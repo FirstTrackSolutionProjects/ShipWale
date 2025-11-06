@@ -10,7 +10,7 @@ function Mission() {
     {
       title: "Our Vision",
       desc: "To build the most reliable and intelligent global logistics ecosystem, driven by data and empowered by seamless, connected technologies.",
-      image: "./image/q5.png",
+      image: "/image/vision.jpg",
     },
     {
       title: "Our Values",

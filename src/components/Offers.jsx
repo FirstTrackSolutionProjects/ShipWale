@@ -2,14 +2,10 @@ import React from "react";
 
 function Offers() {
   const offersData = [
-    {
-      title: "International Shipping",
-      image: "./image/q3.png",
-      desc: "Expand your business globally with confidence. Our tailored international logistics services expertly navigate complex shipping challenges, ensuring prompt and secure deliveries. From customs compliance to live tracking, cross-border shipping has never been easier.",
-    },
+
     {
       title: "Domestic Shipping",
-      image: "./image/q1.png",
+      image: "/image/domestic.jpg",
       desc: "Enhance your local supply chain with faster and more reliable logistics solutions. From optimized scheduling to secure last-mile delivery, we handle freight with precision to support your business operations smoothly and consistently.",
     },
   ];
@@ -20,7 +16,7 @@ function Offers() {
         What We Offer
       </h2>
 
-      <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
+      <div className="grid lg:grid-cols-1 gap-12 max-w-6xl mx-auto">
         {offersData.map((offer, index) => (
           <div
             key={index}

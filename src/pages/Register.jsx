@@ -9,9 +9,9 @@ const Register = () => {
       {/* Top Image */}
       <div className="w-full max-w-md flex justify-center mb-6">
         <img
-          src="/image/q13.png"
+          src="/image/register.png"
           alt="Register"
-          className="w-100 h-60 rounded-lg shadow-md"
+          className="w-full h-full rounded-lg shadow-md"
         />
       </div>
 

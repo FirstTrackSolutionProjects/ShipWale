@@ -1,17 +1,3 @@
-// import { Box } from '@mui/material'
-// import React from 'react'
-// import PriceCalc from '../components/PriceCalc'
-// const Pricing = () => {
-//   return (
-//     <Box>
-//       <PriceCalc />
-//     </Box>
-//   )
-// }
-
-// export default Pricing
-
-
 import React, { useState } from "react";
 
 const Pricing = () => {
@@ -70,13 +56,13 @@ const Pricing = () => {
         className="bg-gray-100 p-8 rounded-lg shadow-lg w-full max-w-2xl"
       >
           {/* Image */}
-        <div className="flex justify-center mb-4">
+        {/* <div className="flex justify-center mb-4">
           <img
             src="/pricing.jpg" 
             alt="Shipping Banner"
             className="w-full rounded-lg object-cover"
           />
-        </div>
+        </div> */}
 
         <h2 className="text-2xl font-semibold text-center mb-6">
           Calculate Your Shipping Price

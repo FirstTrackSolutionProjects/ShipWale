@@ -8,9 +8,9 @@ const Contact = () => {
 
         {/* Top Illustration */}
         <img
-          src="/image/q.png"
+          src="/image/contact.jpeg"
           alt="Customer Support"
-          className="w-full max-w-sm h-auto rounded-xl mb-6"
+          className="w-full h-auto rounded-xl mb-6"
         />
 
         <h1 className="text-3xl font-bold text-center text-gray-800 mb-2">
@@ -93,7 +93,7 @@ const Contact = () => {
 
             <p className="flex items-center gap-3 text-sm">
               <FaPhoneAlt size={16} />
-              +91 98765 43210
+              +91 1234567890
             </p>
 
             <p className="flex items-center gap-3 text-sm">

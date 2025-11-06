@@ -5,13 +5,14 @@ import { CheckCircle, Shield, Truck, Star } from "lucide-react";
 const About = () => {
   return (
     <div className="bg-gray-50 min-h-screen py-20 px-6 flex justify-center">
+      
       <motion.div
         className="max-w-5xl bg-white shadow-xl rounded-2xl p-10 border border-gray-200"
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        <img src="./image/aboutus.png" alt="About Us" className="w-32 h-32 mx-auto mb-6" />
+        <img src="/image/about.jpg" alt="About Us" className="w-200 h-100 mx-auto mb-6" />
         {/* Title */}
         <h1 className="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-6">
           About <span className="text-blue-600">Shipwale</span>

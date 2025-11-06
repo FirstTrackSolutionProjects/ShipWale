@@ -6,7 +6,7 @@ import { FaFacebookF, FaTwitter, FaLinkedinIn, FaYoutube } from "react-icons/fa"
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-900 text-white px-6 py-12">
+    <footer className="bg-gray-800 text-white px-6 py-12">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
         
         {/* Logo + Company Info */}
@@ -33,6 +33,10 @@ const Footer = () => {
           <ul className="space-y-2 text-sm">
             <li><Link to="/faq" className="hover:text-yellow-400">FAQs</Link></li>
             <li><Link to="/about" className="hover:text-yellow-400">About Us</Link></li>
+            <li><Link to="/track"
+            className="hover:text-yellow-400">Tracking</Link>
+            </li>
+            <li><Link to="/price" className="hover:text-yellow-400">Pricing</Link></li>
             <li><Link to="/contact" className="hover:text-yellow-400">Contact Us</Link></li>
             <li><Link to="/policy" className="hover:text-yellow-400">Privacy & Policy</Link></li>
             <li><Link to="/terms" className="hover:text-yellow-400">Terms of Use</Link></li>
@@ -54,7 +58,7 @@ const Footer = () => {
           </div>
           <div className="flex items-center gap-2 mt-2">
             <Phone size={16} />
-            <p className="text-gray-300 text-sm">+91 98765 43210</p>
+            <p className="text-gray-300 text-sm">+91 1234567890</p>
           </div>
         </div>
 
@@ -85,7 +89,7 @@ const Footer = () => {
 
       {/* Bottom Note */}
       <div className="text-center mt-10 text-sm border-t border-gray-600 pt-4 text-gray-400">
-        © 2025 Shipwale | Developed by First Track Solution Technologies
+        © 2025 Shipwale | Developed by First Track Solution Technologies. All rights reserved.
       </div>
     </footer>
   );

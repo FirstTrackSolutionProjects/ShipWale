@@ -38,7 +38,7 @@ const testimonials = [
 ];
 
 const sliderSettings = {
-  dots: true,
+  dots: false,
   infinite: true,
   speed: 600,
   autoplay: true,
@@ -89,7 +89,7 @@ const Clientsay = () => {
         </Slider>
 
         {/* Custom Dot Styling */}
-        <style>
+        {/* <style>
           {`
             .slick-dots li button:before {
               font-size: 10px;
@@ -100,7 +100,7 @@ const Clientsay = () => {
               opacity: 1;
             }
           `}
-        </style>
+        </style> */}
       </div>
     </div>
   );

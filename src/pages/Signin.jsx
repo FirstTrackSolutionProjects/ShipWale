@@ -11,9 +11,9 @@ const Signin = () => {
         {/* Image */}
         <div className="w-full flex justify-center mb-4">
           <img
-            src="./image/q14.png"
+            src="/image/signin.png"
             alt="Sign In"
-            className="w-32 h-32 object-contain"
+            className="w-full h-full object-contain"
           />
         </div>
 

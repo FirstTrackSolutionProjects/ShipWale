@@ -10,7 +10,7 @@ import Tracking from './pages/Tracking'
 import Pricing from './pages/Pricing'
 import Blog from './pages/Blog'
 import Terms from './pages/Terms'
-import Plyc from './pages/Plyc'
+import PrivacyPolicy from './pages/PrivacyPolicy'
 import Faq from './pages/Faq'
 import Footer from './components/Footer'
 
@@ -45,7 +45,7 @@ const App = () => {
         <Route path="/price" element={<Pricing />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/terms" element={<Terms />} />
-        <Route path="/policy" element={<Plyc />} />
+        <Route path="/policy" element={<PrivacyPolicy />} />
         <Route path="/faq" element={<Faq />} />
       </Routes>
       <Footer />

@@ -8,9 +8,10 @@ const Navbar = () => {
 
   const links = [
     { to: "/", label: "Home" },
+    { to: "/about", label: "About Us" },
     { to: "/tracking", label: "Tracking" },
     { to: "/price", label: "Pricing" },
-    { to: "/about", label: "About Us" },
+   
     { to: "/blog", label: "Blog" },
     { to: "/contact", label: "Contact Us" },
     { to: "/signin", label: "Sign In" },
@@ -18,7 +19,7 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 w-full shadow-md bg-blue-900 z-50">
+      <nav className="fixed top-0 left-0 w-full shadow-md bg-blue-800 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10">
           <div className="flex justify-between items-center h-20">
 
@@ -26,11 +27,16 @@ const Navbar = () => {
             <Link to="/" className="flex items-center">
               <div className="h-15 w-15 rounded-full overflow-hidden border-2 border-[#183B4E] flex items-center justify-center bg-white">
                 <img
-                  src="/image/logo.png"
+                  src="/image/logo1.png"
                   alt="Logo"
                   className="h-14 w-auto object-contain"
+                  onClick={() => navigate('/')}
                 />
               </div>
+               <img src="/image/logotext.png"
+                  alt="Logo Text"
+                  className="h-25 w-auto object-contain mt-5"
+                />
             </Link>
 
             {/* Desktop Menu */}
@@ -40,7 +46,7 @@ const Navbar = () => {
                   key={item.to}
                   to={item.to}
                   className={`hover:text-blue-600 transition ${
-                    pathname === item.to ? "text-blue-600 font-semibold" : ""
+                    pathname === item.to ? "font-semibold text-white" : "text-white"
                   }`}
                 >
                   {item.label}
@@ -75,7 +81,7 @@ const Navbar = () => {
                 to={item.to}
                 onClick={() => setMenuOpen(false)}
                 className={`hover:text-blue-300 transition ${
-                  pathname === item.to ? "text-blue-300 font-semibold" : ""
+                  pathname === item.to ? "font-semibold text-white" : "text-white"
                 }`}
               >
                 {item.label}
