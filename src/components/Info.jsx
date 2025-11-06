@@ -1,30 +1,50 @@
-import React from 'react';
+import React from "react";
 
 function Info() {
+  const data = [
+    {
+      count: "20K+",
+      label: "Our Trusted Clients",
+      bg: "from-blue-200 to-blue-100",
+      text: "text-blue-900",
+    },
+    {
+      count: "40K+",
+      label: "Orders Successfully Delivered",
+      bg: "from-red-200 to-red-100",
+      text: "text-red-900",
+    },
+    {
+      count: "35+",
+      label: "Suppliers",
+      bg: "from-purple-200 to-purple-100",
+      text: "text-purple-900",
+    },
+  ];
+
   return (
     <div
-      className="min-h-screen flex flex-col items-center justify-center px-4 py-10"
-      style={{ backgroundColor: '#F1EFEC' }}
+      className="min-h-screen flex flex-col items-center justify-center px-6 py-14"
+      style={{ backgroundColor: "#F1EFEC" }}
     >
-      <h2 className="text-blue-900 text-3xl md:text-4xl font-bold mb-10 text-center">
+      <h2 className="text-blue-900 text-3xl md:text-4xl font-bold mb-14 text-center">
         First Track Superiority
       </h2>
 
-      <div className="flex flex-col gap-6 w-full max-w-md md:max-w-lg lg:max-w-xl">
-        <div className="bg-blue-200 rounded-xl shadow-md py-6 px-4 text-center hover:scale-105 transition-transform">
-          <div className="text-2xl font-bold text-blue-900">20K+</div>
-          <div className="text-blue-800 mt-1">Our Trusted Clients</div>
-        </div>
-
-        <div className="bg-red-100 rounded-xl shadow-md py-6 px-4 text-center hover:scale-105 transition-transform">
-          <div className="text-2xl font-bold text-red-900">40K+</div>
-          <div className="text-red-800 mt-1">Orders Successfully Delivered</div>
-        </div>
-
-        <div className="bg-purple-200 rounded-xl shadow-md py-6 px-4 text-center hover:scale-105 transition-transform">
-          <div className="text-2xl font-bold text-purple-900">35+</div>
-          <div className="text-purple-800 mt-1">Suppliers</div>
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-5xl">
+        {data.map((item, index) => (
+          <div
+            key={index}
+            className={`bg-gradient-to-br ${item.bg} rounded-2xl shadow-lg py-10 px-6 text-center hover:shadow-2xl hover:-translate-y-1 transition-all duration-300`}
+          >
+            <div className={`text-4xl font-extrabold ${item.text}`}>
+              {item.count}
+            </div>
+            <p className={`mt-2 text-lg font-medium ${item.text.replace("900", "800")}`}>
+              {item.label}
+            </p>
+          </div>
+        ))}
       </div>
     </div>
   );

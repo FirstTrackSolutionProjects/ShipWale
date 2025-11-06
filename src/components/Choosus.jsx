@@ -1,52 +1,74 @@
-import React from 'react';
-import { FaThumbsUp, FaLock, FaClock, FaHeadset } from 'react-icons/fa';
+import React, { useState} from "react";
+import { FaMapMarkedAlt, FaRupeeSign, FaTruck, FaSearchLocation, FaHeadset } from "react-icons/fa";
 
 const features = [
   {
-    icon: <FaThumbsUp className="text-blue-700 text-3xl mb-4" />,
-    title: 'Trusted Reputation',
-    description: 'Proven excellence backed by customer satisfaction.',
-    bg: 'bg-red-100 hover:bg-red-200'
+    icon: <FaMapMarkedAlt className="text-blue-700 text-4xl mb-4" />,
+    title: "Nationwide Domestic Network",
+    description: "Connecting every corner of India with fast and reliable delivery.",
+    bg: "bg-gradient-to-b from-red-100 to-red-50 hover:from-red-200 hover:to-red-100",
   },
   {
-    icon: <FaLock className="text-purple-700 text-3xl mb-4" />,
-    title: 'Advanced Security',
-    description: 'Protecting packages with state-of-the-art systems.',
-    bg: 'bg-blue-100 hover:bg-blue-200'
+    icon: <FaRupeeSign className="text-purple-700 text-4xl mb-4" />,
+    title: "Affordable & Transparent Pricing",
+    description: "Lowest rates with no hidden charges.",
+    bg: "bg-gradient-to-b from-blue-100 to-blue-50 hover:from-blue-200 hover:to-blue-100",
   },
   {
-  icon: <FaClock className="text-[#7C4585] text-3xl mb-4" />,
-title: 'On-Time Commitment',
-description: "Deliveries that arrive when they're supposed to.",
-bg: 'bg-[#f3e8f9] hover:bg-[#ecdaf4]'
-
-
+    icon: <FaTruck className="text-[#7C4585] text-4xl mb-4" />,
+    title: "Door-to-Door Pickup & Delivery",
+    description: "Convenience and comfort right at your doorstep.",
+    bg: "bg-gradient-to-b from-[#f3e8f9] to-[#faf3fd] hover:from-[#ecdaf4] hover:to-[#f5e6fb]",
   },
   {
-    icon: <FaHeadset className="text-yellow-700 text-3xl mb-4" />,
-    title: 'Live Assistance',
-    description: 'Real-time help whenever you need it.',
-    bg: 'bg-yellow-100 hover:bg-yellow-200'
-  }
+    icon: <FaSearchLocation className="text-yellow-700 text-4xl mb-4" />,
+    title: "Real-Time Tracking",
+    description: "Track your parcel anytime with live status updates.",
+    bg: "bg-gradient-to-b from-yellow-100 to-yellow-50 hover:from-yellow-200 hover:to-yellow-100",
+  },
+  {
+    icon: <FaHeadset className="text-green-600 text-4xl mb-4" />,
+    title: "Friendly Support Team",
+    description: "Dedicated assistance whenever you need help.",
+    bg: "bg-gradient-to-b from-green-100 to-green-50 hover:from-green-200 hover:to-green-100",
+  },
 ];
 
 const Choosus = () => {
+  const [showMore, setShowMore] = useState(false);
+
+  const visibleFeatures = showMore ? features : features.slice(0, 4);
   return (
-    <div className="bg-white py-12 px-4 sm:px-6 lg:px-8">
+    <div className="bg-white py-14 px-6">
       <div className="max-w-7xl mx-auto text-center">
-        <h2 className="text-3xl font-bold text-gray-900 mb-10">Why Choose Us</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {features.map((feature, index) => (
+        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-14">
+          Why Choose Shipwale?
+        </h2>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8">
+          {visibleFeatures.map((feature, index) => (
             <div
               key={index}
-              className={`${feature.bg} rounded-xl shadow-md p-6 flex flex-col items-center text-center hover:shadow-lg transition-all`}
+              className={`${feature.bg} rounded-2xl shadow-md p-8 flex flex-col items-center text-center transition-all duration-300 hover:shadow-xl hover:-translate-y-1`}
             >
               {feature.icon}
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">{feature.title}</h3>
-              <p className="text-sm text-gray-600">{feature.description}</p>
+              <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                {feature.title}
+              </h3>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                {feature.description}
+              </p>
             </div>
           ))}
         </div>
+
+         {/* View More / View Less Button */}
+        <button
+          onClick={() => setShowMore(!showMore)}
+          className="mt-10 px-6 py-2 border border-blue-700 text-blue-700 rounded-lg hover:bg-blue-700 hover:text-white transition"
+        >
+          {showMore ? "View Less" : "View More"}
+        </button>
       </div>
     </div>
   );

@@ -1,41 +1,59 @@
 import React from 'react';
-import Footer from '../components/Footer';
+
 const blogs = [
   {
     title: 'Master Shipping Route Optimization',
     date: 'January 10, 2025',
     description:
       'Take control of your logistics! Learn actionable strategies to optimize routes and boost efficiency.',
-    image: './image/q11.png', // Replace with actual image path
+    image: '/image/blog1.jpg',
   },
   {
-    title: 'AI and Automation: The Next Era of Logistics',
+    title: 'AI & Automation: The Next Era of Logistics',
     date: 'March 25, 2025',
     description:
-      'Explore the transformative power of artificial intelligence and automation in shaping the future of supply chains.',
-    image: './image/q6.png', // Replace with actual image path
+      'Explore how AI and automation are reshaping supply chains and creating smarter logistics solutions.',
+    image: './image/q6.png',
   },
 ];
 
 const Blog = () => {
   return (
-    <div>
-    <div className="py-10 px-4 md:px-10 lg:px-20 bg-gray-50">
-      <h2 className="text-3xl font-bold text-center mb-8">Our Blogs</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div className="min-h-screen bg-gray-100 py-14 px-4 md:px-12 lg:px-24">
+      {/* Heading */}
+      <h2 className="text-4xl font-bold text-center text-blue-800 mb-10">
+        Our <span className="text-yellow-500">Blogs</span>
+      </h2>
+
+      {/* Blog Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
         {blogs.map((blog, index) => (
-          <div key={index} className="bg-white shadow rounded-lg overflow-hidden transition duration-300 hover:shadow-lg">
-            <img src={blog.image} alt={blog.title} className="w-full h-64 object-cover" />
-            <div className="p-5">
-              <h3 className="text-lg font-semibold mb-1">{blog.title}</h3>
-              <p className="text-sm text-gray-500 mb-2">{blog.date}</p>
-              <p className="text-sm text-gray-700">{blog.description}</p>
+          <div
+            key={index}
+            className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+          >
+            {/* Image */}
+            <img
+              src={blog.image}
+              alt={blog.title}
+              className="w-full h-70 object-cover"
+            />
+
+            {/* Text Content */}
+            <div className="p-5 space-y-2">
+              <p className="text-sm text-gray-500">{blog.date}</p>
+              <h3 className="text-xl font-semibold text-gray-800">
+                {blog.title}
+              </h3>
+              <p className="text-gray-600 text-sm leading-relaxed">
+                {blog.description}
+              </p>
+
+            
             </div>
           </div>
         ))}
       </div>
-    </div>
-     <Footer />
     </div>
   );
 };

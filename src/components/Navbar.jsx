@@ -1,72 +1,97 @@
 import React, { useState } from "react";
 import { Menu, X } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const toggleMenu = () => setMenuOpen(!menuOpen);
+  const { pathname } = useLocation();
+
+  const links = [
+    { to: "/", label: "Home" },
+    { to: "/about", label: "About Us" },
+    { to: "/tracking", label: "Tracking" },
+    { to: "/price", label: "Pricing" },
+   
+    { to: "/blog", label: "Blog" },
+    { to: "/contact", label: "Contact Us" },
+    { to: "/signin", label: "Sign In" },
+  ];
 
   return (
     <>
-      {/* Fixed Navbar */}
-      <nav className="shadow-md w-full fixed top-0 left-0 z-50" style={{ backgroundColor: "#FAF6E9" }}>
-        <div className="w-full px-4 sm:px-6 lg:px-8">
+      <nav className="fixed top-0 left-0 w-full shadow-md bg-blue-800 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10">
           <div className="flex justify-between items-center h-20">
-            {/* Logo wrapped with Link */}
-            <div className="flex items-center">
-              <Link to="/">
+
+            {/* Logo with Circle */}
+            <Link to="/" className="flex items-center">
+              <div className="h-15 w-15 rounded-full overflow-hidden border-2 border-[#183B4E] flex items-center justify-center bg-white">
                 <img
-                  src="./image/logoo.png"
+                  src="/image/logo1.png"
                   alt="Logo"
-                  className="h-20 w-auto object-contain -translate-x-8"
+                  className="h-14 w-auto object-contain"
+                  onClick={() => navigate('/')}
                 />
-              </Link>
-            </div>
+              </div>
+               <img src="/image/logotext.png"
+                  alt="Logo Text"
+                  className="h-25 w-auto object-contain mt-5"
+                />
+            </Link>
 
-            {/* Desktop Links */}
+            {/* Desktop Menu */}
             <div className="hidden md:flex space-x-6 text-gray-800 font-medium">
-              <Link to="/" className="hover:text-blue-600">Home</Link>
-              <Link to="/trc" className="hover:text-blue-600">Tracking</Link>
-              <Link to="/price" className="hover:text-blue-600">Pricing</Link>
-              <Link to="/about" className="hover:text-blue-600">About Us</Link>
-              <Link to="/blog" className="hover:text-blue-600">Blog</Link>
-              <Link to="/contect" className="hover:text-blue-600">Contact Us</Link>
-              <Link to="/signin" className="hover:text-blue-600">Sign In</Link>
+              {links.map((item) => (
+                <Link
+                  key={item.to}
+                  to={item.to}
+                  className={`hover:text-blue-600 transition ${
+                    pathname === item.to ? "font-semibold text-white" : "text-white"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              ))}
             </div>
 
-            {/* Mobile Menu Button */}
+            {/* Mobile Button */}
             <div className="md:hidden">
-              <button onClick={toggleMenu} className="text-gray-800 focus:outline-none">
+              <button onClick={() => setMenuOpen(!menuOpen)}>
                 {menuOpen ? <X size={28} /> : <Menu size={28} />}
               </button>
             </div>
           </div>
         </div>
 
-        {/* Slide-in Mobile Menu */}
+        {/* Mobile Slide Menu */}
         <div
-          className={`fixed top-0 right-0 h-[60%] w-64 bg-[#183B4E] text-white transform transition-transform duration-300 ease-in-out z-40 ${
-            menuOpen ? "translate-x-0" : "translate-x-full"
-          }`}
+          className={`fixed top-0 right-0 h-full w-64 bg-[#183B4E] text-white transform transition-transform duration-300 z-40
+          ${menuOpen ? "translate-x-0" : "translate-x-full"}`}
         >
           <div className="flex justify-end p-4">
-            <button onClick={toggleMenu} className="text-white">
-              <X size={28} />
+            <button onClick={() => setMenuOpen(false)}>
+              <X size={30} />
             </button>
           </div>
-          <div className="flex flex-col px-6 space-y-4 text-base font-medium">
-            <Link to="/" onClick={toggleMenu} className="hover:text-blue-400">Home</Link>
-            <Link to="/trc" onClick={toggleMenu} className="hover:text-blue-400">Tracking</Link>
-            <Link to="/price" onClick={toggleMenu} className="hover:text-blue-400">Pricing</Link>
-            <Link to="/about" onClick={toggleMenu} className="hover:text-blue-400">About Us</Link>
-            <Link to="/blog" onClick={toggleMenu} className="hover:text-blue-400">Blog</Link>
-            <Link to="/contect" onClick={toggleMenu} className="hover:text-blue-400">Contact Us</Link>
-            <Link to="/signin" onClick={toggleMenu} className="hover:text-blue-400">Sign In</Link>
+
+          <div className="flex flex-col px-6 space-y-6 text-lg font-medium">
+            {links.map((item) => (
+              <Link
+                key={item.to}
+                to={item.to}
+                onClick={() => setMenuOpen(false)}
+                className={`hover:text-blue-300 transition ${
+                  pathname === item.to ? "font-semibold text-white" : "text-white"
+                }`}
+              >
+                {item.label}
+              </Link>
+            ))}
           </div>
         </div>
       </nav>
 
-      {/* Push content below the fixed navbar */}
+      {/* Push content below navbar */}
       <div className="pt-20" />
     </>
   );
