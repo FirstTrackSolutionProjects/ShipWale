@@ -19,15 +19,15 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 w-full shadow-md bg-sky-200 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10">
+      <nav className="fixed top-0 left-0 w-full  shadow-md bg-sky-200 z-50">
+        <div className="max-w-7xl px-4 sm:px-6 lg:px-10">
           <div className="flex justify-between items-center h-20">
 
             {/* Logo with Circle */}
             <Link to="/" className="flex items-center">
-              <div className="h-15 w-15 rounded-full overflow-hidden border-2 border-[#183B4E] flex items-center justify-center bg-white">
+              <div className="h-15 w-15 rounded-full overflow-hidden border-2 border-[#183B4E] flex items-center justify-center bg-white ">
                 <img
-                  src="/image/logo1.png"
+                  src="/image/logo.png"
                   alt="Logo"
                   className="h-14 w-auto object-contain"
                   onClick={() => navigate('/')}
@@ -35,7 +35,7 @@ const Navbar = () => {
               </div>
                <img src="/image/logotext.png"
                   alt="Logo Text"
-                  className="h-25 w-auto object-contain"
+                  className="h-27 w-auto object-contain"
                 />
                
             </Link>
@@ -47,7 +47,7 @@ const Navbar = () => {
                   key={item.to}
                   to={item.to}
                   className={`hover:text-blue-600 transition ${
-                    pathname === item.to ? "font-semibold text-white" : "text-white"
+                    pathname === item.to ? "font-semibold text-black" : "text-black"
                   }`}
                 >
                   {item.label}

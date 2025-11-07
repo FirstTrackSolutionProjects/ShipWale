@@ -14,7 +14,7 @@ const Footer = () => {
           <div className="flex items-center gap-3 mb-3">
             <div className="h-14 w-14 rounded-full overflow-hidden bg-white flex items-center justify-center shadow-md">
               <img
-                src="/image/logo1.png"
+                src="/image/logo.png"
                 alt="Shipwale Logo"
                 className="h-10 object-contain"
               />
@@ -40,6 +40,7 @@ const Footer = () => {
             <li><Link to="/contact" className="hover:text-yellow-400">Contact Us</Link></li>
             <li><Link to="/policy" className="hover:text-yellow-400">Privacy & Policy</Link></li>
             <li><Link to="/terms" className="hover:text-yellow-400">Terms of Use</Link></li>
+            <li><Link to="/refund-cancel" className="hover:text-yellow-400">Refund & Cancellation</Link></li>
           </ul>
         </div>
 

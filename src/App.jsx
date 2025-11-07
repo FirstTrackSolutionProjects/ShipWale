@@ -13,7 +13,7 @@ import Terms from './pages/Terms'
 import PrivacyPolicy from './pages/PrivacyPolicy'
 import Faq from './pages/Faq'
 import Footer from './components/Footer'
-
+import RefundCancel from './pages/RefundCancel'
 import Navbar from './components/Navbar'
 
 const ScrollToTop = () => {
@@ -46,6 +46,7 @@ const App = () => {
         <Route path="/blog" element={<Blog />} />
         <Route path="/terms" element={<Terms />} />
         <Route path="/policy" element={<PrivacyPolicy />} />
+        <Route path="/refund-cancel" element={<RefundCancel />} />
         <Route path="/faq" element={<Faq />} />
       </Routes>
       <Footer />
