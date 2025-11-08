@@ -5,7 +5,7 @@ function Mission() {
     {
       title: "Our Mission",
       desc: "Our goal is to transform the logistics landscape through cutting-edge technology, delivering smart, scalable solutions that adapt to the evolving needs of global enterprises.",
-      image: "./image/q2.png",
+      image: "/image/mission.jpeg",
     },
     {
       title: "Our Vision",
@@ -15,7 +15,7 @@ function Mission() {
     {
       title: "Our Values",
       desc: "To transform global logistics through advanced technology, delivering smart and scalable solutions customized for the needs of modern enterprises.",
-      image: "./image/q4.png",
+      image: "/image/value.jpeg",
     },
   ];
 

@@ -13,7 +13,7 @@ const blogs = [
     date: 'March 25, 2025',
     description:
       'Explore how AI and automation are reshaping supply chains and creating smarter logistics solutions.',
-    image: '/image/q6.png',
+    image: '/image/manufacturing.jpeg',
   },
   {
     title: 'Sustainable Logistics Practices',

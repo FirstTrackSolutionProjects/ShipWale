@@ -3,25 +3,25 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const slides = [
   {
-    image: "/image/q7.png",
+    image: "/image/beauty.jpeg",
     title: "Cosmetic Products",
     description:
       "Enhance your natural beauty with our skin-friendly, high-performance cosmetics — perfect for every look.",
   },
   {
-    image: "/image/q15.png",
+    image: "/image/electronic.jpeg",
     title: "Consumer Electronics",
     description:
       "Experience the future of technology with our premium electronics — smart, sleek, and built for everyday life.",
   },
   {
-    image: "/image/q9.png",
+    image: "/image/healthcare.jpeg",
     title: "Healthcare & Pharma",
     description:
       "Empowering healthier lives with accessible, affordable, and trusted healthcare solutions.",
   },
   {
-    image: "/image/spare parts.jpg",
+    image: "/image/spareparts.jpg",
     title: "Automotive & Spare Parts",
     description:
       "Reliable logistics support for automotive parts, ensuring fast, safe, and damage-free transportation across locations.",
