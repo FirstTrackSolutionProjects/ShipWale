@@ -5,7 +5,7 @@ export default function Header() {
   const navigate = useNavigate();
 
   return (
-    <section className="relative bg-gray-100">
+    <section className="relative bg-gray-100 mt-5">
       {/* Background Image */}
       <div className="relative h-[500px] w-full">
         <img

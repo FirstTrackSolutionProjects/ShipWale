@@ -20,7 +20,8 @@ function Mission() {
   ];
 
   return (
-    <div className="bg-[#e7fdfd] px-6 py-10 md:px-16 lg:px-24 xl:px-32 space-y-16">
+   <div className="bg-gradient-to-r from-teal-100 via-blue-100 to-gray-100 px-6 py-10 md:px-16 lg:px-24 xl:px-32 space-y-16">
+
       <div className="max-w-7xl mx-auto space-y-14">
         {missionData.map((item, index) => (
           <div

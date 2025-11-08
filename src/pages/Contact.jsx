@@ -103,7 +103,7 @@ const Contact = () => {
 
             <p className="flex items-center gap-3 text-sm">
               <FaClock size={16} />
-              Mon - Fri: 9:00 AM to 6:00 PM
+              Mon - sat: 9:00 AM to 6:00 PM
             </p>
           </div>
 

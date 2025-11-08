@@ -30,7 +30,8 @@ function Services() {
   ];
 
   return (
-    <div className="bg-gray-100 py-16 px-6 md:px-16 lg:px-24">
+   <div className="bg-gradient-to-r from-teal-200 via-blue-200 to-white py-16 px-6 md:px-16 lg:px-24">
+
       <h2 className="text-4xl font-bold text-center mb-14 text-gray-800">
         Our Services
       </h2>

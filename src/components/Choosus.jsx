@@ -35,18 +35,19 @@ const features = [
 ];
 
 const Choosus = () => {
-  const [showMore, setShowMore] = useState(false);
+  // const [showMore, setShowMore] = useState(false);
 
-  const visibleFeatures = showMore ? features : features.slice(0, 4);
+  // const visibleFeatures = showMore ? features : features.slice(0, 4);
   return (
-    <div className="bg-white py-14 px-6">
+    <div className="bg-gradient-to-br from-teal-200 via-gray-200 to-white py-14 px-6">
+
       <div className="max-w-7xl mx-auto text-center">
         <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-14">
           Why Choose Shipwale?
         </h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8">
-          {visibleFeatures.map((feature, index) => (
+          {features.map((feature, index) => (
             <div
               key={index}
               className={`${feature.bg} rounded-2xl shadow-md p-8 flex flex-col items-center text-center transition-all duration-300 hover:shadow-xl hover:-translate-y-1`}
@@ -63,12 +64,12 @@ const Choosus = () => {
         </div>
 
          {/* View More / View Less Button */}
-        <button
+        {/* <button
           onClick={() => setShowMore(!showMore)}
           className="mt-10 px-6 py-2 border border-blue-700 text-blue-700 rounded-lg hover:bg-blue-700 hover:text-white transition"
         >
           {showMore ? "View Less" : "View More"}
-        </button>
+        </button> */}
       </div>
     </div>
   );

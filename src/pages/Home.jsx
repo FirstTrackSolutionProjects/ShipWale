@@ -8,6 +8,7 @@ import Info from '../components/Info'
 import ShippingCalculator from '../components/ShippingCalculator'
 import IndustryExpertise from '../components/IndustryExpertise'
 import Clientsay from '../components/Clientsay'
+import TrustedPartners from '../components/TrustedPartners'
 
 const Home = () => {
   return (
@@ -22,6 +23,7 @@ const Home = () => {
     <ShippingCalculator />
     <IndustryExpertise />
     <Clientsay />
+    <TrustedPartners />
 
   </>
 )

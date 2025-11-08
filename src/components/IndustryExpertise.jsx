@@ -20,6 +20,18 @@ const slides = [
     description:
       "Empowering healthier lives with accessible, affordable, and trusted healthcare solutions.",
   },
+  {
+    image: "/image/spare parts.jpg",
+    title: "Automotive & Spare Parts",
+    description:
+      "Reliable logistics support for automotive parts, ensuring fast, safe, and damage-free transportation across locations.",
+  },
+  {
+    image: "/image/manufacturing.jpeg",
+    title: "Industrial & Manufacturing Goods",
+    description:
+      "Moving heavy-duty industrial and manufacturing products with precision, safety, and on-time delivery assurance.",
+  },
 ];
 
 const IndustryExpertise = () => {
@@ -39,7 +51,12 @@ const IndustryExpertise = () => {
   };
 
   return (
-    <div className="py-16 bg-gray-50 px-5 flex flex-col items-center">
+    <div
+      className="py-16 px-5 flex flex-col items-center"
+      style={{
+        background: "linear-gradient(to bottom right, #F1F5F9, #D8E6FF)",
+      }}
+    >
       {/* Heading */}
       <div className="text-center mb-10">
         <h2 className="text-3xl md:text-4xl font-bold">
@@ -51,9 +68,8 @@ const IndustryExpertise = () => {
 
       {/* CARD */}
       <div className="relative max-w-5xl w-full bg-white shadow-lg rounded-xl overflow-hidden flex flex-col lg:flex-row">
-
         {/* IMAGE */}
-        <div className="w-full lg:w-2/2 h-[300px] md:h-[350px] lg:h-auto">
+        <div className="w-full lg:w-1/2 h-[300px] md:h-[350px] lg:h-auto">
           <img
             src={slides[index].image}
             alt={slides[index].title}
@@ -70,49 +86,7 @@ const IndustryExpertise = () => {
             {slides[index].description}
           </p>
         </div>
-
-        {/* NAV BUTTONS */}
-        {/* <button
-          onClick={handlePrev}
-          className="absolute left-2 top-1/2 -translate-y-1/2 bg-white shadow-md p-2 rounded-full hover:bg-gray-100 hidden md:block"
-        >
-          <ChevronLeft size={22} />
-        </button>
-        <button
-          onClick={handleNext}
-          className="absolute right-2 top-1/2 -translate-y-1/2 bg-white shadow-md p-2 rounded-full hover:bg-gray-100 hidden md:block"
-        >
-          <ChevronRight size={22} />
-        </button> */}
       </div>
-
-      {/* DOT INDICATORS */}
-      {/* <div className="flex gap-2 mt-6">
-        {slides.map((_, i) => (
-          <span
-            key={i}
-            className={`w-3 h-3 rounded-full transition-all ${
-              i === index ? "bg-blue-600 scale-110" : "bg-gray-300"
-            }`}
-          ></span>
-        ))}
-      </div> */}
-
-      {/* MOBILE NAV BUTTONS */}
-      {/* <div className="flex justify-center gap-4 mt-4 md:hidden">
-        <button
-          onClick={handlePrev}
-          className="bg-white shadow p-2 rounded-full hover:bg-gray-100"
-        >
-          <ChevronLeft size={20} />
-        </button>
-        <button
-          onClick={handleNext}
-          className="bg-white shadow p-2 rounded-full hover:bg-gray-100"
-        >
-          <ChevronRight size={20} />
-        </button>
-      </div> */}
     </div>
   );
 };

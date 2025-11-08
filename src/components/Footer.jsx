@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { MapPin, Mail, Phone } from "lucide-react";
-import { FaFacebookF, FaTwitter, FaLinkedinIn, FaYoutube } from "react-icons/fa";
+import { FaFacebookF, FaTwitter, FaLinkedinIn, FaYoutube, FaInstagram } from "react-icons/fa";
 
 
 const Footer = () => {
@@ -77,6 +77,7 @@ const Footer = () => {
           <div className="flex space-x-4 mt-4">
             <a href="#" className="hover:text-yellow-400"> <FaFacebookF /></a>
             <a href="#" className="hover:text-yellow-400"><FaTwitter /></a>
+            <a href="#" className="hover:text-yellow-400"> <FaInstagram /></a>
             <a href="#" className="hover:text-yellow-400">    <FaLinkedinIn /></a>
             <a href="#"
               className="hover:text-yellow-400">  <FaYoutube /></a>

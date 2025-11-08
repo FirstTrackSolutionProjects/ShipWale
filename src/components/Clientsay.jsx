@@ -6,13 +6,13 @@ import { Quote } from "lucide-react";
 
 const testimonials = [
   {
-    name: "Carlos Rivera",
+    name: "Karan Patel",
     title: "Logistics Lead, E-Marketplace",
     text: "The best logistics partner we've worked with. Seamless integrations and great customer support.",
     image: "https://cdn-icons-png.flaticon.com/512/2922/2922510.png",
   },
   {
-    name: "Sarah Johnson",
+    name: "Shruti Agarwal",
     title: "Supply Manager, RetailCo",
     text: "Always on time and extremely professional. Our go-to for logistics solutions.",
     image: "https://cdn-icons-png.flaticon.com/512/2922/2922656.png",
@@ -24,13 +24,13 @@ const testimonials = [
     image: "https://cdn-icons-png.flaticon.com/512/2922/2922688.png",
   },
   {
-    name: "Linda Gomez",
+    name: "Pooja Chatterjee",
     title: "Procurement Manager, ShopEase",
     text: "Their technology-driven approach has transformed our supply chain management.",
     image: "https://cdn-icons-png.flaticon.com/512/2922/2922566.png",
   },
   {
-    name: "Michael Chen",
+    name: "Ananya Gupta",
     title: "COO, GlobalMart",
     text: "Exceptional service and innovative solutions that meet our complex logistics needs.",
     image: "https://cdn-icons-png.flaticon.com/512/2922/2922731.png",
@@ -51,7 +51,7 @@ const sliderSettings = {
 
 const Clientsay = () => {
   return (
-    <div className="bg-white px-5 py-16 flex justify-center">
+    <div className="bg-gradient-to-br from-blue-200 to-yellow-100 px-5 py-16 flex justify-center">
       <div className="w-full max-w-4xl text-center">
         {/* Heading */}
         <h2 className="text-blue-700 text-2xl md:text-3xl font-bold mb-10 tracking-wide">
@@ -81,7 +81,7 @@ const Clientsay = () => {
                 {/* Name + Title */}
                 <div className="mt-5">
                   <p className="font-semibold text-gray-800 text-lg">{t.name}</p>
-                  <p className="text-gray-500 text-sm">{t.title}</p>
+                 
                 </div>
               </div>
             </div>
