@@ -17,6 +17,13 @@ function Offers() {
         What We Offer
       </h2>
 
+      <img
+          src="/image/offer1.jpg"
+          alt="About Us"
+          className="w-full max-w-3xl h-auto mx-auto mb-6 rounded-xl shadow-md"
+        />
+
+
       <div className="grid lg:grid-cols-1 gap-12 max-w-6xl mx-auto">
         {offersData.map((offer, index) => (
           <div

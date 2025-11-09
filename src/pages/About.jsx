@@ -12,7 +12,12 @@ const About = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        <img src="/image/about.jpg" alt="About Us" className="w-200 h-100 mx-auto mb-6" />
+       <img
+          src="/image/about.jpg"
+          alt="About Us"
+          className="w-full max-w-2xl h-auto mx-auto mb-6 rounded-xl shadow-md"
+        />
+
         {/* Title */}
         <h1 className="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-6">
           About <span className="text-blue-600">Shipwale</span>

@@ -92,7 +92,7 @@ const PrivacyPolicy = () => {
         <p className="text-gray-700">
           For any privacy-related questions, reach us at:
           <br />📧 <strong>support@shipwale.com</strong>
-          <br />📞 <strong>+91 1234567890</strong>
+          <br />📞 <strong>+91 9983800788</strong>
         </p>
       </div>
     </div>

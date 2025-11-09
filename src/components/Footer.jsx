@@ -33,7 +33,7 @@ const Footer = () => {
           <ul className="space-y-2 text-sm">
             <li><Link to="/faq" className="hover:text-yellow-400">FAQs</Link></li>
             <li><Link to="/about" className="hover:text-yellow-400">About Us</Link></li>
-            <li><Link to="/track"
+            <li><Link to="/tracking"
             className="hover:text-yellow-400">Tracking</Link>
             </li>
             <li><Link to="/price" className="hover:text-yellow-400">Pricing</Link></li>
@@ -59,7 +59,7 @@ const Footer = () => {
           </div>
           <div className="flex items-center gap-2 mt-2">
             <Phone size={16} />
-            <p className="text-gray-300 text-sm">+91 1234567890</p>
+            <p className="text-gray-300 text-sm">+91 9983800788</p>
           </div>
         </div>
 

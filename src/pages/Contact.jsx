@@ -1,5 +1,12 @@
 import React from "react";
-import { FaUser, FaEnvelope, FaPhoneAlt, FaMapMarkerAlt, FaClock } from "react-icons/fa";
+import {
+  FaUser,
+  FaEnvelope,
+  FaPhoneAlt,
+  FaMapMarkerAlt,
+  FaClock,
+  FaWhatsapp,
+} from "react-icons/fa";
 
 const Contact = () => {
   return (
@@ -87,13 +94,13 @@ const Contact = () => {
 
             <p className="flex items-start gap-3 text-sm">
               <FaMapMarkerAlt size={18} className="mt-1" />
-              Ramdev Nagar, Phalodi, Jodhpur,<br/>
+              Ramdev Nagar, Phalodi, Jodhpur,<br />
               Rajasthan - 342301
             </p>
 
             <p className="flex items-center gap-3 text-sm">
               <FaPhoneAlt size={16} />
-              +91 1234567890
+              +91 9983800788
             </p>
 
             <p className="flex items-center gap-3 text-sm">
@@ -103,8 +110,23 @@ const Contact = () => {
 
             <p className="flex items-center gap-3 text-sm">
               <FaClock size={16} />
-              Mon - sat: 9:00 AM to 6:00 PM
+              Mon - Sat: 9:00 AM to 6:00 PM
             </p>
+
+            {/* ✅ WhatsApp Contact */}
+            <p
+              className="flex items-center gap-3 text-sm cursor-pointer"
+              onClick={() =>
+                window.open(
+                  "https://api.whatsapp.com/send?phone=919983800788&text=Hello%2C%20I%20need%20help%20with%20shipment%20tracking.",
+                  "_blank"
+                )
+              }
+            >
+              <FaWhatsapp size={18} className="text-green-400" />
+              WhatsApp: +91 9983800788
+            </p>
+
           </div>
 
         </div>
