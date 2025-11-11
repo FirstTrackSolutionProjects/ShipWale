@@ -19,7 +19,14 @@ const Footer = () => {
                 className="h-10 object-contain"
               />
             </div>
-            <h2 className="text-xl font-bold tracking-wide">Shipwale</h2>
+
+            <h1 className="text-2xl font-bold flex items-center">
+                <span className="text-white">Ship</span>
+                <span className="ml-1 bg-gradient-to-r from-gray-200 via-yellow-400 to-gray-200 text-transparent bg-clip-text">
+                  Wale
+                </span>
+              </h1>
+
           </div>
           <p className="text-gray-300">
             Delivering excellence in logistics across PAN India.
