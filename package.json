@@ -22,8 +22,6 @@
     "@mui/material": "^6.1.10",
     "@mui/x-data-grid": "^8.5.2",
     "@netlify/functions": "^2.8.0",
-    "@react-three/drei": "^9.106.0",
-    "@react-three/fiber": "^8.16.8",
     "@tailwindcss/vite": "^4.1.8",
     "@tweenjs/tween.js": "^23.1.2",
     "axios": "^1.7.2",
