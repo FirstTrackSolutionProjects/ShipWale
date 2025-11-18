@@ -841,11 +841,11 @@ const ManageForm = ({ isManage, setIsManage, shipment, isShipped }) => {
                   onChange={handleInvoice}
                 />
                 <Box className="flex items-center mt-2">
-                  <a type="button" className="m-2 w-20 px-5 py-2 border rounded-3xl bg-blue-600 text-white" target="_blank" href={import.meta.env.VITE_APP_BUCKET_URL + formData.invoiceUrl}>View</a>
+                  <a type="button" className="m-2 w-20 px-5 py-2 border rounded-3xl bg-red-600 text-white" target="_blank" href={import.meta.env.VITE_APP_BUCKET_URL + formData.invoiceUrl}>View</a>
                 <Button
                   variant="contained"
                   onClick={uploadInvoice}
-                  className="bg-blue-500"
+                  className="bg-red-500"
                   sx={{ borderRadius: '24px' }}
                 >
                   Update
@@ -960,7 +960,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
       <button 
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        className={`px-2 sm:px-3 py-1 rounded-md text-xs sm:text-sm ${currentPage === 1 ? 'bg-gray-200 cursor-not-allowed' : 'bg-blue-500 text-white hover:bg-blue-600'}`}
+        className={`px-2 sm:px-3 py-1 rounded-md text-xs sm:text-sm ${currentPage === 1 ? 'bg-gray-200 cursor-not-allowed' : 'bg-red-500 text-white hover:bg-red-600'}`}
       >
         <span className="hidden sm:inline">Previous</span>
         <span className="sm:hidden">Prev</span>
@@ -972,7 +972,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
           onClick={() => page.number !== '...' && onPageChange(page.number)}
           className={`min-w-[30px] px-2 sm:px-3 py-1 rounded-md text-xs sm:text-sm ${
             page.number === '...' ? 'cursor-default' 
-            : page.isCurrent ? 'bg-blue-500 text-white' 
+            : page.isCurrent ? 'bg-red-500 text-white' 
             : 'bg-white hover:bg-gray-100 border'
           }`}
         >
@@ -983,7 +983,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
       <button 
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className={`px-2 sm:px-3 py-1 rounded-md text-xs sm:text-sm ${currentPage === totalPages ? 'bg-gray-200 cursor-not-allowed' : 'bg-blue-500 text-white hover:bg-blue-600'}`}
+        className={`px-2 sm:px-3 py-1 rounded-md text-xs sm:text-sm ${currentPage === totalPages ? 'bg-gray-200 cursor-not-allowed' : 'bg-red-500 text-white hover:bg-red-600'}`}
       >
         <span className="hidden sm:inline">Next</span>
         <span className="sm:hidden">Next</span>
@@ -1062,7 +1062,7 @@ const Card = ({ shipment }) => {
           {/* Action Button - 1 column */}
           <div className="col-span-1 flex items-center justify-end">
             <button 
-              className="px-4 py-1 bg-blue-500 text-white text-sm rounded-3xl hover:bg-blue-600 transition-colors" 
+              className="px-4 py-1 bg-red-500 text-white text-sm rounded-3xl hover:bg-red-600 transition-colors" 
               onClick={() => setIsManage(true)}
             >
               {isShipped ? "View" : "Manage"}
@@ -1252,7 +1252,7 @@ const Listing = ({ step, setStep }) => {
 
 {/* Filters */}
       <Box
-        className="bg-blue-500 p-4 rounded-xl shadow-md"
+        className="bg-red-500 p-4 rounded-xl shadow-md"
         sx={{
           mb: 3,
           display: 'grid',

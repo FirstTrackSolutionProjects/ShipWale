@@ -141,7 +141,7 @@ const ViewInternationalWeightDisputePopup = ({ open, onClose, disputeId }) => {
     target="_blank"
     className={`w-full text-center rounded-lg py-2 ${
       formData?.doc_1
-        ? "bg-blue-500 text-white"
+        ? "bg-red-500 text-white"
         : "bg-gray-300 text-gray-500 cursor-not-allowed pointer-events-none"
     }`}
   >
@@ -152,7 +152,7 @@ const ViewInternationalWeightDisputePopup = ({ open, onClose, disputeId }) => {
     target="_blank"
     className={`w-full text-center rounded-lg py-2 ${
       formData?.doc_2
-        ? "bg-blue-500 text-white"
+        ? "bg-red-500 text-white"
         : "bg-gray-300 text-gray-500 cursor-not-allowed pointer-events-none"
     }`}
   >
@@ -166,7 +166,7 @@ const ViewInternationalWeightDisputePopup = ({ open, onClose, disputeId }) => {
     target="_blank"
     className={`w-full text-center rounded-lg py-2 ${
       formData?.doc_3
-        ? "bg-blue-500 text-white"
+        ? "bg-red-500 text-white"
         : "bg-gray-300 text-gray-500 cursor-not-allowed pointer-events-none"
     }`}
   >
@@ -177,7 +177,7 @@ const ViewInternationalWeightDisputePopup = ({ open, onClose, disputeId }) => {
     target="_blank"
     className={`w-full text-center rounded-lg py-2 ${
       formData?.doc_4
-        ? "bg-blue-500 text-white"
+        ? "bg-red-500 text-white"
         : "bg-gray-300 text-gray-500 cursor-not-allowed pointer-events-none"
     }`}
   >

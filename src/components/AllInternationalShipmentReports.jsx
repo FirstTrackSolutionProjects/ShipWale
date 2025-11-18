@@ -788,7 +788,7 @@ const ManageForm = ({ shipment, isManage, setIsManage, isShipped }) => {
                       {filteredCountries.length === 0 && <li className="px-3 py-2 text-gray-500">No matches</li>}
                       {filteredCountries.map((c) => (
                         <li key={c.iso2 + "-code"}>
-                          <button type="button" className={`w-full text-left px-3 py-2 hover:bg-blue-100 ${formData.countryCode === c.key ? "bg-blue-50 font-medium" : ""}`} onClick={() => {
+                          <button type="button" className={`w-full text-left px-3 py-2 hover:bg-red-100 ${formData.countryCode === c.key ? "bg-red-50 font-medium" : ""}`} onClick={() => {
                             updateForm({ countryCode: c.key });
                             setCountryDropdownOpen(false);
                             setCountrySearch("");
@@ -844,7 +844,7 @@ const ManageForm = ({ shipment, isManage, setIsManage, isShipped }) => {
                       {filteredDestCountries.length === 0 && <li className="px-3 py-2 text-gray-500">No matches</li>}
                       {filteredDestCountries.map((c) => (
                         <li key={c.iso2 + "-dest"}>
-                          <button type="button" className={`w-full text-left px-3 py-2 hover:bg-blue-100 ${formData.consigneeCountry === c.key ? "bg-blue-50 font-medium" : ""}`} onClick={() => {
+                          <button type="button" className={`w-full text-left px-3 py-2 hover:bg-red-100 ${formData.consigneeCountry === c.key ? "bg-red-50 font-medium" : ""}`} onClick={() => {
                             updateForm({ consigneeCountry: c.key });
                             setDestCountryOpen(false);
                             setDestCountrySearch("");
@@ -868,7 +868,7 @@ const ManageForm = ({ shipment, isManage, setIsManage, isShipped }) => {
           <div className="overflow-x-auto">
             <table className="w-full text-sm border-collapse">
               <thead>
-                <tr className="bg-blue-50 text-left">
+                <tr className="bg-red-50 text-left">
                   <th className="p-2">#</th>
                   <th className="p-2">L*</th>
                   <th className="p-2">W*</th>
@@ -912,7 +912,7 @@ const ManageForm = ({ shipment, isManage, setIsManage, isShipped }) => {
             </table>
           </div>
           <div className="flex justify-end">
-            <button type="button" onClick={handleAddDocket} className="px-3 py-1 text-sm rounded-lg bg-blue-600 text-white">Add Docket</button>
+            <button type="button" onClick={handleAddDocket} className="px-3 py-1 text-sm rounded-lg bg-red-600 text-white">Add Docket</button>
           </div>
         </div>
 
@@ -931,7 +931,7 @@ const ManageForm = ({ shipment, isManage, setIsManage, isShipped }) => {
                 <div className="overflow-x-auto overflow-visible">
                   <table className="w-full text-sm border-collapse">
                     <thead>
-                      <tr className="bg-blue-50 text-left">
+                      <tr className="bg-red-50 text-left">
                         <th className="p-2">Description*</th>
                         {(String(formData.service) === '14' && isUS) && <th className="p-2">Manufacturer Name*</th>}
                         {(String(formData.service) === '14' && isUS) && <th className="p-2">Manufacturer Address*</th>}
@@ -1058,7 +1058,7 @@ const ManageForm = ({ shipment, isManage, setIsManage, isShipped }) => {
                         <button
                           type="button"
                           onClick={() => addItemForBox(d.box_no)}
-                          className="px-3 py-1 text-sm rounded-lg bg-blue-600 text-white"
+                          className="px-3 py-1 text-sm rounded-lg bg-red-600 text-white"
                         >
                           Add Item
                         </button>
@@ -1104,7 +1104,7 @@ const ManageForm = ({ shipment, isManage, setIsManage, isShipped }) => {
               <label htmlFor="aadhaarDoc" className="text-sm font-medium">Aadhaar Document (PDF/Image)</label>
               <input id="aadhaarDoc" name="aadhaarDoc" type="file" accept="application/pdf,image/*" onChange={handleFileChange} className="border rounded-xl px-4 py-2" />
               {formData.aadhaarDoc && typeof formData.aadhaarDoc === "string" && (
-                <a href={`${import.meta.env.VITE_APP_BUCKET_URL}${formData.aadhaarDoc}`} target="_blank" rel="noopener noreferrer" className="text-xs px-2 py-1 rounded border border-blue-600 text-blue-600 hover:bg-blue-50">View</a>
+                <a href={`${import.meta.env.VITE_APP_BUCKET_URL}${formData.aadhaarDoc}`} target="_blank" rel="noopener noreferrer" className="text-xs px-2 py-1 rounded border border-red-600 text-red-600 hover:bg-red-50">View</a>
               )}
             </div>
           </div>
@@ -1125,7 +1125,7 @@ const ManageForm = ({ shipment, isManage, setIsManage, isShipped }) => {
               <label htmlFor="invoiceDoc" className="text-sm font-medium">Invoice Document (PDF/Image)</label>
               <input id="invoiceDoc" name="invoiceDoc" type="file" accept="application/pdf,image/*" onChange={handleFileChange} className="border rounded-xl px-4 py-2" />
               {formData.invoiceDoc && typeof formData.invoiceDoc === "string" && (
-                <a href={`${import.meta.env.VITE_APP_BUCKET_URL}${formData.invoiceDoc}`} target="_blank" rel="noopener noreferrer" className="text-xs px-2 py-1 rounded border border-blue-600 text-blue-600 hover:bg-blue-50">View</a>
+                <a href={`${import.meta.env.VITE_APP_BUCKET_URL}${formData.invoiceDoc}`} target="_blank" rel="noopener noreferrer" className="text-xs px-2 py-1 rounded border border-red-600 text-red-600 hover:bg-red-50">View</a>
               )}
             </div>
           </div>
@@ -1143,7 +1143,7 @@ const ManageForm = ({ shipment, isManage, setIsManage, isShipped }) => {
 
         {!isShipped && (
           <div className="pt-4">
-            <button type="submit" disabled={loading} className="px-6 py-2 rounded-xl bg-blue-600 text-white font-medium shadow hover:bg-blue-700 transition">{loading || "Update"}</button>
+            <button type="submit" disabled={loading} className="px-6 py-2 rounded-xl bg-red-600 text-white font-medium shadow hover:bg-red-700 transition">{loading || "Update"}</button>
           </div>
         )}
       </form>
@@ -1159,7 +1159,7 @@ const ManageForm = ({ shipment, isManage, setIsManage, isShipped }) => {
                     <button
                       type="button"
                       title={s.n}
-                      className="w-full text-left px-3 py-2 hover:bg-blue-50"
+                      className="w-full text-left px-3 py-2 hover:bg-red-50"
                       onClick={() => {
                         setItems((prev) => prev.map((it2, idx) => (idx === activeHsnIndex ? { ...it2, hscode: s.c } : it2)));
                         setHsnSuggestions((prev) => ({ ...prev, [activeHsnIndex]: [] }));
@@ -1186,7 +1186,7 @@ const ManageForm = ({ shipment, isManage, setIsManage, isShipped }) => {
                   <li key={idx}>
                     <button
                       type="button"
-                      className="w-full text-left px-3 py-2 hover:bg-blue-50"
+                      className="w-full text-left px-3 py-2 hover:bg-red-50"
                       title={s}
                       onMouseDown={(e) => e.preventDefault()}
                       onClick={() => {
@@ -1458,7 +1458,7 @@ const AllInternationalShipmentReports = () => {
           sx={{
             mb: 3,
             p: 2,
-            bgcolor: "primary.main",
+            bgcolor: "red",
             borderRadius: 2,
             "& .MuiTextField-root": { bgcolor: "background.paper", borderRadius: 1 },
             overflowX: "auto",
@@ -1599,7 +1599,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
       <button 
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        className={`px-2 sm:px-3 py-1 rounded-md text-xs sm:text-sm ${currentPage === 1 ? 'bg-gray-200 cursor-not-allowed' : 'bg-blue-500 text-white hover:bg-blue-600'}`}
+        className={`px-2 sm:px-3 py-1 rounded-md text-xs sm:text-sm ${currentPage === 1 ? 'bg-gray-200 cursor-not-allowed' : 'bg-red-500 text-white hover:bg-red-600'}`}
       >
         <span className="hidden sm:inline">Previous</span>
         <span className="sm:hidden">Prev</span>
@@ -1611,7 +1611,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
           onClick={() => page.number !== '...' && onPageChange(page.number)}
           className={`min-w-[30px] px-2 sm:px-3 py-1 rounded-md text-xs sm:text-sm ${
             page.number === '...' ? 'cursor-default' 
-            : page.isCurrent ? 'bg-blue-500 text-white' 
+            : page.isCurrent ? 'bg-red-500 text-white' 
             : 'bg-white hover:bg-gray-100 border'
           }`}
         >
@@ -1622,7 +1622,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
       <button 
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className={`px-2 sm:px-3 py-1 rounded-md text-xs sm:text-sm ${currentPage === totalPages ? 'bg-gray-200 cursor-not-allowed' : 'bg-blue-500 text-white hover:bg-blue-600'}`}
+        className={`px-2 sm:px-3 py-1 rounded-md text-xs sm:text-sm ${currentPage === totalPages ? 'bg-gray-200 cursor-not-allowed' : 'bg-red-500 text-white hover:bg-red-600'}`}
       >
         <span className="hidden sm:inline">Next</span>
         <span className="sm:hidden">Next</span>

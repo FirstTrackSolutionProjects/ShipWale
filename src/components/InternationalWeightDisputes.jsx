@@ -25,7 +25,7 @@ const Card = ({ report }) => {
         </div>
         <div className="absolute right-4 sm:right-8 flex items-center space-x-2">
           <div className={`${report.dispute_deduction >= 0 ? 'text-red-500' : 'text-green-500'} font-bold`}>{report.dispute_deduction >= 0 ? '-':''}₹{report.dispute_deduction}</div>
-          <div className="px-3 py-1 bg-blue-500  rounded-3xl text-white cursor-pointer" onClick={() => setIsView(true)}>View</div>
+          <div className="px-3 py-1 bg-red-500  rounded-3xl text-white cursor-pointer" onClick={() => setIsView(true)}>View</div>
         </div>
       </div>
     </>
@@ -89,12 +89,12 @@ const Listing = () => {
       >
         <div className="w-full h-16 px-4  relative flex justify-between">
           <div className="text-2xl font-medium">INTERNATIONAL WEIGHT DISPUTES</div>
-          {admin ? <div><button type='button' onClick={toggleCreateDisputePopup} className="mx-2 px-5 py-1 border rounded-3xl bg-blue-500 text-white">Create</button></div> : null}
+          {admin ? <div><button type='button' onClick={toggleCreateDisputePopup} className="mx-2 px-5 py-1 border rounded-3xl bg-red-500 text-white">Create</button></div> : null}
         </div>
 
-        <details className="w-full p-2 bg-blue-500 rounded-xl text-white">
+        <details className="w-full p-2 bg-red-500 rounded-xl text-white">
           <summary>Filters</summary>
-          <div className="grid space-y-2 lg:grid-rows-1 lg:grid-cols-4 lg:space-y-0 lg:space-x-4 p-2 rounded-xl w-full bg-blue-500 text-black justify-evenly">
+          <div className="grid space-y-2 lg:grid-rows-1 lg:grid-cols-4 lg:space-y-0 lg:space-x-4 p-2 rounded-xl w-full bg-red-500 text-black justify-evenly">
             <input
               className="p-1 rounded-xl"
               type="text"

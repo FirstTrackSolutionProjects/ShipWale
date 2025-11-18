@@ -94,19 +94,19 @@ const WalletRechargeModal = ({ onClose }) => {
     return (
         <div className='fixed inset-0 flex items-center justify-center z-50 bg-[rgba(0,0,0,0.5)]'>
             <form className='relative mx-2 w-full sm:w-[500px] flex flex-col items-center bg-white rounded-2xl p-8 space-y-8' onSubmit={(e) => { e.preventDefault(); displayRazorpay() }}>
-                <div className='absolute right-6 hover:bg-blue-500 w-7 h-7 rounded-full flex items-center justify-center hover:text-white cursor-pointer' onClick={onClose}>
+                <div className='absolute right-6 hover:bg-red-500 w-7 h-7 rounded-full flex items-center justify-center hover:text-white cursor-pointer' onClick={onClose}>
                     X
                 </div>
                 <div className='text-2xl font-medium text-center'>Wallet Recharge</div>
 
                 {paymentId && (
-                    <div className='w-full text-xs sm:text-sm bg-blue-50 border border-blue-200 text-blue-900 rounded-md p-2 break-all'>
+                    <div className='w-full text-xs sm:text-sm bg-red-50 border border-red-200 text-red-900 rounded-md p-2 break-all'>
                         <div className='flex items-center justify-between gap-2'>
                             <span>Payment ID:</span>
                             <span className='font-mono'>{paymentId}</span>
                             <button
                                 type='button'
-                                className='text-blue-700 hover:underline whitespace-nowrap'
+                                className='text-red-700 hover:underline whitespace-nowrap'
                                 onClick={() => { if (navigator.clipboard) navigator.clipboard.writeText(paymentId); }}
                                 title='Copy Payment ID'
                             >
@@ -124,11 +124,11 @@ const WalletRechargeModal = ({ onClose }) => {
                     className='w-full border py-2 px-4 rounded-3xl'
                 />
                 <div className='flex w-full justify-evenly'>
-                    <button className='w-20 border py-2 px-4 rounded-3xl hover:bg-blue-500 hover:text-white' onClick={() => { setAmount(500) }}>500</button>
-                    <button className='w-20 border py-2 px-4 rounded-3xl hover:bg-blue-500 hover:text-white' onClick={() => { setAmount(1000) }}>1000</button>
-                    <button className='w-20 border py-2 px-4 rounded-3xl hover:bg-blue-500 hover:text-white' onClick={() => { setAmount(2000) }}>2000</button>
+                    <button className='w-20 border py-2 px-4 rounded-3xl hover:bg-red-500 hover:text-white' onClick={() => { setAmount(500) }}>500</button>
+                    <button className='w-20 border py-2 px-4 rounded-3xl hover:bg-red-500 hover:text-white' onClick={() => { setAmount(1000) }}>1000</button>
+                    <button className='w-20 border py-2 px-4 rounded-3xl hover:bg-red-500 hover:text-white' onClick={() => { setAmount(2000) }}>2000</button>
                 </div>
-                <button type='submit' className='w-40 border py-2 px-4 rounded-3xl hover:text-white hover:bg-blue-500'>Recharge Wallet</button>
+                <button type='submit' className='w-40 border py-2 px-4 rounded-3xl hover:text-white hover:bg-red-500'>Recharge Wallet</button>
             </form>
         </div>
     )

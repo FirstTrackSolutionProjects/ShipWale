@@ -3,7 +3,7 @@ import { FaMapMarkedAlt, FaRupeeSign, FaTruck, FaSearchLocation, FaHeadset } fro
 
 const features = [
   {
-    icon: <FaMapMarkedAlt className="text-blue-700 text-4xl mb-4" />,
+    icon: <FaMapMarkedAlt className="text-red-700 text-4xl mb-4" />,
     title: "Nationwide Domestic Network",
     description: "Connecting every corner of India with fast and reliable delivery.",
     bg: "bg-gradient-to-b from-red-100 to-red-50 hover:from-red-200 hover:to-red-100",
@@ -12,7 +12,7 @@ const features = [
     icon: <FaRupeeSign className="text-purple-700 text-4xl mb-4" />,
     title: "Affordable & Transparent Pricing",
     description: "Lowest rates with no hidden charges.",
-    bg: "bg-gradient-to-b from-blue-100 to-blue-50 hover:from-blue-200 hover:to-blue-100",
+    bg: "bg-gradient-to-b from-red-100 to-red-50 hover:from-red-200 hover:to-red-100",
   },
   {
     icon: <FaTruck className="text-[#7C4585] text-4xl mb-4" />,
@@ -66,7 +66,7 @@ const Choosus = () => {
          {/* View More / View Less Button */}
         {/* <button
           onClick={() => setShowMore(!showMore)}
-          className="mt-10 px-6 py-2 border border-blue-700 text-blue-700 rounded-lg hover:bg-blue-700 hover:text-white transition"
+          className="mt-10 px-6 py-2 border border-red-700 text-red-700 rounded-lg hover:bg-red-700 hover:text-white transition"
         >
           {showMore ? "View Less" : "View More"}
         </button> */}

@@ -76,7 +76,7 @@ const Navbar = () => {
                 <Link
                   key={item.to}
                   to={item.to}
-                  className={`hover:text-blue-600 transition ${
+                  className={`hover:text-red-600 transition ${
                     pathname === item.to ? "font-semibold text-yellow-500" : "text-yellow-500"
                   }`}
                 >
@@ -87,7 +87,7 @@ const Navbar = () => {
             {isAuthenticated && (
           <div className="h-16 flex space-x-3 items-center">
             {verified? (<>
-              <div onClick={()=>setShowRecharge(true)} className={`relative bg-blue-600 ${balance < 250 ? "text-red-400" : "text-green-400"} flex items-center font-medium rounded-tl-xl rounded-br-xl px-3 min-w-14 py-2 cursor-pointer border-l-4 border-t-4 border-blue-900`}>
+              <div onClick={()=>setShowRecharge(true)} className={`relative bg-blue-600 ${balance < 250 ? "text-red-400" : "text-green-400"} flex items-center font-medium rounded-tl-xl rounded-br-xl px-3 min-w-14 py-2 cursor-pointer border-l-4 border-t-4 border-red-900`}>
               {balance < 250 && <p className="absolute -mt-5 top-0 right-[2px] text-red-400 text-3xl">!</p>}
                 <p><FontAwesomeIcon icon={'fa-solid fa-house'} />{`₹${balance}`}</p>
               </div>
@@ -140,7 +140,7 @@ const Navbar = () => {
                 key={item.to}
                 to={item.to}
                 onClick={() => setMenuOpen(false)}
-                className={`hover:text-blue-300 transition ${
+                className={`hover:text-red-300 transition ${
                   pathname === item.to ? "font-semibold text-white" : "text-white"
                 }`}
               >

@@ -641,7 +641,7 @@ const FullDetails = () => {
                       {filteredCountries.length === 0 && (<li className="px-3 py-2 text-gray-500">No matches</li>)}
                       {filteredCountries.map(c => (
                         <li key={c.key+"-code"}>
-                          <button type="button" className={`w-full text-left px-3 py-2 hover:bg-blue-100 ${formData.countryCode===c.key ? 'bg-blue-50 font-medium':''}`} onClick={()=>{updateForm({countryCode:c.key}); setCountryDropdownOpen(false); setCountrySearch("");}}>
+                          <button type="button" className={`w-full text-left px-3 py-2 hover:bg-red-100 ${formData.countryCode===c.key ? 'bg-red-50 font-medium':''}`} onClick={()=>{updateForm({countryCode:c.key}); setCountryDropdownOpen(false); setCountrySearch("");}}>
                             <span className="inline-block w-16">{c.code}</span>
                             <span>{c.name}</span>
                           </button>
@@ -695,7 +695,7 @@ const FullDetails = () => {
                       {filteredDestCountries.length === 0 && (<li className="px-3 py-2 text-gray-500">No matches</li>)}
                       {filteredDestCountries.map(c => (
                         <li key={c.key+"-dest"}>
-                          <button type="button" className={`w-full text-left px-3 py-2 hover:bg-blue-100 ${formData.consigneeCountry===c.key ? 'bg-blue-50 font-medium':''}`} onClick={()=>{updateForm({consigneeCountry:c.key}); setDestCountryOpen(false); setDestCountrySearch("");}}>
+                          <button type="button" className={`w-full text-left px-3 py-2 hover:bg-red-100 ${formData.consigneeCountry===c.key ? 'bg-red-50 font-medium':''}`} onClick={()=>{updateForm({consigneeCountry:c.key}); setDestCountryOpen(false); setDestCountrySearch("");}}>
                             {c.name}
                           </button>
                         </li>
@@ -716,7 +716,7 @@ const FullDetails = () => {
           <div className="overflow-x-auto overflow-visible">
             <table className="w-full text-sm border-collapse">
               <thead>
-                <tr className="bg-blue-50 text-left">
+                <tr className="bg-red-50 text-left">
                   <th className="p-2">#</th>
                   <th className="p-2">L (cm)*</th>
                   <th className="p-2">W (cm)*</th>
@@ -762,7 +762,7 @@ const FullDetails = () => {
             </table>
           </div>
           <div className="flex justify-end">
-            <button type="button" onClick={handleAddDocket} className="px-3 py-1 text-sm rounded-lg bg-blue-600 text-white">Add Docket</button>
+            <button type="button" onClick={handleAddDocket} className="px-3 py-1 text-sm rounded-lg bg-red-600 text-white">Add Docket</button>
           </div>
         </section>
         {/* Items Section (per Docket) */}
@@ -780,7 +780,7 @@ const FullDetails = () => {
                 <div className="overflow-x-auto overflow-visible">
                   <table className="w-full text-sm border-collapse">
                     <thead>
-                      <tr className="bg-blue-50 text-left">
+                      <tr className="bg-red-50 text-left">
                         <th className="p-2">Description*</th>
                         <th className="p-2">HS Code*</th>
                         <th className="p-2">Qty*</th>
@@ -911,7 +911,7 @@ const FullDetails = () => {
                         <button
                           type="button"
                           onClick={() => addItemForBox(d.box_no)}
-                          className="px-3 py-1 text-sm rounded-lg bg-blue-600 text-white"
+                          className="px-3 py-1 text-sm rounded-lg bg-red-600 text-white"
                         >
                           Add Item
                         </button>
@@ -990,7 +990,7 @@ const FullDetails = () => {
           </div>
         </section>
         <div className="flex justify-end pt-4">
-          <button type="submit" disabled={!!creatingStatus} className="px-6 py-2 rounded-xl bg-blue-600 text-white">{creatingStatus || "Create Shipment"}</button>
+          <button type="submit" disabled={!!creatingStatus} className="px-6 py-2 rounded-xl bg-red-600 text-white">{creatingStatus || "Create Shipment"}</button>
         </div>
       </form>
           {activeHsnIndex !== null && hsnSuggestions[activeHsnIndex] && hsnSuggestions[activeHsnIndex].length > 0 && typeof document !== 'undefined' && createPortal(
@@ -1002,7 +1002,7 @@ const FullDetails = () => {
                   <button
                     type="button"
                     title={s.n}
-                    className="w-full text-left px-3 py-2 hover:bg-blue-50"
+                    className="w-full text-left px-3 py-2 hover:bg-red-50"
                     onClick={() => {
                       setItems(prev => prev.map((it2, idx) => idx === activeHsnIndex ? { ...it2, hscode: s.c } : it2));
                       setHsnSuggestions(prev => ({ ...prev, [activeHsnIndex]: [] }));
@@ -1026,7 +1026,7 @@ const FullDetails = () => {
                     <li key={idx}>
                       <button
                         type="button"
-                        className="w-full text-left px-3 py-2 hover:bg-blue-50"
+                        className="w-full text-left px-3 py-2 hover:bg-red-50"
                         title={s}
                         onMouseDown={(e) => e.preventDefault()}
                         onClick={() => {

@@ -108,7 +108,7 @@ const View = ({merchant, balance ,fullName, email, phone,isActive, uid  , gst, s
                         <button onClick={isActivated?()=>deactivate():()=>activate()}  className={` ${isActivated?"bg-red-500":"bg-green-500"} text-white mx-2  py-2 px-4 rounded-3xl`}>
                             {isActivated? "Deactivate" : "Activate"}
                         </button>
-                        <button onClick={() => setOpenDiscountModal(true)}  className={`bg-blue-500 text-white mx-2  py-2 px-4 rounded-3xl`}>
+                        <button onClick={() => setOpenDiscountModal(true)}  className={`bg-red-500 text-white mx-2  py-2 px-4 rounded-3xl`}>
                             Discounts
                         </button>
                     </div>
@@ -165,7 +165,7 @@ const MerchantManage =  () => {
         { field: 'actions', headerName: 'Actions', width: 320, sortable: false, filterable: false, renderCell: (params)=> (
             <div className="flex items-center space-x-2">
                 <button
-                    className="px-3 py-1 bg-blue-500 text-white rounded-2xl text-sm"
+                    className="px-3 py-1 bg-red-500 text-white rounded-2xl text-sm"
                     onClick={() => { setSelectedMerchant(params.row); setShowView(true); }}
                 >
                     View
@@ -235,7 +235,7 @@ const MerchantManage =  () => {
             </div>
             <div className="ml-auto flex items-center space-x-2">
                 <button
-                    className={`px-3 py-1 bg-blue-500 rounded-3xl text-white ${page <= 0 || loading ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}
+                    className={`px-3 py-1 bg-red-500 rounded-3xl text-white ${page <= 0 || loading ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}
                     onClick={() => { if (page > 0 && !loading) setPage(page - 1) }}
                     disabled={page <= 0 || loading}
                 >
@@ -245,7 +245,7 @@ const MerchantManage =  () => {
                     Page {page + 1} of {totalPages}
                 </div>
                 <button
-                    className={`px-3 py-1 bg-blue-500 rounded-3xl text-white ${(page + 1) >= totalPages || loading ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}
+                    className={`px-3 py-1 bg-red-500 rounded-3xl text-white ${(page + 1) >= totalPages || loading ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}
                     onClick={() => { if ((page + 1) < totalPages && !loading) setPage(page + 1) }}
                     disabled={(page + 1) >= totalPages || loading}
                 >
@@ -271,7 +271,7 @@ const MerchantManage =  () => {
                                 type='number'
                                 max={0}
                                 step='0.01'
-                                className='border rounded-lg px-3 py-2 w-full outline-none focus:ring-2 focus:ring-blue-400'
+                                className='border rounded-lg px-3 py-2 w-full outline-none focus:ring-2 focus:ring-red-400'
                                 placeholder='Enter negative limit (e.g., -5000)'
                                 value={toPayForm.negative_limit}
                                 onChange={(e) => setToPayForm({ negative_limit: e.target.value })}
@@ -313,7 +313,7 @@ const MerchantManage =  () => {
                                     Cancel
                                 </button>
                                 <button
-                                    className={`px-3 py-2 rounded-2xl text-sm ${toPaySubmitting ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 text-white'}`}
+                                    className={`px-3 py-2 rounded-2xl text-sm ${toPaySubmitting ? 'bg-gray-400 cursor-not-allowed' : 'bg-red-600 text-white'}`}
                                     onClick={async () => {
                                         if (toPaySubmitting) return;
                                         const val = parseFloat(toPayForm.negative_limit)
@@ -358,34 +358,34 @@ const MerchantManage =  () => {
                         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                             <input
                                 type="text"
-                                className="border rounded-lg px-3 py-2 w-full outline-none focus:ring-2 focus:ring-blue-400"
+                                className="border rounded-lg px-3 py-2 w-full outline-none focus:ring-2 focus:ring-red-400"
                                 placeholder="Merchant Name"
                                 value={filters.merchant_name}
                                 onChange={handleFilterChange('merchant_name')}
                             />
                             <input
                                 type="text"
-                                className="border rounded-lg px-3 py-2 w-full outline-none focus:ring-2 focus:ring-blue-400"
+                                className="border rounded-lg px-3 py-2 w-full outline-none focus:ring-2 focus:ring-red-400"
                                 placeholder="Business Name"
                                 value={filters.business_name}
                                 onChange={handleFilterChange('business_name')}
                             />
                             <input
                                 type="email"
-                                className="border rounded-lg px-3 py-2 w-full outline-none focus:ring-2 focus:ring-blue-400"
+                                className="border rounded-lg px-3 py-2 w-full outline-none focus:ring-2 focus:ring-red-400"
                                 placeholder="Merchant Email"
                                 value={filters.merchant_email}
                                 onChange={handleFilterChange('merchant_email')}
                             />
                             <input
                                 type="text"
-                                className="border rounded-lg px-3 py-2 w-full outline-none focus:ring-2 focus:ring-blue-400"
+                                className="border rounded-lg px-3 py-2 w-full outline-none focus:ring-2 focus:ring-red-400"
                                 placeholder="Merchant Phone"
                                 value={filters.merchant_phone}
                                 onChange={handleFilterChange('merchant_phone')}
                             />
                             <select
-                                className="border rounded-lg px-3 py-2 w-full outline-none focus:ring-2 focus:ring-blue-400"
+                                className="border rounded-lg px-3 py-2 w-full outline-none focus:ring-2 focus:ring-red-400"
                                 value={filters.is_to_pay_merchant}
                                 onChange={handleFilterChange('is_to_pay_merchant')}
                             >

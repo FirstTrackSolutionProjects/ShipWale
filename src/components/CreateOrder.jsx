@@ -659,7 +659,7 @@ const FullDetails = () => {
           <div className="w-full text-right">
             <button
               type="button"
-              className="bg-blue-500 text-white px-4 py-2 rounded-3xl"
+              className="bg-red-500 text-white px-4 py-2 rounded-3xl"
               onClick={() => boxes.append({ box_no: watch('boxes').length + 1, product_name: '', product_quantity: 0, selling_price: 0, discount: '', tax_in_percentage: 0 })}
             >
               Add Boxes
@@ -726,7 +726,7 @@ const FullDetails = () => {
           <div className="w-full text-right">
             <button
               type="button"
-              className="bg-blue-500 text-white px-4 py-2 rounded-3xl"
+              className="bg-red-500 text-white px-4 py-2 rounded-3xl"
               onClick={() => append({ box_no: 1, product_name: '', product_quantity: 0, selling_price: 0, discount: '', tax_in_percentage: 0 })}
             >
               Add Product
@@ -789,7 +789,7 @@ const FullDetails = () => {
                 {errors.invoiceUrl && <span className='text-red-500'>{errors.invoiceUrl.message}</span>}
                 <button
                   type='button'
-                  className="bg-blue-500 text-white px-6 py-2 rounded-3xl"
+                  className="bg-red-500 text-white px-6 py-2 rounded-3xl"
                   onClick={handleInvoiceUpload}
                 >
                   Upload

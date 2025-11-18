@@ -99,7 +99,7 @@ const AddForm = ({ setMode }) => {
               e.preventDefault();
               setMode(0);
             }}
-            className="px-5 py-1 bg-blue-500 absolute rounded-3xl text-white  right-4"
+            className="px-5 py-1 bg-red-500 absolute rounded-3xl text-white  right-4"
           >
             X
           </div>
@@ -312,7 +312,7 @@ const ManageForm = ({ isManage, setIsManage, name, address, pin, phone, city, st
               e.preventDefault();
               setIsManage(0);
             }}
-            className="px-5 py-1 bg-blue-500 absolute rounded-3xl text-white  right-4"
+            className="px-5 py-1 bg-red-500 absolute rounded-3xl text-white  right-4"
           >
             X
           </div>
@@ -424,7 +424,7 @@ const ManageForm = ({ isManage, setIsManage, name, address, pin, phone, city, st
           <div className="w-full flex justify-end px-2 mt-2">
             <button
               type="button"
-              className="border bg-blue-600 text-white mx-2 py-2 px-4 rounded-3xl disabled:opacity-60"
+              className="border bg-red-600 text-white mx-2 py-2 px-4 rounded-3xl disabled:opacity-60"
               onClick={saving ? () => {} : handleUpdate}
               disabled={saving}
             >
@@ -541,8 +541,8 @@ const Card = ({ name, address, pin, phone, wid, justCreated, state, city, intern
         <div>{name}</div>
         <div className="absolute right-8 flex space-x-2 items-center">
           
-          <div className="cursor-pointer py-1 px-2 rounded-lg bg-blue-500 text-white" onClick={() => setCheckWarehouse(true)}>Check</div>
-          <div className="cursor-pointer p-2 rounded-lg bg-blue-500 text-white" onClick={() => setIsManage(true)}><FaEye/></div>
+          <div className="cursor-pointer py-1 px-2 rounded-lg bg-red-500 text-white" onClick={() => setCheckWarehouse(true)}>Check</div>
+          <div className="cursor-pointer p-2 rounded-lg bg-red-500 text-white" onClick={() => setIsManage(true)}><FaEye/></div>
         </div>
       </div>
       {checkWarehouse ? <WarehouseServiceList wid={wid} setCheckWarehouse={setCheckWarehouse} /> : null}
@@ -581,7 +581,7 @@ const Listing = ({ setMode }) => {
               e.preventDefault();
               setMode(1);
             }}
-            className="px-5 py-1 bg-blue-500 absolute rounded-3xl text-white  right-4"
+            className="px-5 py-1 bg-red-500 absolute rounded-3xl text-white  right-4"
           >
             Add
           </div>

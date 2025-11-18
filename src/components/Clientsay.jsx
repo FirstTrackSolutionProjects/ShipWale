@@ -51,10 +51,10 @@ const sliderSettings = {
 
 const Clientsay = () => {
   return (
-    <div className="bg-gradient-to-br from-blue-200 to-yellow-100 px-5 py-16 flex justify-center">
+    <div className="bg-gradient-to-br from-red-200 to-yellow-100 px-5 py-16 flex justify-center">
       <div className="w-full max-w-4xl text-center">
         {/* Heading */}
-        <h2 className="text-blue-700 text-2xl md:text-3xl font-bold mb-10 tracking-wide">
+        <h2 className="text-red-700 text-2xl md:text-3xl font-bold mb-10 tracking-wide">
           What Our Clients Say
         </h2>
 
@@ -67,7 +67,7 @@ const Clientsay = () => {
                 <img
                   src={t.image}
                   alt={t.name}
-                  className="w-20 h-20 rounded-full object-cover border-4 border-blue-100 shadow-md mb-4"
+                  className="w-20 h-20 rounded-full object-cover border-4 border-red-100 shadow-md mb-4"
                 />
 
                 {/* Quote Icon */}

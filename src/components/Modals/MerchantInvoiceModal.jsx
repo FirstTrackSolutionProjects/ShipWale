@@ -60,7 +60,7 @@ const MerchantInvoiceModal = ({ open, onClose, merchantId }) => {
             <div className='flex flex-col'>
               <label className='text-sm text-gray-600 mb-1'>Month</label>
               <select
-                className='border rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-blue-400'
+                className='border rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-red-400'
                 value={month}
                 onChange={(e)=>setMonth(Number(e.target.value))}
               >
@@ -70,7 +70,7 @@ const MerchantInvoiceModal = ({ open, onClose, merchantId }) => {
             <div className='flex flex-col'>
               <label className='text-sm text-gray-600 mb-1'>Year</label>
               <select
-                className='border rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-blue-400'
+                className='border rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-red-400'
                 value={year}
                 onChange={(e)=>setYear(Number(e.target.value))}
               >
@@ -80,7 +80,7 @@ const MerchantInvoiceModal = ({ open, onClose, merchantId }) => {
           </div>
           <div className='flex justify-end space-x-2 pt-2'>
             <button type='button' className='px-4 py-2 rounded-3xl bg-gray-200' onClick={onClose}>Cancel</button>
-            <button type='submit' className={`px-4 py-2 rounded-3xl text-white ${loading ? 'bg-blue-300 cursor-not-allowed' : 'bg-blue-500'}`} disabled={loading}>
+            <button type='submit' className={`px-4 py-2 rounded-3xl text-white ${loading ? 'bg-red-300 cursor-not-allowed' : 'bg-red-500'}`} disabled={loading}>
               {loading ? 'Generating…' : 'Generate Invoice'}
             </button>
           </div>

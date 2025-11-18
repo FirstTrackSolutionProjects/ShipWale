@@ -962,7 +962,7 @@ const [items, setItems] = useState([
                       {filteredCountries.length === 0 && (<li className="px-3 py-2 text-gray-500">No matches</li>)}
                       {filteredCountries.map(c => (
                         <li key={c.iso2+"-code"}>
-                          <button type="button" className={`w-full text-left px-3 py-2 hover:bg-blue-100 ${formData.countryCode===c.key ? 'bg-blue-50 font-medium':''}`} onClick={()=>{updateForm({countryCode:c.key}); setCountryDropdownOpen(false); setCountrySearch("");}}>
+                          <button type="button" className={`w-full text-left px-3 py-2 hover:bg-red-100 ${formData.countryCode===c.key ? 'bg-red-50 font-medium':''}`} onClick={()=>{updateForm({countryCode:c.key}); setCountryDropdownOpen(false); setCountrySearch("");}}>
                             <span className="inline-block w-16">{c.code}</span>
                             <span>{c.name}</span>
                           </button>
@@ -1017,7 +1017,7 @@ const [items, setItems] = useState([
                       {filteredDestCountries.length === 0 && (<li className="px-3 py-2 text-gray-500">No matches</li>)}
                       {filteredDestCountries.map(c => (
                         <li key={c.iso2+"-dest"}>
-                          <button type="button" className={`w-full text-left px-3 py-2 hover:bg-blue-100 ${formData.consigneeCountry===c.key ? 'bg-blue-50 font-medium':''}`} onClick={()=>{updateForm({consigneeCountry:c.key}); setDestCountryOpen(false); setDestCountrySearch("");}}>
+                          <button type="button" className={`w-full text-left px-3 py-2 hover:bg-red-100 ${formData.consigneeCountry===c.key ? 'bg-red-50 font-medium':''}`} onClick={()=>{updateForm({consigneeCountry:c.key}); setDestCountryOpen(false); setDestCountrySearch("");}}>
                             {c.name}
                           </button>
                         </li>
@@ -1038,7 +1038,7 @@ const [items, setItems] = useState([
           <div className="overflow-x-auto">
             <table className="w-full text-sm border-collapse">
               <thead>
-                <tr className="bg-blue-50 text-left">
+                <tr className="bg-red-50 text-left">
                   <th className="p-2">#</th>
                   <th className="p-2">L*</th>
                   <th className="p-2">W*</th>
@@ -1082,7 +1082,7 @@ const [items, setItems] = useState([
             </table>
           </div>
           <div className="flex justify-end">
-            <button type="button" onClick={handleAddDocket} className="px-3 py-1 text-sm rounded-lg bg-blue-600 text-white">Add Docket</button>
+            <button type="button" onClick={handleAddDocket} className="px-3 py-1 text-sm rounded-lg bg-red-600 text-white">Add Docket</button>
           </div>
         </div>
         {/* Items Section (per Docket) */}
@@ -1100,7 +1100,7 @@ const [items, setItems] = useState([
                 <div className="overflow-x-auto overflow-visible">
                   <table className="w-full text-sm border-collapse">
                     <thead>
-                      <tr className="bg-blue-50 text-left">
+                      <tr className="bg-red-50 text-left">
                         <th className="p-2">Description*</th>
                         <th className="p-2">HS Code*</th>
                         <th className="p-2">Qty*</th>
@@ -1231,7 +1231,7 @@ const [items, setItems] = useState([
                         <button
                           type="button"
                           onClick={() => addItemForBox(d.box_no)}
-                          className="px-3 py-1 text-sm rounded-lg bg-blue-600 text-white"
+                          className="px-3 py-1 text-sm rounded-lg bg-red-600 text-white"
                         >
                           Add Item
                         </button>
@@ -1283,7 +1283,7 @@ const [items, setItems] = useState([
                     href={`${import.meta.env.VITE_APP_BUCKET_URL}${formData.aadhaarDoc}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-xs px-2 py-1 rounded border border-blue-600 text-blue-600 hover:bg-blue-50"
+                    className="text-xs px-2 py-1 rounded border border-red-600 text-red-600 hover:bg-red-50"
                   >
                     View
                   </a>
@@ -1312,7 +1312,7 @@ const [items, setItems] = useState([
                     href={`${import.meta.env.VITE_APP_BUCKET_URL}${formData.invoiceDoc}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-xs px-2 py-1 rounded border border-blue-600 text-blue-600 hover:bg-blue-50"
+                    className="text-xs px-2 py-1 rounded border border-red-600 text-red-600 hover:bg-red-50"
                   >
                     View
                   </a>
@@ -1334,7 +1334,7 @@ const [items, setItems] = useState([
 
         {!isShipped && (
           <div className="pt-4">
-            <button type='submit' disabled={loading} className="px-6 py-2 rounded-xl bg-blue-600 text-white font-medium shadow hover:bg-blue-700 transition">{loading || "Update"}</button>
+            <button type='submit' disabled={loading} className="px-6 py-2 rounded-xl bg-red-600 text-white font-medium shadow hover:bg-red-700 transition">{loading || "Update"}</button>
           </div>
         )}
       </form>
@@ -1347,7 +1347,7 @@ const [items, setItems] = useState([
                   <button
                     type="button"
                     title={s.n}
-                    className="w-full text-left px-3 py-2 hover:bg-blue-50"
+                    className="w-full text-left px-3 py-2 hover:bg-red-50"
                     onClick={() => {
                       setItems(prev => prev.map((it2, idx) => idx === activeHsnIndex ? { ...it2, hscode: s.c } : it2));
                       setHsnSuggestions(prev => ({ ...prev, [activeHsnIndex]: [] }));
@@ -1371,7 +1371,7 @@ const [items, setItems] = useState([
                 <li key={idx}>
                   <button
                     type="button"
-                    className="w-full text-left px-3 py-2 hover:bg-blue-50"
+                    className="w-full text-left px-3 py-2 hover:bg-red-50"
                     title={s}
                     onMouseDown={(e) => e.preventDefault()}
                     onClick={() => {
@@ -1558,21 +1558,21 @@ const Card = ({ shipment, onRefresh }) => {
             <div>{shipment.created_at ? shipment.created_at.toString().split('T')[0] + ' ' + shipment.created_at.toString().split('T')[1].split('.')[0] : null}</div>
           </div>
           <div className="absolute right-4 sm:right-8 flex space-x-2">
-            <div className="px-3 py-1 bg-blue-500 rounded-3xl text-white cursor-pointer" onClick={() => setIsManage(!isManage)}>{!isManage ? hasAwb ? "View" : "Manage" : "X"}</div>
+            <div className="px-3 py-1 bg-red-500 rounded-3xl text-white cursor-pointer" onClick={() => setIsManage(!isManage)}>{!isManage ? hasAwb ? "View" : "Manage" : "X"}</div>
             {/* Manifested: show label and cancel shipment */}
             {(isManifested && hasAwb && !isCancelled) ? (
               <>
                 <div className="relative" ref={labelsMenuRef}>
-                  <button type="button" className="px-3 py-1 bg-blue-500 rounded-3xl text-white cursor-pointer flex items-center gap-1" onClick={() => setLabelsOpen((o) => !o)}>
+                  <button type="button" className="px-3 py-1 bg-red-500 rounded-3xl text-white cursor-pointer flex items-center gap-1" onClick={() => setLabelsOpen((o) => !o)}>
                     Download
                     <span>▾</span>
                   </button>
                   {labelsOpen && (
                     <div className="absolute right-0 mt-2 w-56 bg-white border rounded-xl shadow-lg z-10 overflow-hidden">
-                      <button type="button" className="w-full text-left px-3 py-2 hover:bg-blue-50 text-sm" onClick={() => { setLabelsOpen(false); handleGetLabel(shipment.iid); }}>
+                      <button type="button" className="w-full text-left px-3 py-2 hover:bg-red-50 text-sm" onClick={() => { setLabelsOpen(false); handleGetLabel(shipment.iid); }}>
                         Shipment Label
                       </button>
-                      <button type="button" className="w-full text-left px-3 py-2 hover:bg-blue-50 text-sm" onClick={() => { setLabelsOpen(false); handleGetInvoice(shipment.iid); }}>
+                      <button type="button" className="w-full text-left px-3 py-2 hover:bg-red-50 text-sm" onClick={() => { setLabelsOpen(false); handleGetInvoice(shipment.iid); }}>
                         Invoice
                       </button>
                       {vendorLabels && vendorLabels.length > 0 && (
@@ -1582,7 +1582,7 @@ const Card = ({ shipment, onRefresh }) => {
                             <button
                               key={key + idx}
                               type="button"
-                              className="w-full text-left px-3 py-2 hover:bg-blue-50 text-sm"
+                              className="w-full text-left px-3 py-2 hover:bg-red-50 text-sm"
                               onClick={() => {
                                 setLabelsOpen(false);
                                 const url = `${BUCKET_URL}${key}`;
@@ -1613,7 +1613,7 @@ const Card = ({ shipment, onRefresh }) => {
             ): null}
             {/* Not requested: show request button */}
             {!isRequested && !isManifested ? (
-              <div className="px-3 py-1 bg-blue-500 rounded-3xl text-white cursor-pointer" onClick={isRequesting ? () => {} : () => handleRequest(shipment.iid)}>{isRequesting ? "Shipping..." : "Ship"}</div>
+              <div className="px-3 py-1 bg-red-500 rounded-3xl text-white cursor-pointer" onClick={isRequesting ? () => {} : () => handleRequest(shipment.iid)}>{isRequesting ? "Shipping..." : "Ship"}</div>
             ): null}
             {/* Requested: show cancel request button */}
             {isRequested ? (
@@ -1743,7 +1743,7 @@ const Card = ({ shipment, onRefresh }) => {
                 onChange={handleChange}
               />
             </div>
-            <button className="px-5 py-1 mx-2 bg-blue-500  rounded-3xl text-white cursor-pointer" type="submit">Submit</button>
+            <button className="px-5 py-1 mx-2 bg-red-500  rounded-3xl text-white cursor-pointer" type="submit">Submit</button>
               </form>
           </div>
         </div>
@@ -1779,7 +1779,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
       <button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        className={`px-2 sm:px-3 py-1 rounded-md text-xs sm:text-sm ${currentPage === 1 ? 'bg-gray-200 cursor-not-allowed' : 'bg-blue-500 text-white hover:bg-blue-600'}`}
+        className={`px-2 sm:px-3 py-1 rounded-md text-xs sm:text-sm ${currentPage === 1 ? 'bg-gray-200 cursor-not-allowed' : 'bg-red-500 text-white hover:bg-red-600'}`}
       >
         <span className="hidden sm:inline">Previous</span>
         <span className="sm:hidden">Prev</span>
@@ -1789,7 +1789,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
           key={idx}
           onClick={() => page.number !== '...' && onPageChange(page.number)}
           className={`min-w-[30px] px-2 sm:px-3 py-1 rounded-md text-xs sm:text-sm ${
-            page.number === '...' ? 'cursor-default' : page.isCurrent ? 'bg-blue-500 text-white' : 'bg-white hover:bg-gray-100 border'
+            page.number === '...' ? 'cursor-default' : page.isCurrent ? 'bg-red-500 text-white' : 'bg-white hover:bg-gray-100 border'
           }`}
         >
           {page.number}
@@ -1798,7 +1798,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
       <button
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className={`px-2 sm:px-3 py-1 rounded-md text-xs sm:text-sm ${currentPage === totalPages ? 'bg-gray-200 cursor-not-allowed' : 'bg-blue-500 text-white hover:bg-blue-600'}`}
+        className={`px-2 sm:px-3 py-1 rounded-md text-xs sm:text-sm ${currentPage === totalPages ? 'bg-gray-200 cursor-not-allowed' : 'bg-red-500 text-white hover:bg-red-600'}`}
       >
         <span className="hidden sm:inline">Next</span>
         <span className="sm:hidden">Next</span>
@@ -2172,7 +2172,7 @@ const Listing = ({ step, setStep }) => {
           sx={{
             mb: 3,
             p: 2,
-            bgcolor: 'primary.main',
+            bgcolor: 'red',
             borderRadius: 2,
             '& .MuiTextField-root': { bgcolor: 'background.paper', borderRadius: 1 },
             overflowX: 'auto',

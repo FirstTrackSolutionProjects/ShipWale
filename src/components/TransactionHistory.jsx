@@ -92,7 +92,7 @@ const TransactionHistory = () => {
                 <button
                     onClick={() => onPageChange(currentPage - 1)}
                     disabled={currentPage === 1}
-                    className={`px-2 sm:px-3 py-1 rounded-md text-xs sm:text-sm ${currentPage === 1 ? 'bg-gray-200 cursor-not-allowed' : 'bg-blue-500 text-white hover:bg-blue-600'}`}
+                    className={`px-2 sm:px-3 py-1 rounded-md text-xs sm:text-sm ${currentPage === 1 ? 'bg-gray-200 cursor-not-allowed' : 'bg-red-500 text-white hover:bg-red-600'}`}
                 >
                     <span className="hidden sm:inline">Previous</span>
                     <span className="sm:hidden">Prev</span>
@@ -103,7 +103,7 @@ const TransactionHistory = () => {
                         onClick={() => p.number !== '...' && onPageChange(p.number)}
                         className={`min-w-[30px] px-2 sm:px-3 py-1 rounded-md text-xs sm:text-sm ${
                             p.number === '...' ? 'cursor-default'
-                            : p.isCurrent ? 'bg-blue-500 text-white'
+                            : p.isCurrent ? 'bg-red-500 text-white'
                             : 'bg-white hover:bg-gray-100 border'
                         }`}
                         disabled={p.number === '...'}
@@ -114,7 +114,7 @@ const TransactionHistory = () => {
                 <button
                     onClick={() => onPageChange(currentPage + 1)}
                     disabled={currentPage === totalPages}
-                    className={`px-2 sm:px-3 py-1 rounded-md text-xs sm:text-sm ${currentPage === totalPages ? 'bg-gray-200 cursor-not-allowed' : 'bg-blue-500 text-white hover:bg-blue-600'}`}
+                    className={`px-2 sm:px-3 py-1 rounded-md text-xs sm:text-sm ${currentPage === totalPages ? 'bg-gray-200 cursor-not-allowed' : 'bg-red-500 text-white hover:bg-red-600'}`}
                 >
                     <span className="hidden sm:inline">Next</span>
                     <span className="sm:hidden">Next</span>
@@ -127,7 +127,7 @@ const TransactionHistory = () => {
         <div className='py-10 w-full flex flex-col items-center'>
             <div className='w-full max-w-7xl px-4 flex flex-col gap-4'>
                 <h1 className='text-2xl font-semibold text-center'>Transaction History</h1>
-                <div className='bg-blue-500 text-white p-4 rounded-lg space-y-4'>
+                <div className='bg-red-500 text-white p-4 rounded-lg space-y-4'>
                     <div className='grid md:grid-cols-4 gap-3'>
                         <select name='type' value={filters.type} onChange={handleFilterChange} className='p-2 rounded text-black bg-white'>
                             <option value='all'>All Types</option>

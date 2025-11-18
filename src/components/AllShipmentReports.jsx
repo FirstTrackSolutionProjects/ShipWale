@@ -267,7 +267,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
         className={`px-2 sm:px-3 py-1 rounded-md text-xs sm:text-sm ${
-          currentPage === 1 ? 'bg-gray-200 cursor-not-allowed' : 'bg-blue-500 text-white hover:bg-blue-600'
+          currentPage === 1 ? 'bg-gray-200 cursor-not-allowed' : 'bg-red-500 text-white hover:bg-red-600'
         }`}
       >
         <span className="hidden sm:inline">Previous</span>
@@ -280,7 +280,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
           onClick={() => page.number !== '...' && onPageChange(page.number)}
           className={`min-w-[30px] px-2 sm:px-3 py-1 rounded-md text-xs sm:text-sm ${
             page.number === '...' ? 'cursor-default' 
-            : page.isCurrent ? 'bg-blue-500 text-white' 
+            : page.isCurrent ? 'bg-red-500 text-white' 
             : 'bg-white hover:bg-gray-100 border'
           }`}
         >
@@ -292,7 +292,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
         className={`px-2 sm:px-3 py-1 rounded-md text-xs sm:text-sm ${
-          currentPage === totalPages ? 'bg-gray-200 cursor-not-allowed' : 'bg-blue-500 text-white hover:bg-blue-600'
+          currentPage === totalPages ? 'bg-gray-200 cursor-not-allowed' : 'bg-red-500 text-white hover:bg-red-600'
         }`}
       >
         <span className="hidden sm:inline">Next</span>
@@ -461,7 +461,7 @@ const Listing = () => {
           sx={{
             mb: 3,
             p: 2,
-            bgcolor: 'primary.main',
+            bgcolor: 'red',
             borderRadius: 2, '& .MuiTextField-root': {bgcolor: 'background.paper', borderRadius: 1},
             overflowX: 'auto',
             '&::-webkit-scrollbar': {

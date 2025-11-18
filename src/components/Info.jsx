@@ -5,8 +5,8 @@ function Info() {
     {
       count: "20K+",
       label: "Our Trusted Clients",
-      bg: "from-blue-300 to-blue-100",
-      text: "text-blue-900",
+      bg: "from-red-300 to-red-100",
+      text: "text-red-900",
     },
     {
       count: "40K+",
@@ -27,7 +27,7 @@ function Info() {
   className="min-h-screen flex flex-col items-center justify-center px-6 py-14 bg-gradient-to-br from-red-200 via-pink-100 to-white"
 >
 
-      <h2 className="text-blue-900 text-3xl md:text-4xl font-bold mb-14 text-center">
+      <h2 className="text-red-900 text-3xl md:text-4xl font-bold mb-14 text-center">
         ShipWale Superiority
       </h2>
 

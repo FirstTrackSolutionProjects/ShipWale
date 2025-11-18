@@ -6,8 +6,8 @@ function Services() {
     {
       title: "Supply Chain Optimization",
       desc: "Enhance efficiency across your supply chain with smart analytics and expert planning.",
-      icon: <Truck className="w-10 h-10 text-blue-600" />,
-      bg: "bg-blue-50 hover:bg-blue-100"
+      icon: <Truck className="w-10 h-10 text-red-600" />,
+      bg: "bg-red-50 hover:bg-red-100"
     },
     {
       title: "Real-Time Tracking",
@@ -30,7 +30,7 @@ function Services() {
   ];
 
   return (
-   <div className="bg-gradient-to-r from-teal-200 via-blue-200 to-white py-16 px-6 md:px-16 lg:px-24">
+   <div className="bg-gradient-to-r from-teal-200 via-red-200 to-white py-16 px-6 md:px-16 lg:px-24">
 
       <h2 className="text-4xl font-bold text-center mb-14 text-gray-800">
         Our Services

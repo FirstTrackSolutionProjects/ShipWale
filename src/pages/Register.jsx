@@ -105,7 +105,7 @@ const Register = () => {
   return (
     <>
     {emailModalOpen && <EmailOTPVerificationModal open={emailModalOpen} onClose={closeEmailModal} />}
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-gray-100 flex flex-col items-center justify-start px-4 py-10">
+    <div className="min-h-screen bg-gradient-to-b from-red-50 to-gray-100 flex flex-col items-center justify-start px-4 py-10">
 
       {/* Top Image */}
       <div className="w-full max-w-md flex justify-center mb-6">
@@ -125,7 +125,7 @@ const Register = () => {
         <form className="space-y-4" onSubmit={handleSubmit}>
 
           {/* Full Name */}
-          <div className="flex items-center border border-gray-300 rounded-md px-3 py-2 focus-within:ring-2 focus-within:ring-blue-500">
+          <div className="flex items-center border border-gray-300 rounded-md px-3 py-2 focus-within:ring-2 focus-within:ring-red-500">
             <FaUser className="text-gray-500 mr-2" />
             <input
               type="text"
@@ -139,7 +139,7 @@ const Register = () => {
           </div>
 
           {/* Phone */}
-          <div className="flex items-center border border-gray-300 rounded-md px-3 py-2 focus-within:ring-2 focus-within:ring-blue-500">
+          <div className="flex items-center border border-gray-300 rounded-md px-3 py-2 focus-within:ring-2 focus-within:ring-red-500">
             <FaPhoneAlt className="text-gray-500 mr-2" />
             <input
               type="text"
@@ -153,7 +153,7 @@ const Register = () => {
           </div>
 
           {/* Email */}
-          <div className="flex items-center border border-gray-300 rounded-md px-3 py-2 focus-within:ring-2 focus-within:ring-blue-500">
+          <div className="flex items-center border border-gray-300 rounded-md px-3 py-2 focus-within:ring-2 focus-within:ring-red-500">
             <FaEnvelope className="text-gray-500 mr-2" />
             <input
               type="email"
@@ -167,7 +167,7 @@ const Register = () => {
           </div>
 
           {/* Password */}
-          <div className="flex items-center border border-gray-300 rounded-md px-3 py-2 focus-within:ring-2 focus-within:ring-blue-500">
+          <div className="flex items-center border border-gray-300 rounded-md px-3 py-2 focus-within:ring-2 focus-within:ring-red-500">
             <FaLock className="text-gray-500 mr-2" />
             <input
               type="password"
@@ -181,7 +181,7 @@ const Register = () => {
           </div>
 
           {/* Confirm Password */}
-          <div className="flex items-center border border-gray-300 rounded-md px-3 py-2 focus-within:ring-2 focus-within:ring-blue-500">
+          <div className="flex items-center border border-gray-300 rounded-md px-3 py-2 focus-within:ring-2 focus-within:ring-red-500">
             <FaLock className="text-gray-500 mr-2" />
             <input
               type="password"
@@ -195,7 +195,7 @@ const Register = () => {
           </div>
 
           {/* Business Name */}
-          <div className="flex items-center border border-gray-300 rounded-md px-3 py-2 focus-within:ring-2 focus-within:ring-blue-500">
+          <div className="flex items-center border border-gray-300 rounded-md px-3 py-2 focus-within:ring-2 focus-within:ring-red-500">
             <FaBuilding className="text-gray-500 mr-2" />
             <input
               type="text"
@@ -210,7 +210,7 @@ const Register = () => {
 
           <button
             type="submit"
-            className="w-full bg-blue-900 text-white py-2 rounded-md font-semibold hover:bg-blue-700 transition"
+            className="w-full bg-red-900 text-white py-2 rounded-md font-semibold hover:bg-red-700 transition"
           >
             REGISTER
           </button>

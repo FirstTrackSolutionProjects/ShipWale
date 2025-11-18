@@ -506,7 +506,7 @@ const Listing = () => {
           sx={{
             mb: 3,
             p: 2,
-            bgcolor: "primary.main",
+            bgcolor: "red",
             borderRadius: 2,
             "& .MuiTextField-root": { bgcolor: "background.paper", borderRadius: 1 },
             overflowX: "auto",

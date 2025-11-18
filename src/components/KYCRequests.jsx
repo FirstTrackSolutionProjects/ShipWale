@@ -89,7 +89,7 @@ const View = ({request, kycId, uid ,fullName, email, phone, gst, setView, busine
                             <p>Cancelled Cheque : <span className='cursor-pointer' onClick={()=>handleDownload('cancelledCheque')}>[PDF]</span></p>
                         </div>
                     </div>
-                    <button onClick={handleApprove} className=" bg-blue-500 text-white mx-2  py-2 px-4 rounded-3xl">
+                    <button onClick={handleApprove} className=" bg-red-500 text-white mx-2  py-2 px-4 rounded-3xl">
                         Approve
                     </button>
                     <button onClick={handleReject} className=" bg-red-500 text-white mx-2  py-2 px-6 rounded-3xl">

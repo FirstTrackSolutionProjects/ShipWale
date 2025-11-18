@@ -38,7 +38,7 @@ const ChangePassword = () => {
           <input type="password" placeholder="Old Password" value={formData.oldPassword} onChange={handleChange} name="oldPassword" className="py-2 px-3 rounded-xl w-full sm:w-[400px]" />
           <input type="password" placeholder="New Password" name="newPassword" value={formData.newPassword} onChange={handleChange} className="py-2 px-3 rounded-xl  w-full sm:w-[400px]"/>
           <input type="password" placeholder="Confirm New Password" name="confirmNewPassword" value={formData.confirmNewPassword} onChange={handleChange} className="py-2 px-3 rounded-xl  w-full sm:w-[400px]"/>
-          <button type="submit" className="py-2 px-3 rounded-xl  w-full sm:w-[400px] border border-black  hover:bg-[rgba(135,206,235,1)]">Change password</button>
+          <button type="submit" className="py-2 px-3 rounded-xl  w-full sm:w-[400px] border border-black hover:bg-red-300">Change password</button>
         </form>
       </div>
     </div>

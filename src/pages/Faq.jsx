@@ -35,9 +35,9 @@ const Faq = () => {
   };
 
   return (
-    <div className="min-h-screen bg-blue-100 flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-red-100 flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-2xl bg-white shadow-lg rounded-lg overflow-hidden">
-        <h2 className="text-center text-xl md:text-2xl font-semibold bg-blue-900 text-white py-4">
+        <h2 className="text-center text-xl md:text-2xl font-semibold bg-red-900 text-white py-4">
           Frequently Asked Questions
         </h2>
 
@@ -49,7 +49,7 @@ const Faq = () => {
           >
             <div className="flex justify-between items-center">
               <p className="text-base font-medium text-gray-800">{item.question}</p>
-              <span className="text-2xl font-bold text-blue-900">
+              <span className="text-2xl font-bold text-red-900">
                 {openIndex === index ? "−" : "+"}
               </span>
             </div>

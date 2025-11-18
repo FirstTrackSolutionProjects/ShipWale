@@ -125,7 +125,7 @@ const FileUploadForm = ({reqId}) => {
           <button
             type="button"
             onClick={() => handleUpload("aadharDoc")}
-            className="px-5 py-1 border rounded-3xl bg-blue-500 text-white"
+            className="px-5 py-1 border rounded-3xl bg-red-500 text-white"
           >
             Upload
           </button>
@@ -143,7 +143,7 @@ const FileUploadForm = ({reqId}) => {
           <button
             type="button"
             onClick={() => handleUpload("panDoc")}
-            className="px-5 py-1 border rounded-3xl bg-blue-500 text-white"
+            className="px-5 py-1 border rounded-3xl bg-red-500 text-white"
           >
             Upload
           </button>
@@ -163,7 +163,7 @@ const FileUploadForm = ({reqId}) => {
           <button
             type="button"
             onClick={() => handleUpload("gstDoc")}
-            className="px-5 py-1 border rounded-3xl bg-blue-500 text-white"
+            className="px-5 py-1 border rounded-3xl bg-red-500 text-white"
           >
             Upload
           </button>
@@ -181,7 +181,7 @@ const FileUploadForm = ({reqId}) => {
           <button
             type="button"
             onClick={() => handleUpload("cancelledCheque")}
-            className="px-5 py-1 border rounded-3xl bg-blue-500 text-white"
+            className="px-5 py-1 border rounded-3xl bg-red-500 text-white"
           >
             Upload
           </button>
@@ -201,7 +201,7 @@ const FileUploadForm = ({reqId}) => {
           <button
             type="button"
             onClick={() => handleUpload("selfieDoc")}
-            className="px-5 py-1 border rounded-3xl bg-blue-500 text-white"
+            className="px-5 py-1 border rounded-3xl bg-red-500 text-white"
           >
             Upload
           </button>
@@ -211,7 +211,7 @@ const FileUploadForm = ({reqId}) => {
       <div className="px-2 space-x-4 mb-4">
         <button
           type="submit"
-          className="px-5 py-1 border rounded-3xl bg-blue-500 text-white"
+          className="px-5 py-1 border rounded-3xl bg-red-500 text-white"
         >
           Submit
         </button>
@@ -433,7 +433,7 @@ const TextForm = ({ onNext, setReqId }) => {
       <div className="px-2 space-x-4 mb-4">
         <button
           type="submit"
-          className="px-5 py-1 border rounded-3xl bg-blue-500 text-white"
+          className="px-5 py-1 border rounded-3xl bg-red-500 text-white"
         >
           Next
         </button>

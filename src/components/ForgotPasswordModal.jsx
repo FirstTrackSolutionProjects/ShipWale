@@ -90,7 +90,7 @@ const ForgotPasswordModal = ({onClose}) => {
                 endAdornment: <Box className="h-4 cursor-pointer" onClick={()=>setShowConfirmPassword((prev)=>!prev)}>{!showConfirmPassword?<FaEye/>:<FaEyeSlash/>}</Box>
               }} size="small" placeholder="Confirm Password" name="confirmNewPassword" value={formData.confirmNewPassword} onChange={handleChange} className="py-2 border-black px-3 rounded-xl  w-full sm:w-[196px]"/>
               </div>
-              <Button type="submit" variant="contained" className="py-2 px-3 rounded-xl  w-full sm:w-[400px] border border-black  hover:bg-[rgba(135,206,235,1)]">Change password</Button>
+              <Button type="submit" variant="contained" className="py-2 px-3 rounded-xl  w-full sm:w-[400px] border border-black  hover:bg-red-300" >Change password</Button>
             </form>
         </div>
           </div>

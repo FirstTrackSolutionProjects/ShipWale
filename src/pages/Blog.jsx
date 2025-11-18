@@ -28,7 +28,7 @@ const Blog = () => {
   return (
     <div className="min-h-screen bg-gray-100 py-14 px-4 md:px-12 lg:px-24">
       {/* Heading */}
-      <h2 className="text-4xl font-bold text-center text-blue-800 mb-10">
+      <h2 className="text-4xl font-bold text-center text-red-800 mb-10">
         Our <span className="text-yellow-500">Blogs</span>
       </h2>
 

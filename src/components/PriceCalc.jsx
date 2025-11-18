@@ -283,8 +283,8 @@ const Domestic = () => {
             </div>
             </>
           ))}
-            <button type="button" className="m-2 px-5 py-1 border border-blue-500 rounded-3xl bg-white text-blue-500" onClick={addBox}>Add More Boxes</button>
-            <button type="submit" className="border bg-blue-500 text-white mx-2  py-2 px-4 rounded-3xl">
+            <button type="button" className="m-2 px-5 py-1 border border-red-500 rounded-3xl bg-white text-red-500" onClick={addBox}>Add More Boxes</button>
+            <button type="submit" className="border bg-red-500 text-white mx-2  py-2 px-4 rounded-3xl">
               Submit and Compare
             </button>
         </form>

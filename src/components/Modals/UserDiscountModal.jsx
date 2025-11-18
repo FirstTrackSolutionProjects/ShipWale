@@ -92,7 +92,7 @@ const UserDiscountModal = ({ open, onClose, uid }) => {
           </div>
           <div className="flex justify-center">
             <button
-              className="px-4 py-2 my-4 rounded-full text-white bg-blue-500 hover:bg-blue-700"
+              className="px-4 py-2 my-4 rounded-full text-white bg-red-500 hover:bg-red-700"
               onClick={()=>setOpenAddDiscount(true)}
             >
               Add Discount

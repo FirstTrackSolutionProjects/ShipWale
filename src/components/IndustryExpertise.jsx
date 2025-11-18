@@ -60,10 +60,10 @@ const IndustryExpertise = () => {
       {/* Heading */}
       <div className="text-center mb-10">
         <h2 className="text-3xl md:text-4xl font-bold">
-          <span className="text-blue-700">Industry</span>{" "}
+          <span className="text-red-700">Industry</span>{" "}
           <span className="text-yellow-500">Expertise</span>
         </h2>
-        <div className="h-1 w-32 bg-blue-600 mx-auto mt-2"></div>
+        <div className="h-1 w-32 bg-red-600 mx-auto mt-2"></div>
       </div>
 
       {/* CARD */}

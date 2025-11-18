@@ -20,7 +20,7 @@ const About = () => {
 
         {/* Title */}
         <h1 className="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-6">
-          About <span className="text-blue-600">Shipwale</span>
+          About <span className="text-red-600">Shipwale</span>
         </h1>
 
         {/* Description */}
@@ -45,15 +45,15 @@ const About = () => {
         </p>
 
         {/* Highlight */}
-        <div className="mt-8 bg-blue-50 border border-blue-200 p-5 rounded-lg text-center">
-          <h2 className="text-xl font-semibold text-blue-700">
+        <div className="mt-8 bg-red-50 border border-red-200 p-5 rounded-lg text-center">
+          <h2 className="text-xl font-semibold text-red-700">
             “We don’t just deliver parcels — we deliver smiles.”
           </h2>
         </div>
 
         {/* Mission & Vision */}
         <div className="mt-10">
-          <h2 className="text-2xl font-bold text-blue-600 mb-3">Our Mission</h2>
+          <h2 className="text-2xl font-bold text-red-600 mb-3">Our Mission</h2>
           <p className="text-gray-700 leading-relaxed text-lg">
             To deliver parcels with speed, security, and reliability, ensuring customer
             satisfaction at every step of the journey.
@@ -89,7 +89,7 @@ const About = () => {
             </div>
 
             <div className="flex items-center gap-3 bg-gray-50 p-3 rounded-lg border border-gray-200">
-              <Shield className="text-blue-600" /> Affordable & transparent pricing
+              <Shield className="text-red-600" /> Affordable & transparent pricing
             </div>
 
             <div className="flex items-center gap-3 bg-gray-50 p-3 rounded-lg border border-gray-200">

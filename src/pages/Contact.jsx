@@ -42,7 +42,7 @@ const Contact = () => {
               </label>
               <input
                 type="text"
-                className="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-600 outline-none"
+                className="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-red-600 outline-none"
                 placeholder="Enter your full name"
               />
             </div>
@@ -53,7 +53,7 @@ const Contact = () => {
               </label>
               <input
                 type="email"
-                className="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-600 outline-none"
+                className="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-red-600 outline-none"
                 placeholder="Enter your email"
               />
             </div>
@@ -64,7 +64,7 @@ const Contact = () => {
               </label>
               <input
                 type="tel"
-                className="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-600 outline-none"
+                className="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-red-600 outline-none"
                 placeholder="Enter your phone number"
               />
             </div>
@@ -75,21 +75,21 @@ const Contact = () => {
               </label>
               <textarea
                 rows="4"
-                className="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-600 outline-none"
+                className="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-red-600 outline-none"
                 placeholder="Write your message"
               ></textarea>
             </div>
 
             <button
               type="submit"
-              className="w-full bg-blue-900 text-white font-semibold py-2 rounded hover:bg-blue-700 transition"
+              className="w-full bg-red-900 text-white font-semibold py-2 rounded hover:bg-red-700 transition"
             >
               SUBMIT
             </button>
           </form>
 
           {/* Contact Information Box */}
-          <div className="bg-blue-900 text-white rounded-lg p-6 space-y-4 shadow-lg">
+          <div className="bg-red-900 text-white rounded-lg p-6 space-y-4 shadow-lg">
             <h2 className="text-xl font-semibold mb-4">Contact Information</h2>
 
             <p className="flex items-start gap-3 text-sm">

@@ -20,15 +20,15 @@ function Mission() {
   ];
 
   return (
-   <div className="bg-gradient-to-r from-teal-100 via-blue-100 to-gray-100 px-6 py-10 md:px-16 lg:px-24 xl:px-32 space-y-16">
+   <div className="bg-gradient-to-r from-teal-100 via-red-100 to-gray-100 px-6 py-10 md:px-16 lg:px-24 xl:px-32 space-y-16">
 
       <div className="max-w-7xl mx-auto space-y-14">
         {missionData.map((item, index) => (
           <div
             key={index}
-            className="bg-white border border-blue-100 p-6 md:p-10 rounded-xl shadow-md hover:shadow-xl transition-all duration-300"
+            className="bg-white border border-red-100 p-6 md:p-10 rounded-xl shadow-md hover:shadow-xl transition-all duration-300"
           >
-            <h2 className="text-blue-900 text-2xl md:text-3xl font-bold mb-3">
+            <h2 className="text-red-900 text-2xl md:text-3xl font-bold mb-3">
               {item.title}
             </h2>
 
