@@ -63,8 +63,8 @@ const generateMonthlyInvoiceHtml = (data) => {
   const breakups = data?.BREAKUPS || {}
   const total = Number(data?.TOTAL_AMOUNT || 0)
 
-  const companyName = escapeHtml(from.NAME || 'Jupiter Xpress')
-  const companyShort = escapeHtml((from.NAME || 'Jupiter Xpress').split(' ').map(w => w[0]).join('').slice(0,4).toUpperCase())
+  const companyName = escapeHtml(from.NAME || 'ShipWale')
+  const companyShort = escapeHtml((from.NAME || 'ShipWale').split(' ').map(w => w[0]).join('').slice(0,4).toUpperCase())
   const logoUrl = `${(typeof window !== 'undefined' ? window.location.origin : '')}/logo.webp`
   const companyTagline = 'Monthly Merchant Invoice'
 
