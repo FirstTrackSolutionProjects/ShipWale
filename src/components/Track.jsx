@@ -16,7 +16,7 @@ const Track = ({track, setTrack}) => {
         <div onClick={()=>setTrack(0)} className="absolute top-5 right-5 text-2xl font-medium">
             X
         </div>
-        <img src="logo.webp" alt="" />
+        <img src="logo-nobg.png" alt="" />
         <div className="text-lg sm:text-2xl font-medium my-3">
             TRACK YOUR ORDER NOW
         </div>

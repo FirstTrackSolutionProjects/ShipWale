@@ -15,7 +15,7 @@ const SidebarItem = ({ item, setShowRecharge }) => {
     return (
         <>
             <div onClick={item.isDropdown ? () => setIsOpen(!isOpen) : (item.name === "Wallet Recharge" ? () => setShowRecharge(true) : () => navigate(`/dashboard/${item.url}`))} className={` cursor-pointer px-2 w-full h-12 ${isCurrentMenu ? 'bg-gray-600' : 'bg-gray-900'} focus:outline-none transition-all duration-300 hover:bg-gray-700 relative flex items-center`}>
-                {item.icon !== "/logo.webp" && <item.icon className='mr-3' />}
+                {item.icon !== "/logo-nobg.png" && <item.icon className='mr-3' />}
                 <p className=''>{item.name}</p>
                 {item.isDropdown ? <p className={`absolute transition-transform duration-300 ${isOpen ? "rotate-90" : ""} right-1`}>
                     &#9656;

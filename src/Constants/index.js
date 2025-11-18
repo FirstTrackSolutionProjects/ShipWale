@@ -67,7 +67,7 @@ export const navItems = [
 
 export const menuItems = [
     {
-        icon : "/logo.webp",
+        icon : "/logo-nobg.png",
         name : "Dashboard",
         isDropdown : false,
         url : '',
@@ -75,14 +75,14 @@ export const menuItems = [
         dropDownOptions : [{}]
     },
     {
-        icon : "/logo.webp",
+        icon : "/logo-nobg.png",
         name : "Wallet Recharge",
         isDropdown : false,
         url : 'wallet-recharge',
         dropDownOptions : [{}]
     },
     // {
-    //     icon : "/logo.webp",
+    //     icon : "/logo-nobg.png",
     //     name : "KYC Update",
     //     isDropdown : false,
     //     merchantOnly : true,
@@ -91,21 +91,21 @@ export const menuItems = [
     //     dropDownOptions : [{}]
     // },
     {
-        icon : "/logo.webp",
+        icon : "/logo-nobg.png",
         name : "Create Shipment",
         isDropdown : false,
         merchantOnly : true,
         url : 'order/create',
         component: CreateOrder,
         dropDownOptions : [{
-            icon : "/logo.webp",
+            icon : "/logo-nobg.png",
             name : "Domestic",
             isDropdown : false,
             url : 'order/domestic/create',
             component : CreateOrder,
             dropDownOptions : [{}]
         },{
-            icon : "/logo.webp",
+            icon : "/logo-nobg.png",
             name : "International",
             isDropdown : false,
             url : 'order/international/create',
@@ -114,7 +114,7 @@ export const menuItems = [
         },]
     },
     {
-        icon : "/logo.webp",
+        icon : "/logo-nobg.png",
         name : "Warehouse",
         isDropdown : false,
         merchantOnly : true,
@@ -123,14 +123,14 @@ export const menuItems = [
         dropDownOptions : [{}]
     },
     {
-        icon : "/logo.webp",
+        icon : "/logo-nobg.png",
         name : "Parcels",
         isDropdown : false,
         merchantOnly : true,
         url : 'parcels',
         component : UpdateOrder,
         dropDownOptions : [{
-            icon : "/logo.webp",
+            icon : "/logo-nobg.png",
             name : "Domestic",
             isDropdown : false,
             url : 'parcels/domestic',
@@ -138,7 +138,7 @@ export const menuItems = [
             dropDownOptions : [{}]
         },
         {
-            icon : "/logo.webp",
+            icon : "/logo-nobg.png",
             name : "International",
             isDropdown : false,
             url : 'parcels/international',
@@ -147,7 +147,7 @@ export const menuItems = [
         },]
     },
     {
-        icon : "/logo.webp",
+        icon : "/logo-nobg.png",
         name : "Transaction History",
         isDropdown : false,
         url : 'transaction-history',
@@ -156,7 +156,7 @@ export const menuItems = [
         merchantOnly : true
     },
     {
-        icon : "/logo.webp",
+        icon : "/logo-nobg.png",
         name : "Merchant Transactions",
         isDropdown : false,
         admin : true,
@@ -165,14 +165,14 @@ export const menuItems = [
         dropDownOptions : [{}]
     },
     {
-        icon : "/logo.webp",
+        icon : "/logo-nobg.png",
         name : "Weight Disputes",
         isDropdown : false,
         url : 'weight-disputes',
         component : WeightDisputes,
         dropDownOptions : [
             {
-                icon : "/logo.webp",
+                icon : "/logo-nobg.png",
                 name : "Domestic",
                 isDropdown : false,
                 url : 'domestic-weight-disputes',
@@ -180,7 +180,7 @@ export const menuItems = [
                 dropDownOptions : [{}]
             },
             {
-                icon : "/logo.webp",
+                icon : "/logo-nobg.png",
                 name : "International",
                 isDropdown : false,
                 url : 'international-weight-disputes',
@@ -190,7 +190,7 @@ export const menuItems = [
         ]
     },
     {
-        icon : "/logo.webp",
+        icon : "/logo-nobg.png",
         name : "COD Remittance",
         isDropdown : false,
         admin : true,
@@ -199,7 +199,7 @@ export const menuItems = [
         dropDownOptions : [{}]
     },
     {
-        icon : "/logo.webp",
+        icon : "/logo-nobg.png",
         name : "COD Remittance",
         isDropdown : false,
         merchantOnly : true,
@@ -208,7 +208,7 @@ export const menuItems = [
         dropDownOptions : [{}]
     },
     {
-        icon : "/logo.webp",
+        icon : "/logo-nobg.png",
         name : "Cancellations/Refunds",
         isDropdown : true,
         admin : true,
@@ -216,14 +216,14 @@ export const menuItems = [
         // component : DashboardMain,
         dropDownOptions : [
             {
-                icon : "/logo.webp",
+                icon : "/logo-nobg.png",
                 name : "Pending Cancellations",
                 isDropdown : false,
                 url : 'pending-cancellations',
                 component : PendingCancellations,
                 dropDownOptions : [
                     {
-                        icon : "/logo.webp",
+                        icon : "/logo-nobg.png",
                         name : "Domestic",
                         isDropdown : false,
                         url : 'pending-cancellations/domestic',
@@ -231,7 +231,7 @@ export const menuItems = [
                         dropDownOptions : [{}]
                     },
                     {
-                        icon : "/logo.webp",
+                        icon : "/logo-nobg.png",
                         name : "International",
                         isDropdown : false,
                         url : 'pending-cancellations/international',
@@ -241,14 +241,14 @@ export const menuItems = [
                 ]
             },
             {
-                icon : "/logo.webp",
+                icon : "/logo-nobg.png",
                 name : "Pending Refunds",
                 isDropdown : false,
                 url : 'pending-refunds',
                 component : PendingRefunds,
                 dropDownOptions : [
                     {
-                        icon : "/logo.webp",
+                        icon : "/logo-nobg.png",
                         name : "Domestic",
                         isDropdown : false,
                         url : 'pending-refunds/domestic',
@@ -256,7 +256,7 @@ export const menuItems = [
                         dropDownOptions : [{}]
                     },
                     {
-                        icon : "/logo.webp",
+                        icon : "/logo-nobg.png",
                         name : "International",
                         isDropdown : false,
                         url : 'pending-refunds/international',
@@ -268,21 +268,21 @@ export const menuItems = [
         ]
     },
     {
-        icon : "/logo.webp",
+        icon : "/logo-nobg.png",
         name : "Reports",
         isDropdown : false,
         merchantOnly : true,
         url : 'shipment/reports',
         component : NDR,
         dropDownOptions : [{
-            icon : "/logo.webp",
+            icon : "/logo-nobg.png",
             name : "Domestic Reports",
             isDropdown : false,
             url : 'shipment/domestic/reports',
             component : NDR,
             dropDownOptions : [{}]
         },{
-            icon : "/logo.webp",
+            icon : "/logo-nobg.png",
             name : "International Reports",
             isDropdown : false,
             url : 'shipment/international/reports',
@@ -291,13 +291,13 @@ export const menuItems = [
         },]
     },
     {
-        icon : "/logo.webp",
+        icon : "/logo-nobg.png",
         name : "Merchant Manage",
         isDropdown : true,
         admin : true,
         url : 'manage/merchant',
         dropDownOptions : [{
-            icon : "/logo.webp",
+            icon : "/logo-nobg.png",
             name : "Verified Merchants",
             isDropdown : false,
             url : 'manage/merchant/verified',
@@ -305,7 +305,7 @@ export const menuItems = [
             dropDownOptions : [{}]
         },
         {
-            icon : "/logo.webp",
+            icon : "/logo-nobg.png",
             name : "Non-Verified Merchants",
             isDropdown : false,
             url : 'manage/merchant/non-verified',
@@ -313,20 +313,20 @@ export const menuItems = [
             dropDownOptions : [{}]
         },
         {
-            icon : "/logo.webp",
+            icon : "/logo-nobg.png",
             name : "Shipments",
             isDropdown : false,
             url : 'manage/merchant/shipments',
             component : AllParcels,
             dropDownOptions : [{
-                icon : "/logo.webp",
+                icon : "/logo-nobg.png",
                 name : "Domestic",
                 isDropdown : false,
                 url : 'manage/merchant/shipments/domestic',
                 component : AllParcels,
                 dropDownOptions : [{}]
             },{
-                icon : "/logo.webp",
+                icon : "/logo-nobg.png",
                 name : "International",
                 isDropdown : false,
                 url : 'manage/merchant/shipments/international',
@@ -335,20 +335,20 @@ export const menuItems = [
             },]
         },
         {
-            icon : "/logo.webp",
+            icon : "/logo-nobg.png",
             name : "Shipment Reports",
             isDropdown : false,
             url : 'manage/merchant/shipments/reports',
             component : AllShipmentReports,
             dropDownOptions : [{
-                icon : "/logo.webp",
+                icon : "/logo-nobg.png",
                 name : "Domestic Reports",
                 isDropdown : false,
                 url : 'manage/merchant/shipments/domestic/reports',
                 component : AllShipmentReports,
                 dropDownOptions : [{}]
             },{
-                icon : "/logo.webp",
+                icon : "/logo-nobg.png",
                 name : "International Reports",
                 isDropdown : false,
                 url : 'manage/merchant/shipments/international/reports',
@@ -358,19 +358,19 @@ export const menuItems = [
         }]
     },
     // {
-    //     icon : "/logo.webp",
+    //     icon : "/logo-nobg.png",
     //     name : "Users",
     //     admin : true,
     //     isDropdown : true,
     //     menuID : [10],
     //     dropDownOptions : [{
-    //         icon : "/logo.webp",
+    //         icon : "/logo-nobg.png",
     //         name : "Accounts",
     //         isDropdown : false,
     //         menuID : [10,0],
     //         dropDownOptions : [{}]
     //     },{
-    //         icon : "/logo.webp",
+    //         icon : "/logo-nobg.png",
     //         name : "Admin",
     //         isDropdown : false,
     //         menuID : [10,1],
@@ -378,13 +378,13 @@ export const menuItems = [
     //     },]
     // },
     {
-        icon : "/logo.webp",
+        icon : "/logo-nobg.png",
         name : "Submission",
         isDropdown : true,
         admin : true,
         url : 'submissions',
         dropDownOptions : [{
-            icon : "/logo.webp",
+            icon : "/logo-nobg.png",
             name : "Merchant Verification",
             isDropdown : false,
             admin : true,
@@ -393,7 +393,7 @@ export const menuItems = [
             dropDownOptions : [{}]
         },
         {
-            icon : "/logo.webp",
+            icon : "/logo-nobg.png",
             name : "Update Profile Requests",
             isDropdown : false,
             admin : true,
@@ -402,7 +402,7 @@ export const menuItems = [
             dropDownOptions : [{}]
         },
         {
-            icon : "/logo.webp",
+            icon : "/logo-nobg.png",
             name : "Contact Submission",
             isDropdown : false,
             admin : true,
@@ -411,7 +411,7 @@ export const menuItems = [
             dropDownOptions : [{}]
         },
         // {
-        //     icon : "/logo.webp",
+        //     icon : "/logo-nobg.png",
         //     name : "KYC Requests",
         //     isDropdown : false,
         //     admin : true,
@@ -422,7 +422,7 @@ export const menuItems = [
     ]
     },
     {
-        icon : "/logo.webp",
+        icon : "/logo-nobg.png",
         name : "Manual Recharge",
         isDropdown : false,
         admin : true,
@@ -431,13 +431,13 @@ export const menuItems = [
         dropDownOptions : [{}]
     },
     {
-        icon : "/logo.webp",
+        icon : "/logo-nobg.png",
         name : "Settings",
         isDropdown : true,
         url : 'settings',
         dropDownOptions : [
             {
-                icon : "/logo.webp",
+                icon : "/logo-nobg.png",
                 name : "Profile",
                 isDropdown : false,
                 url : 'settings/profile',
@@ -445,7 +445,7 @@ export const menuItems = [
                 dropDownOptions : [{}]
             },
             {
-                icon : "/logo.webp",
+                icon : "/logo-nobg.png",
                 name : "Profile Update",
                 isDropdown : false,
                 url : 'settings/profile-update-request',
@@ -454,7 +454,7 @@ export const menuItems = [
                 dropDownOptions : [{}]
             },
             {
-                icon : "/logo.webp",
+                icon : "/logo-nobg.png",
                 name : "Change Password",
                 isDropdown : false,
                 url : 'settings/change-password',
@@ -464,7 +464,7 @@ export const menuItems = [
         ]
     },
     {
-        icon : "/logo.webp",
+        icon : "/logo-nobg.png",
         name : "Logout",
         isDropdown : false,
         url : 'logout',
