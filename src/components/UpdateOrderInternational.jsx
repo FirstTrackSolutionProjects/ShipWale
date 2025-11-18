@@ -150,9 +150,9 @@ async function generateShipmentLabels(labelData) {
       <div class='header'>
         <div class='brand'>
           <img src='${logoUrl}' />
-          <div><div class='brand-name'>JUPITER XPRESS</div><div class='brand-sub'>International Courier & Cargo</div></div>
+          <div><div class='brand-name'>SHIPWALE</div><div class='brand-sub'>International Courier & Cargo</div></div>
         </div>
-        <div class='contact'>info@jupiterxpress.online<br/>https://jupiterxpress.online</div>
+        <div class='contact'>info@shipwale.com<br/>https://shipwale.com</div>
       </div>
       <div class='section'>
         <div class='section-title'>To</div>
@@ -196,7 +196,7 @@ async function generateShipmentLabels(labelData) {
           <div class='ref'>${labelData.SHIPMENT_REFERENCE_ID || ''}</div>
         </div>
       </div>
-      <div class='footer'>Thank you for shipping with Jupiter Xpress Courier & Cargo</div>
+      <div class='footer'>Thank you for shipping with ShipWale Courier & Cargo</div>
     </body></html>`;
   };
 
