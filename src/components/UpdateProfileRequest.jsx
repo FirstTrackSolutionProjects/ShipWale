@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Typography, TextField, Button, Grid } from "@mui/material";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { z } from "zod";
-import { AuthContext } from "../context/AuthContext";
+import { useAuth } from "../context/AuthContext";
 import { v4 } from "uuid";
 import { MuiFileInput } from 'mui-file-input'
 import CloseIcon from '@mui/icons-material/Close'
@@ -350,7 +350,7 @@ const TextForm = ({ id, onNext }) => {
 };
 
 const UpdateProfileRequest = () => {  
-  const { id } = useContext(AuthContext);
+  const { id } = useAuth();
   const [step, setStep] = useState(1);
   const nextStep = () => setStep((prevStep) => prevStep + 1);
 

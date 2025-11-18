@@ -1,7 +1,7 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import CreateInternationalWeightDisputePopup from "./CreateInternationalWeightDisputePopup";
 import ViewInternationalWeightDisputePopup from "./ViewInternationalWeightDisputePopup";
-import { AuthContext } from "../context/AuthContext";
+import { useAuth } from "../context/AuthContext";
 const API_URL = import.meta.env.VITE_APP_API_URL
 
 const Card = ({ report }) => {
@@ -34,7 +34,7 @@ const Card = ({ report }) => {
 
 const Listing = () => {
   const [reports, setReports] = useState([])
-  const {admin} = useContext(AuthContext);
+  const {admin} = useAuth();
   const [filteredReports, setFilteredReports] = useState([]);
   const [filters, setFilters] = useState({
     orderId: ""

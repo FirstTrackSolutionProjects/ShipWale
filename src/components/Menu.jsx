@@ -1,13 +1,13 @@
-import  { useState, useContext, useEffect} from 'react';
+import  { useState, useEffect} from 'react';
 import { navItems } from '../Constants';
 import NavItem from './NavItem';
-import { AuthContext } from "../context/AuthContext"
+import { useAuth } from "../context/AuthContext"
 import { useNavigate, useLocation } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 const Menu = ({spaceTheme, setSpaceTheme} ) => {
   const [isMenu,setIsMenu] = useState(false)
   const location = useLocation();
-  const {login , logout} = useContext(AuthContext)
+  const {login , logout} = useAuth();
   const [username, setUsername] = useState(null);
   const navigate = useNavigate();
   const toggleMenu = () => {

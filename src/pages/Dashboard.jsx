@@ -1,5 +1,5 @@
 import React, { createElement } from 'react';
-import Sidebar2 from '../Components/Sidebar2';
+import Sidebar2 from '../components/Sidebar2';
 import { Routes,Route } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { menuItems } from '../Constants';
