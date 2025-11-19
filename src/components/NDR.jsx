@@ -132,6 +132,20 @@ const EnviaCard = ({ report, status }) => {
   )
 }
 
+const DelhiveryB2BStatusCard = ({report , status}) => {
+  const timestamp = status?.scan_timestamp;
+  const formattedTimestamp = timestampToDate(timestamp);
+  return (
+    <div>
+      <p>AWB : {report.awb}</p>
+      <p>Ref Id: {report.ref_id}</p>
+      <p>LRN : {status.lrnum}</p>
+      <p>Status : {status.status}</p>
+      <div>{formattedTimestamp} | {status?.location} | {status?.scan_remark} </div>
+    </div>
+  )
+}
+
 const ViewDialog = ({ isOpen, onClose, report }) => {
   const [status, setStatus] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -180,16 +194,17 @@ const ViewDialog = ({ isOpen, onClose, report }) => {
     
     switch(report?.serviceId) {
       case 1:
+        return <DelhiveryB2BStatusCard report={report} status={status} />;
       case 2:
         return <DelhiveryStatusCard report={report} status={status} />;
-      case 3:
-        return <MovinStatusCard report={report} status={status} />;
-      case 4:
-        return <PickrrStatusCard report={report} status={status} />;
-      case 5:
-        return <ShiprocketStatusCard report={report} status={status} />;
-      case 6:
-        return <EnviaCard report={report} status={status} />;
+      // case 3:
+      //   return <MovinStatusCard report={report} status={status} />;
+      // case 4:
+      //   return <PickrrStatusCard report={report} status={status} />;
+      // case 5:
+      //   return <ShiprocketStatusCard report={report} status={status} />;
+      // case 6:
+      //   return <EnviaCard report={report} status={status} />;
       default:
         return null;
     }

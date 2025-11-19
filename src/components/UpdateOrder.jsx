@@ -1257,8 +1257,8 @@ const PickupRequest = ({ setPickup }) => {
               label="Delivery Partner"
             >
               <MenuItem value="">Select Service</MenuItem>
-              <MenuItem value="2">Delhivery (10Kg)</MenuItem>
-              <MenuItem value="1">Delhivery (500gm)</MenuItem>
+              <MenuItem value="1">Delhivery B2B</MenuItem>
+              <MenuItem value="2">Delhivery (500gm)</MenuItem>
             </Select>
           </FormControl>
           
@@ -1754,7 +1754,7 @@ const Listing = ({ step, setStep }) => {
       headerName: 'Actions',
       width: 400,
       renderCell: (params) => {
-        const isShipped = Boolean(params.row.awb);
+        const isShipped = Boolean(params.row.is_manifested);
         const isCancelled = params.row.cancelled;
         const isDeleted = params.row.deleted;
         const isProcessing = params.row.in_process;
