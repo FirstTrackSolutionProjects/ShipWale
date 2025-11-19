@@ -85,7 +85,7 @@ const Menu = ({spaceTheme, setSpaceTheme} ) => {
       </button>
       
       <div className="flex flex-col justify-center p-4 space-y-6 bg-white text-black h-screen items-center">
-        <img src="/logo.webp" alt="" className='w-48' />
+        <img src="/image/logo-nobg.png" alt="" className='w-48' />
         {username && (
           <div className="h-16 flex text-2xl space-x-3 items-center">
             <div className="flex flex-col justify-center space-y-1">

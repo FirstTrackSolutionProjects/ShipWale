@@ -48,7 +48,7 @@ const WalletRechargeModal = ({ onClose }) => {
             currency: 'INR',
             name: `${business_name} (${name})`,
             description: 'Wallet Recharge',
-            image: 'logo.webp',
+            image: 'logo-nobg.png',
             order_id: data.id,
             handler: async function (response) {
                 // Always show the payment_id to the user, even if verification fails

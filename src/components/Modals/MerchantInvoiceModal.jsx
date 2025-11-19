@@ -39,7 +39,7 @@ const MerchantInvoiceModal = ({ open, onClose, merchantId }) => {
       setLoading(true)
       const data = await getMerchantInvoiceService({ merchantId, month, year })
   const html = generateMonthlyInvoiceHtml(data)
-  const filename = `Invoice-JUPINV${merchantId}${year}${String(month).padStart(2,'0')}.pdf`
+  const filename = `Invoice-SWINV${merchantId}${year}${String(month).padStart(2,'0')}.pdf`
   await downloadPdfFromHtml(html, filename)
       setLoading(false)
       onClose && onClose()

@@ -53,7 +53,7 @@ async function generateShipmentLabels(labelData) {
   };
   const awb = String(labelData.SHIPMENT_AWB || '')
   // Use logo from the app's public folder
-  const logoUrl = `/logo.webp`;
+  const logoUrl = `/logo-nobg.png`;
   const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(awb)}&size=80x80`;
   // Generate barcode client-side using bwip-js
   const { default: bwipjs } = await import('bwip-js');
