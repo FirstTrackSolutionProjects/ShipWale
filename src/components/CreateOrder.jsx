@@ -97,6 +97,7 @@ const schema = z.object({
     (a) => parseFloat(a),
     z.number().min(1, "Shipment value must be greater than 0")
   ),
+  insurance: z.boolean().optional(),
   ewaybill: z.string().optional(),
   invoiceNumber: z.string().optional(),
   invoiceDate: z.string().optional(),
@@ -125,6 +126,7 @@ const FullDetails = () => {
       Bpostcode: '',
       same: true,
       shipmentValue: 0,
+      insurance: false,
       discount: 0,
       cod: 0,
       addressType: "home",
@@ -799,6 +801,17 @@ const FullDetails = () => {
             </div>
           </> : null
         }
+        <div className="flex-1 mb-2 min-w-[300px] space-y-2 flex items-center">
+            <div>
+              <input
+                className="mr-2"
+                type="checkbox"
+                id="insurance"
+                {...register("insurance")}
+              />
+              <label htmlFor="insurance">Do you want insurance?</label>
+            </div>
+          </div>
         <div className="w-full flex mb-2 flex-wrap">
           <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
             <label htmlFor="shipmentValue">Shipment Value</label>

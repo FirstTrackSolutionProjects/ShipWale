@@ -150,6 +150,7 @@ const ManageForm = ({ isManage, setIsManage, shipment, isShipped }) => {
     pickupDate: shipment.pickup_date,
     pickupTime: shipment.pickup_time,
     shipmentValue: shipment.shipment_value,
+    insurance: shipment.insurance || false,
     ewaybill: shipment.ewaybill,
     invoiceNumber: shipment.invoice_number,
     invoiceDate: shipment.invoice_date,
@@ -856,7 +857,7 @@ const ManageForm = ({ isManage, setIsManage, shipment, isShipped }) => {
             }
             label="Is this is a B2B shipment?"
           />
-          {formData.isB2B && (
+          {formData.isB2B ? (
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, my: 2 }}>
               <FormControl sx={{ minWidth: 150, flex:1 }}>
                 <TextField
@@ -915,7 +916,17 @@ const ManageForm = ({ isManage, setIsManage, shipment, isShipped }) => {
                 />
               </FormControl>
             </Box>
-          )}
+          ) : null}
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={!!formData.insurance}
+                onChange={(e)=> setFormData(prev=>({...prev, insurance: e.target.checked}))}
+                name="insurance"
+              />
+            }
+            label="Do you want insurance?"
+          />
           <Box sx={{ my: 4 }}>
             <div style={{ fontWeight: 'bold', fontSize: '1.2rem' }}>Additional Info</div>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, my: 2 }}>
@@ -969,24 +980,22 @@ const ShipCard = ({ price, shipment, setIsShipped, setIsShip, getParcels }) => {
   
   const ship = async () => {
     setIsLoading(true);
-    // const getBalance = await fetch(`${API_URL}/wallet/balance`, {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //     'Accept': 'application/json',
-    //     'Authorization': localStorage.getItem('token'),
-    //   }
-    // });
-    // const balanceData = await getBalance.json();
-    // const balance = balanceData.balance;
+    const getBalance = await fetch(`${API_URL}/wallet/balance`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': localStorage.getItem('token'),
+      }
+    });
+    const balanceData = await getBalance.json();
+    const balance = balanceData.balance;
     
-    // if ((parseFloat(balance) < (100 + parseFloat(price.price)))) {
-    //   if (shipment.pay_method !== "topay") {
-    //     alert('Your wallet must have over 100 rupees after shipment');
-    //     setIsLoading(false);
-    //     return;
-    //   }
-    // }
+    if ((parseFloat(balance) < (parseFloat(price.price)))) {
+        alert('Insufficient balance to create shipment');
+        setIsLoading(false);
+        return;
+    }
     
     fetch(`${API_URL}/shipment/domestic/create`, {
       method: 'POST',
@@ -997,9 +1006,9 @@ const ShipCard = ({ price, shipment, setIsShipped, setIsShip, getParcels }) => {
       },
       body: JSON.stringify({ 
         order: shipment.ord_id, 
-        price: shipment.pay_method == "topay" ? 0 : Math.round(price.price), 
+        price: Math.round(price.price), 
         serviceId: price.serviceId, 
-        courierId: price.courierId, 
+        courierId: price.courierId,
         courierServiceId: price.courierServiceId 
       })
     }).then(response => response.json()).then(async result => {
@@ -1007,13 +1016,13 @@ const ShipCard = ({ price, shipment, setIsShipped, setIsShip, getParcels }) => {
         setIsShipped(true);
         console.log(result);
         const message = (result?.message instanceof String) ? result?.message : null;
-        alert(message || "Your shipment has been created successfully");
+        toast.success(message || "Your shipment has been created successfully");
         getParcels();
         setIsLoading(false);
         setIsShip(false);
       } else {
         const failureReason = result.message || "Your shipment has not been created";
-        alert(failureReason);
+        toast.error(failureReason);
         console.log(result);
         setIsLoading(false);
       }
@@ -1024,6 +1033,24 @@ const ShipCard = ({ price, shipment, setIsShipped, setIsShip, getParcels }) => {
     <Paper sx={{ p: 2, mb: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
       <Box>
         <div>{price.name + " " + price.weight}</div>
+        <Box sx={{ mt: 0.5 }}>
+          <Box component="span" sx={{
+            px: 1.2,
+            py: 0.3,
+            fontSize: '0.65rem',
+            fontWeight: 600,
+            borderRadius: '12px',
+            letterSpacing: 0.5,
+            display: 'inline-block',
+            textTransform: 'uppercase',
+            color: price.insurance ? '#065f46' : '#6b7280',
+            backgroundColor: price.insurance ? '#d1fae5' : '#f3f4f6',
+            border: '1px solid',
+            borderColor: price.insurance ? '#10b981' : '#d1d5db'
+          }}>
+            {price.insurance ? 'Insured' : 'Not Insured'}
+          </Box>
+        </Box>
       </Box>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
         <div>{`₹${Math.round((price.price))}`}</div>
@@ -1103,6 +1130,7 @@ const ShipList = ({ shipment, isShipOpen, setIsShipOpen, setIsShipped, getParcel
           quantity: boxesData.order.length, 
           boxes: boxesData.order, 
           isShipment: true, 
+          insurance: shipment.insurance,
           isB2B: shipment.is_b2b, 
           invoiceAmount: shipment.invoice_amount 
         }),
