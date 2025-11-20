@@ -32,13 +32,14 @@ const ScrollToTop = () => {
 
 
 const App = () => {
+  const { pathname } = useLocation();
   return (
     <>
     <ScrollToTop />
     <Navbar />
     <ToastContainer />
       
-      <div className="min-h-[calc(100vh-64px)] w-full overflow-hidden bg-white">
+      <div className="min-h-[calc(100vh-80px)] w-full overflow-hidden bg-white">
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
@@ -55,7 +56,7 @@ const App = () => {
         <Route path="/verify" element={<Verify />} />
         <Route path="/dashboard/*" element={<Dashboard />} />
       </Routes>
-      <Footer />
+      { pathname.startsWith('/dashboard') ? null : <Footer /> }
       </div>
     </>
   );
