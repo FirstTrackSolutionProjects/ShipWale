@@ -43,9 +43,14 @@ const Navbar = () => {
       behavior: 'smooth'
     });
   };
+
+  const formatBusinessName = (name) => {
+    if (!name) return '';
+    return name.length > 20 ? name.slice(0, 20) + '...' : name;
+  };
   return (
     <>
-      <nav className="fixed top-0 left-0 w-full shadow-md bg-gradient-to-r from-black  to-red-400 z-10">
+      <nav className="fixed top-0 left-0 w-full shadow-md bg-linear-to-r from-black  to-red-400 z-10">
 
         <div className="max-w-7xl px-4 sm:px-6 lg:px-10">
           <div className="flex justify-between items-center h-20">
@@ -62,7 +67,7 @@ const Navbar = () => {
               </div>
               <h1 className="text-2xl font-bold flex items-center">
                 <span className="text-white ml-2">Ship</span>
-                <span className="ml-1 bg-gradient-to-r from-gray-200 via-yellow-400 to-gray-200 text-transparent bg-clip-text">
+                <span className="ml-1 bg-linear-to-r from-gray-200 via-yellow-400 to-gray-200 text-transparent bg-clip-text">
                   Wale
                 </span>
               </h1>
@@ -88,7 +93,7 @@ const Navbar = () => {
           <div className="h-16 flex space-x-3 items-center">
             {verified? (<>
               <div onClick={()=>setShowRecharge(true)} className={`relative bg-blue-600 ${balance < 250 ? "text-red-400" : "text-green-400"} flex items-center font-medium rounded-tl-xl rounded-br-xl px-3 min-w-14 py-2 cursor-pointer border-l-4 border-t-4 border-red-900`}>
-              {balance < 250 && <p className="absolute -mt-5 top-0 right-[2px] text-red-400 text-3xl">!</p>}
+              {balance < 250 && <p className="absolute -mt-5 top-0 right-0.5 text-red-400 text-3xl">!</p>}
                 <p><FontAwesomeIcon icon={'fa-solid fa-house'} />{`₹${balance}`}</p>
               </div>
               {/* <div className="bg-white flex items-center font-medium rounded-xl px-3 py-2 ">
@@ -97,8 +102,12 @@ const Navbar = () => {
               </>
             ):null}
             <div className="hidden md:flex space-x-4">
-              <p className="bg-white text-black flex items-center font-medium rounded-xl px-2 py-2 cursor-pointer" onClick={()=>navigate('/dashboard')}>
-                {business_name}
+              <p
+                className="bg-white text-black flex items-center font-medium rounded-xl px-2 py-2 cursor-pointer max-w-xs truncate"
+                onClick={()=>navigate('/dashboard')}
+                title={business_name}
+              >
+                {formatBusinessName(business_name)}
               </p>
               <p
                 className="bg-red-400 text-white flex items-center font-medium rounded-xl px-2 py-2 cursor-pointer"
@@ -134,7 +143,15 @@ const Navbar = () => {
           </div>
 
           <div className="flex flex-col px-6 space-y-6 text-lg font-medium">
-            {isAuthenticated &&<p className="text-sky-950 text-xl font-bold bg-[rgba(255,255,255,0.6)] px-5 py-2 rounded-xl" onClick={()=>navigate('/dashboard')}>{business_name}</p>}
+            {isAuthenticated && (
+              <p
+                className="text-sky-950 text-xl font-bold bg-[rgba(255,255,255,0.6)] px-5 py-2 rounded-xl max-w-56 truncate"
+                onClick={()=>navigate('/dashboard')}
+                title={business_name}
+              >
+                {formatBusinessName(business_name)}
+              </p>
+            )}
             {links.map((item) => (
               <Link
                 key={item.to}
