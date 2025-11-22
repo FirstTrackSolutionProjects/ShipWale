@@ -5,7 +5,7 @@ import Offers from '../components/Offers'
 import Mission from '../components/Mission'
 import Choosus from '../components/Choosus'
 import Info from '../components/Info'
-import ShippingCalculator from '../components/ShippingCalculator'
+// import ShippingCalculator from '../components/ShippingCalculator'
 import IndustryExpertise from '../components/IndustryExpertise'
 import Clientsay from '../components/Clientsay'
 import TrustedPartners from '../components/TrustedPartners'
@@ -20,7 +20,7 @@ const Home = () => {
     <Mission />
     <Choosus />
     <Info />
-    <ShippingCalculator />
+    {/* <ShippingCalculator /> */}
     <IndustryExpertise />
     <Clientsay />
     <TrustedPartners />
