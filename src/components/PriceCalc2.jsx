@@ -1,13 +1,9 @@
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
-import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
 
 const API_URL = import.meta.env.VITE_APP_API_URL
 const ComparePrices = ({method, boxes, status, origin, dest, payMode, codAmount, isB2B, invoiceAmount, setShowCompare}) => {
   const [prices,setPrices] = useState([])
-  const navigate = useNavigate()
-  const {isAuthenticated} = useAuth()
   useEffect(()=>{
     console.log({method, status, origin, dest, payMode, codAmount})
     const data = async () => {
@@ -23,24 +19,6 @@ const ComparePrices = ({method, boxes, status, origin, dest, payMode, codAmount,
     }  
     data()
   }, []) 
-
-  const handleShip = () => {
-    const shipment = {
-      payMode: payMode,
-      shippingType: method==="E"?"Express":"Surface",
-      postcode: dest,
-      isB2B: isB2B,
-      cod: codAmount,
-      invoiceAmount: invoiceAmount
-    }
-    const shipmentBoxes = boxes.map((box, index) => ({
-      box_no: index + 1,
-      ...box
-    }))
-    navigate('/dashboard/order/create', {
-      state: { shipment, boxes: shipmentBoxes }
-    })
-  }
   return (
     <>
      <div className="w-full absolute z-[1] inset-0 overflow-y-scroll px-4 pt-24 pb-4 flex flex-col bg-gray-100 items-center space-y-6">
@@ -54,10 +32,7 @@ const ComparePrices = ({method, boxes, status, origin, dest, payMode, codAmount,
               <div className="w-full h-16 bg-white relative justify-center px-4 flex flex-col border-b" >
           <div className="font-bold">{price.name+" "+price.weight}</div>
           <div>{"Chargable Weight : "+price.chargableWeight}gm</div>
-          <div className="absolute right-4 flex gap-2">
-            <p>{`₹${Math.round((price.price))}`}</p>
-            {isAuthenticated && <button type="button" onClick={handleShip} className="bg-blue-500 text-white py-1 px-2 rounded">Ship</button>}
-          </div>
+          <div className="absolute right-4">{`₹${Math.round((price.price))}`}</div>
         </div>
             ))
           : null
@@ -71,7 +46,7 @@ const ComparePrices = ({method, boxes, status, origin, dest, payMode, codAmount,
 
 
 const Domestic = () => {
-  const [boxes, setBoxes] = useState([{weight : 0, weight_unit : 'g', length : 0, breadth : 0, height : 0, quantity : 1}])
+  const [boxes, setBoxes] = useState([{weight : 500, weight_unit : 'g', length : 10, breadth : 10, height : 10, quantity : 1}])
   const [formData, setFormData] = useState({
     method : 'S',
     status: 'Delivered',
@@ -129,7 +104,7 @@ const Domestic = () => {
     setBoxes(updatedBoxes);
   };
   const addBox = () => {
-    setBoxes([...boxes, {  length: 0 , breadth : 0 , height : 0  , weight: 0, weight_unit : 'g', quantity: 1 }]);
+    setBoxes([...boxes, {  length: 10 , breadth : 10 , height : 10  , weight: 500, weight_unit : 'g', quantity: 1 }]);
   };
   const removeBox = (index) => {
     const updatedBoxes = boxes.filter((_, i) => i !== index);
@@ -154,17 +129,18 @@ const Domestic = () => {
               </select>
             </div>
             <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2 flex flex-col justify-center">
-              <label htmlFor="status">Status</label>
+              <label htmlFor="payMode">Payment Mode</label>
               <select
-                name="status"
-                id="status"
+                name="payMode"
+                id="payMode"
                 className="border py-2 px-4 rounded-3xl"
-                value={formData.status}
+                value={formData.payMode}
                 onChange={handleChange}
+
               >
-                <option value="Delivered">Forward</option>
-                <option value="RTO">RTO</option>
-                <option value="DTO">Reverse</option>
+                <option value="COD">COD</option>
+                <option value="Pre-paid">Prepaid</option>
+                <option value="Pickup">Pickup</option>
               </select>
             </div>
           </div>
@@ -206,39 +182,6 @@ const Domestic = () => {
                 value={formData.codAmount}
                 onChange={handleChange}
               />
-            </div>
-            
-            <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2 flex flex-col justify-center">
-              <label htmlFor="payMode">Payment Mode</label>
-              <select
-                name="payMode"
-                id="payMode"
-                className="border py-2 px-4 rounded-3xl"
-                value={formData.payMode}
-                onChange={handleChange}
-
-              >
-                <option value="COD">COD</option>
-                <option value="Pre-paid">Prepaid</option>
-                <option value="Pickup">Pickup</option>
-              </select>
-            </div>
-            
-          </div>
-          <div className="w-full flex mb-2 flex-wrap ">
-          <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2 flex flex-col justify-center">
-              <label htmlFor="shipmentType">Shipment Type</label>
-              <select
-                name="isB2B"
-                id="shipmentType"
-                className="border py-2 px-4 rounded-3xl"
-                value={formData.isB2B}
-                onChange={handleChange}
-
-              >
-                <option value={false}>B2C</option>
-                <option value={true}>B2B</option>
-              </select>
             </div>
             
             <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2 flex flex-col justify-center">
@@ -341,7 +284,7 @@ const Domestic = () => {
             </>
           ))}
             <button type="button" className="m-2 px-5 py-1 border border-red-500 rounded-3xl bg-white text-red-500" onClick={addBox}>Add More Boxes</button>
-            <button type="submit" className="border bg-red-500 hover:bg-red-600 text-white mx-2  py-2 px-4 rounded-3xl">
+            <button type="submit" className="border bg-red-500 text-white mx-2  py-2 px-4 rounded-3xl">
               Submit and Compare
             </button>
         </form>
