@@ -41,7 +41,7 @@ const International = () => {
               <div className="flex-1 mx-2 mb-2 min-w-[200px] space-y-2">
                 <label htmlFor="name">Name</label>
                 <input
-                  className="w-full border py-2 px-4 rounded-3xl"
+                  className="w-full border py-2 px-4 rounded"
                   type="text"
                   id="name"
                   name="name"
@@ -54,7 +54,7 @@ const International = () => {
               <div className="flex-1 mx-2 mb-2 min-w-[200px] space-y-2">
                 <label htmlFor="phone">Contact Number</label>
                 <input
-                  className="w-full border py-2 px-4 rounded-3xl"
+                  className="w-full border py-2 px-4 rounded"
                   type="text"
                   id="phone"
                   name="phone"
@@ -67,7 +67,7 @@ const International = () => {
               <div className="flex-1 mx-2 mb-2 min-w-[200px] space-y-2">
                 <label htmlFor="email">Email</label>
                 <input
-                  className="w-full border py-2 px-4 rounded-3xl"
+                  className="w-full border py-2 px-4 rounded"
                   type="text"
                   id="email"
                   name="email"
@@ -84,7 +84,7 @@ const International = () => {
                 <select
                   name="status"
                   id="status"
-                  className="border py-2 px-4 rounded-3xl"
+                  className="border py-2 px-4 rounded"
                   value={formData.status}
                   onChange={handleChange}
                   required
@@ -97,7 +97,7 @@ const International = () => {
               <div className="flex-1 mx-2 mb-2 min-w-[200px] space-y-2">
                 <label htmlFor="originCountry">Origin Country</label>
                 <input
-                  className="w-full border py-2 px-4 rounded-3xl"
+                  className="w-full border py-2 px-4 rounded"
                   type="text"
                   id="originCountry"
                   name="originCountry"
@@ -110,7 +110,7 @@ const International = () => {
               <div className="flex-1 mx-2 mb-2 min-w-[200px] space-y-2">
                 <label htmlFor="destCountry">Destination Country</label>
                 <input
-                  className="w-full border py-2 px-4 rounded-3xl"
+                  className="w-full border py-2 px-4 rounded"
                   type="text"
                   id="destCountry"
                   name="destCountry"
@@ -125,7 +125,7 @@ const International = () => {
               <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
                 <label htmlFor="origin">Origin Pincode</label>
                 <input
-                  className="w-full border py-2 px-4 rounded-3xl"
+                  className="w-full border py-2 px-4 rounded"
                   type="text"
                   id="origin"
                   name="origin"
@@ -138,7 +138,7 @@ const International = () => {
               <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
                 <label htmlFor="dest">Destination Pincode</label>
                 <input
-                  className="w-full border py-2 px-4 rounded-3xl"
+                  className="w-full border py-2 px-4 rounded"
                   type="text"
                   id="dest"
                   name="dest"
@@ -153,7 +153,7 @@ const International = () => {
               <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
                 <label htmlFor="weight">Weight (In grams)</label>
                 <input
-                  className="w-full border py-2 px-4 rounded-3xl"
+                  className="w-full border py-2 px-4 rounded"
                   type="text"
                   id="weight"
                   name="weight"
@@ -168,7 +168,7 @@ const International = () => {
                 <select
                   name="payMode"
                   id="payMode"
-                  className="border py-2 px-4 rounded-3xl"
+                  className="border py-2 px-4 rounded"
                   value={formData.payMode}
                   onChange={handleChange}
                   required
@@ -184,7 +184,7 @@ const International = () => {
               <div className="flex-1 mx-2 mb-2 min-w-[90px] space-y-2">
                 <label htmlFor="length">L (in cm)</label>
                 <input
-                  className="w-full border py-2 px-4 rounded-3xl"
+                  className="w-full border py-2 px-4 rounded"
                   type="text"
                   id="length"
                   name="length"
@@ -197,7 +197,7 @@ const International = () => {
               <div className="flex-1 mx-2 mb-2 min-w-[90px] space-y-2">
                 <label htmlFor="breadth">B (in cm)</label>
                 <input
-                  className="w-full border py-2 px-4 rounded-3xl"
+                  className="w-full border py-2 px-4 rounded"
                   type="text"
                   id="breadth"
                   name="breadth"
@@ -210,7 +210,7 @@ const International = () => {
               <div className="flex-1 mx-2 mb-2 min-w-[90px] space-y-2">
                 <label htmlFor="height">H (in cm)</label>
                 <input
-                  className="w-full border py-2 px-4 rounded-3xl"
+                  className="w-full border py-2 px-4 rounded"
                   type="text"
                   id="height"
                   name="height"
@@ -222,7 +222,7 @@ const International = () => {
               </div>
               </div>
               </div>
-              <button type="submit" className="border bg-white mx-2  py-2 px-4 rounded-3xl">
+              <button type="submit" className="border bg-white mx-2  py-2 px-4 rounded">
                 Submit Request
               </button>
           </form>

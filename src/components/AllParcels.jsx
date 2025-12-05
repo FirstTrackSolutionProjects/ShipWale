@@ -716,7 +716,7 @@ const ManageForm = ({ isManage, setIsManage, shipment, isShipped }) => {
             <Button
               variant="contained"
               onClick={addBox}
-              sx={{ borderRadius: '24px', mt: 2 }}
+              sx={{ borderRadius: '4px', mt: 2 }}
             >
               Add More Boxes
             </Button>
@@ -788,7 +788,7 @@ const ManageForm = ({ isManage, setIsManage, shipment, isShipped }) => {
             <Button
               variant="contained"
               onClick={addProduct}
-              sx={{ borderRadius: '24px', mt: 2 }}
+              sx={{ borderRadius: '4px', mt: 2 }}
             >
               Add More Product
             </Button>
@@ -842,12 +842,12 @@ const ManageForm = ({ isManage, setIsManage, shipment, isShipped }) => {
                   onChange={handleInvoice}
                 />
                 <Box className="flex items-center mt-2">
-                  <a type="button" className="m-2 w-20 px-5 py-2 border rounded-3xl bg-red-600 text-white" target="_blank" href={import.meta.env.VITE_APP_BUCKET_URL + formData.invoiceUrl}>View</a>
+                  <a type="button" className="m-2 w-20 px-5 py-2 border rounded bg-red-600 text-white" target="_blank" href={import.meta.env.VITE_APP_BUCKET_URL + formData.invoiceUrl}>View</a>
                 <Button
                   variant="contained"
                   onClick={uploadInvoice}
                   className="bg-red-500"
-                  sx={{ borderRadius: '24px' }}
+                  sx={{ borderRadius: '4px' }}
                 >
                   Update
                 </Button>
@@ -1067,7 +1067,7 @@ const Card = ({ shipment }) => {
           {/* Action Button - 1 column */}
           <div className="col-span-1 flex items-center justify-end">
             <button 
-              className="px-4 py-1 bg-red-500 text-white text-sm rounded-3xl hover:bg-red-600 transition-colors" 
+              className="px-4 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600 transition-colors" 
               onClick={() => setIsManage(true)}
             >
               {isShipped ? "View" : "Manage"}
@@ -1239,7 +1239,7 @@ const Listing = ({ step, setStep }) => {
               setSelectedShipment(params.row);
               setIsManageOpen(true);
             }}
-            sx={{ borderRadius: '24px' }}
+            sx={{ borderRadius: '4px' }}
           >
             {isShipped ? 'View' : 'Manage'}
           </Button>

@@ -105,10 +105,10 @@ const View = ({merchant, balance ,fullName, email, phone,isActive, uid  , gst, s
                         </div>
                     </div>
                     <div className='flex space-x-1'>
-                        <button onClick={isActivated?()=>deactivate():()=>activate()}  className={` ${isActivated?"bg-red-500":"bg-green-500"} text-white mx-2  py-2 px-4 rounded-3xl`}>
+                        <button onClick={isActivated?()=>deactivate():()=>activate()}  className={` ${isActivated?"bg-red-500":"bg-green-500"} text-white mx-2  py-2 px-4 rounded`}>
                             {isActivated? "Deactivate" : "Activate"}
                         </button>
-                        <button onClick={() => setOpenDiscountModal(true)}  className={`bg-red-500 text-white mx-2  py-2 px-4 rounded-3xl`}>
+                        <button onClick={() => setOpenDiscountModal(true)}  className={`bg-red-500 text-white mx-2  py-2 px-4 rounded`}>
                             Discounts
                         </button>
                     </div>
@@ -235,7 +235,7 @@ const MerchantManage =  () => {
             </div>
             <div className="ml-auto flex items-center space-x-2">
                 <button
-                    className={`px-3 py-1 bg-red-500 rounded-3xl text-white ${page <= 0 || loading ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}
+                    className={`px-3 py-1 bg-red-500 rounded text-white ${page <= 0 || loading ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}
                     onClick={() => { if (page > 0 && !loading) setPage(page - 1) }}
                     disabled={page <= 0 || loading}
                 >
@@ -245,7 +245,7 @@ const MerchantManage =  () => {
                     Page {page + 1} of {totalPages}
                 </div>
                 <button
-                    className={`px-3 py-1 bg-red-500 rounded-3xl text-white ${(page + 1) >= totalPages || loading ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}
+                    className={`px-3 py-1 bg-red-500 rounded text-white ${(page + 1) >= totalPages || loading ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}
                     onClick={() => { if ((page + 1) < totalPages && !loading) setPage(page + 1) }}
                     disabled={(page + 1) >= totalPages || loading}
                 >

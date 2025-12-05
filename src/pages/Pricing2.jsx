@@ -265,14 +265,14 @@ const Pricing = () => {
         <div className="mx-auto justify-center items-center flex">
           <button
             type="button"
-            className="m-2 px-2 md:px-5 py-2 text-sm md:text-base border border-green-600 rounded-3xl bg-white text-green-600"
+            className="m-2 px-2 md:px-5 py-2 text-sm md:text-base border border-green-600 rounded bg-white text-green-600"
             onClick={addBox}
           >
             Add More Boxes
           </button>
           <button
             type="submit"
-            className="border bg-green-600 text-white mx-2 text-sm md:text-base py-2 md:px-4 px-2 rounded-3xl"
+            className="border bg-green-600 text-white mx-2 text-sm md:text-base py-2 md:px-4 px-2 rounded"
           >
             Submit and Compare
           </button>

@@ -770,7 +770,7 @@ const ManageForm = ({ isManage, setIsManage, shipment, isShipped }) => {
             <Button
               variant="contained"
               onClick={addBox}
-              sx={{ borderRadius: '24px', mt: 2 }}
+              sx={{ borderRadius: '4px', mt: 2 }}
             >
               Add More Boxes
             </Button>
@@ -842,7 +842,7 @@ const ManageForm = ({ isManage, setIsManage, shipment, isShipped }) => {
             <Button
               variant="contained"
               onClick={addProduct}
-              sx={{ borderRadius: '24px', mt: 2 }}
+              sx={{ borderRadius: '4px', mt: 2 }}
             >
               Add More Product
             </Button>
@@ -896,12 +896,12 @@ const ManageForm = ({ isManage, setIsManage, shipment, isShipped }) => {
                   onChange={handleInvoice}
                 />
                 <Box className="flex items-center mt-2">
-                  <a type="button" className="m-2 w-20 px-5 py-2 border rounded-3xl bg-red-600 text-white" target="_blank" href={import.meta.env.VITE_APP_BUCKET_URL + formData.invoiceUrl}>View</a>
+                  <a type="button" className="m-2 w-20 px-5 py-2 border rounded bg-red-600 text-white" target="_blank" href={import.meta.env.VITE_APP_BUCKET_URL + formData.invoiceUrl}>View</a>
                   <Button
                     variant="contained"
                     onClick={uploadInvoice}
                     className="bg-red-500"
-                    sx={{ borderRadius: '24px' }}
+                    sx={{ borderRadius: '4px' }}
                   >
                     Update
                   </Button>
@@ -1058,7 +1058,7 @@ const ShipCard = ({ price, shipment, setIsShipped, setIsShip, getParcels }) => {
           variant="contained"
           onClick={isLoading ? () => {} : () => ship()}
           disabled={isLoading}
-          sx={{ borderRadius: '24px' }}
+          sx={{ borderRadius: '4px' }}
         >
           {isLoading ? "Shipping..." : "Ship"}
         </Button>
@@ -1771,7 +1771,7 @@ const Listing = ({ step, setStep }) => {
                   setSelectedShipment(params.row);
                   setIsManageOpen(true);
                 }}
-                sx={{ borderRadius: '24px' }}
+                sx={{ borderRadius: '4px' }}
               >
                 {isShipped ? 'View' : 'Manage'}
               </Button>
@@ -1783,7 +1783,7 @@ const Listing = ({ step, setStep }) => {
               size="small"
               onClick={() => handleClone(params.row)}
               disabled={getActionState(params.row.ord_id, 'cloning')}
-              sx={{ borderRadius: '24px' }}
+              sx={{ borderRadius: '4px' }}
             >
               {getActionState(params.row.ord_id, 'cloning') ? 'Cloning...' : 'Clone'}
             </Button>
@@ -1795,7 +1795,7 @@ const Listing = ({ step, setStep }) => {
                 size="small"
                 onClick={() => handleRefresh(params.row)}
                 disabled={getActionState(params.row.ord_id, 'refreshing')}
-                sx={{ borderRadius: '24px' }}
+                sx={{ borderRadius: '4px' }}
               >
                 {getActionState(params.row.ord_id, 'refreshing') ? 'Refreshing...' : 'Refresh'}
               </Button>
@@ -1807,7 +1807,7 @@ const Listing = ({ step, setStep }) => {
                 variant="contained"
                 size="small"
                 onClick={() => handleGetLabel(params.row)}
-                sx={{ borderRadius: '24px' }}
+                sx={{ borderRadius: '4px' }}
               >
                 Label
               </Button>
@@ -1819,7 +1819,7 @@ const Listing = ({ step, setStep }) => {
                 variant="contained"
                 size="small"
                 onClick={() => handleShip(params.row)}
-                sx={{ borderRadius: '24px' }}
+                sx={{ borderRadius: '4px' }}
               >
                 Ship
               </Button>
@@ -1833,7 +1833,7 @@ const Listing = ({ step, setStep }) => {
                 size="small"
                 onClick={() => handleCancel(params.row)}
                 disabled={getActionState(params.row.ord_id, 'cancelling')}
-                sx={{ borderRadius: '24px' }}
+                sx={{ borderRadius: '4px' }}
               >
                 {getActionState(params.row.ord_id, 'cancelling') ? 'Cancelling...' : 'Cancel'}
               </Button>
@@ -1847,7 +1847,7 @@ const Listing = ({ step, setStep }) => {
                 size="small"
                 onClick={() => handleDelete(params.row)}
                 disabled={getActionState(params.row.ord_id, 'deleting')}
-                sx={{ borderRadius: '24px' }}
+                sx={{ borderRadius: '4px' }}
               >
                 {getActionState(params.row.ord_id, 'deleting') ? 'Deleting...' : 'Delete'}
               </Button>
@@ -1868,7 +1868,7 @@ const Listing = ({ step, setStep }) => {
           <div className="text-2xl font-medium">SHIPMENTS</div>
           <div
             onClick={() => setPickup(true)}
-            className="px-5 py-1 bg-red-500 absolute rounded-3xl text-white right-4"
+            className="px-5 py-1 bg-red-500 absolute rounded text-white right-4"
           >
             Pickup Request
           </div>

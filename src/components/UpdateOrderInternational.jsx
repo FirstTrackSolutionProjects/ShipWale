@@ -1558,12 +1558,12 @@ const Card = ({ shipment, onRefresh }) => {
             <div>{shipment.created_at ? shipment.created_at.toString().split('T')[0] + ' ' + shipment.created_at.toString().split('T')[1].split('.')[0] : null}</div>
           </div>
           <div className="absolute right-4 sm:right-8 flex space-x-2">
-            <div className="px-3 py-1 bg-red-500 rounded-3xl text-white cursor-pointer" onClick={() => setIsManage(!isManage)}>{!isManage ? hasAwb ? "View" : "Manage" : "X"}</div>
+            <div className="px-3 py-1 bg-red-500 rounded text-white cursor-pointer" onClick={() => setIsManage(!isManage)}>{!isManage ? hasAwb ? "View" : "Manage" : "X"}</div>
             {/* Manifested: show label and cancel shipment */}
             {(isManifested && hasAwb && !isCancelled) ? (
               <>
                 <div className="relative" ref={labelsMenuRef}>
-                  <button type="button" className="px-3 py-1 bg-red-500 rounded-3xl text-white cursor-pointer flex items-center gap-1" onClick={() => setLabelsOpen((o) => !o)}>
+                  <button type="button" className="px-3 py-1 bg-red-500 rounded text-white cursor-pointer flex items-center gap-1" onClick={() => setLabelsOpen((o) => !o)}>
                     Download
                     <span>▾</span>
                   </button>
@@ -1608,21 +1608,21 @@ const Card = ({ shipment, onRefresh }) => {
                     </div>
                   )}
                 </div>
-                <div className="px-3 py-1 bg-red-500 rounded-3xl text-white cursor-pointer" onClick={isCancelling ? () => {} : () => handleCancelShipment(shipment.iid)}>{isCancelling ? "Cancelling..." : "Cancel Shipment"}</div>
+                <div className="px-3 py-1 bg-red-500 rounded text-white cursor-pointer" onClick={isCancelling ? () => {} : () => handleCancelShipment(shipment.iid)}>{isCancelling ? "Cancelling..." : "Cancel Shipment"}</div>
               </>
             ): null}
             {/* Not requested: show request button */}
             {!isRequested && !isManifested ? (
-              <div className="px-3 py-1 bg-red-500 rounded-3xl text-white cursor-pointer" onClick={isRequesting ? () => {} : () => handleRequest(shipment.iid)}>{isRequesting ? "Shipping..." : "Ship"}</div>
+              <div className="px-3 py-1 bg-red-500 rounded text-white cursor-pointer" onClick={isRequesting ? () => {} : () => handleRequest(shipment.iid)}>{isRequesting ? "Shipping..." : "Ship"}</div>
             ): null}
             {/* Requested: show cancel request button */}
             {isRequested ? (
-              <div className="px-3 py-1 bg-red-500 rounded-3xl text-white cursor-pointer" onClick={isCancelling ? () => {} : () => handleCancelRequest(shipment.iid)}>{isCancelling ? "Cancelling..." : "Cancel Request"}</div>
+              <div className="px-3 py-1 bg-red-500 rounded text-white cursor-pointer" onClick={isCancelling ? () => {} : () => handleCancelRequest(shipment.iid)}>{isCancelling ? "Cancelling..." : "Cancel Request"}</div>
  ): null}
          
             {/* Cancelled: show message */}
             {isCancelled ? (
-              <div className="px-3 py-1 bg-red-500 rounded-3xl text-white cursor-not-allowed">Cancelled</div>
+              <div className="px-3 py-1 bg-red-500 rounded text-white cursor-not-allowed">Cancelled</div>
             ): null} </div>
         </div>
         {isManage && <ManageForm isManage={isManage} setIsManage={setIsManage} shipment={shipment} isShipped={hasAwb} />}
@@ -1691,7 +1691,7 @@ const Card = ({ shipment, onRefresh }) => {
               <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
             <label htmlFor="wid">Pickup Warehouse Name</label>
               <select
-                className="w-full border py-2 px-4 rounded-3xl"
+                className="w-full border py-2 px-4 rounded"
                 type="text"
                 id="wid"
                 name="wid"
@@ -1710,7 +1710,7 @@ const Card = ({ shipment, onRefresh }) => {
             <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
               <label htmlFor="pickDate">Pickup Date</label>
               <input
-                className="w-full border py-2 px-4 rounded-3xl"
+                className="w-full border py-2 px-4 rounded"
                 type="text"
                 id="pickDate"
                 name="pickDate"
@@ -1722,7 +1722,7 @@ const Card = ({ shipment, onRefresh }) => {
             <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
               <label htmlFor="pickTime">Pickup Time</label>
               <input
-                className="w-full border py-2 px-4 rounded-3xl"
+                className="w-full border py-2 px-4 rounded"
                 type="text"
                 id="pickTime"
                 name="pickTime"
@@ -1734,7 +1734,7 @@ const Card = ({ shipment, onRefresh }) => {
             <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
               <label htmlFor="packages">No of packages</label>
               <input
-                className="w-full border py-2 px-4 rounded-3xl"
+                className="w-full border py-2 px-4 rounded"
                 type="number"
                 id="packages"
                 name="packages"
@@ -1743,7 +1743,7 @@ const Card = ({ shipment, onRefresh }) => {
                 onChange={handleChange}
               />
             </div>
-            <button className="px-5 py-1 mx-2 bg-red-500  rounded-3xl text-white cursor-pointer" type="submit">Submit</button>
+            <button className="px-5 py-1 mx-2 bg-red-500  rounded text-white cursor-pointer" type="submit">Submit</button>
               </form>
           </div>
         </div>

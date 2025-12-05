@@ -164,7 +164,7 @@ const CreateWeightDisputePopup = ({ open, onClose, onSubmit }) => {
                             onChange={handleChange}
                         />
                     </div>
-                    <button type='button' onClick={getBoxes} disabled={!formData?.ord_id} className="mx-2 px-5 py-1 border rounded-3xl disabled:bg-gray-400 bg-red-500 text-white">Get Order Details</button>
+                    <button type='button' onClick={getBoxes} disabled={!formData?.ord_id} className="mx-2 px-5 py-1 border rounded disabled:bg-gray-400 bg-red-500 text-white">Get Order Details</button>
                 </div>
 
                 {

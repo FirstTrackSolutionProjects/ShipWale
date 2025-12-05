@@ -79,8 +79,8 @@ const MerchantInvoiceModal = ({ open, onClose, merchantId }) => {
             </div>
           </div>
           <div className='flex justify-end space-x-2 pt-2'>
-            <button type='button' className='px-4 py-2 rounded-3xl bg-gray-200' onClick={onClose}>Cancel</button>
-            <button type='submit' className={`px-4 py-2 rounded-3xl text-white ${loading ? 'bg-red-300 cursor-not-allowed' : 'bg-red-500'}`} disabled={loading}>
+            <button type='button' className='px-4 py-2 rounded bg-gray-200' onClick={onClose}>Cancel</button>
+            <button type='submit' className={`px-4 py-2 rounded text-white ${loading ? 'bg-red-300 cursor-not-allowed' : 'bg-red-500'}`} disabled={loading}>
               {loading ? 'Generating…' : 'Generate Invoice'}
             </button>
           </div>
