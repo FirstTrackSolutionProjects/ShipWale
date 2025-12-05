@@ -38,7 +38,7 @@ const ManualRecharge = () => {
             <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
               <label htmlFor="email">Beneficiary E-mail</label>
               <input
-                className="w-full border py-2 px-4 rounded-3xl"
+                className="w-full border py-2 px-4 rounded"
                 type="email"
                 id="email"
                 name="email"
@@ -51,7 +51,7 @@ const ManualRecharge = () => {
             <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
               <label htmlFor="amount">Amount</label>
               <input
-                className="w-full border py-2 px-4 rounded-3xl"
+                className="w-full border py-2 px-4 rounded"
                 type="number"
                 id="amount"
                 name="amount"
@@ -65,7 +65,7 @@ const ManualRecharge = () => {
           <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
               <label htmlFor="reason">Reason for manual Transaction</label>
               <input
-                className="w-full border py-2 px-4 rounded-3xl"
+                className="w-full border py-2 px-4 rounded"
                 type="text"
                 id="reason"
                 name="reason"
@@ -76,7 +76,7 @@ const ManualRecharge = () => {
               />
             </div>
           
-            <button type="submit" className="border bg-white mx-2  py-2 px-4 rounded-3xl">
+            <button type="submit" className="border bg-white mx-2  py-2 px-4 rounded">
               Recharge
             </button>
         </form>

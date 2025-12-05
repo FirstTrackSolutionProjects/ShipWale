@@ -145,7 +145,7 @@ const Domestic = () => {
               <select
                 name="method"
                 id="method"
-                className="border py-2 px-4 rounded-3xl"
+                className="border py-2 px-4 rounded"
                 value={formData.method}
                 onChange={handleChange}
               >
@@ -158,7 +158,7 @@ const Domestic = () => {
               <select
                 name="status"
                 id="status"
-                className="border py-2 px-4 rounded-3xl"
+                className="border py-2 px-4 rounded"
                 value={formData.status}
                 onChange={handleChange}
               >
@@ -172,7 +172,7 @@ const Domestic = () => {
             <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
               <label htmlFor="origin">Origin Pincode</label>
               <input
-                className="w-full border py-2 px-4 rounded-3xl"
+                className="w-full border py-2 px-4 rounded"
                 type="text"
                 id="origin"
                 name="origin"
@@ -184,7 +184,7 @@ const Domestic = () => {
             <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
               <label htmlFor="dest">Destination Pincode</label>
               <input
-                className="w-full border py-2 px-4 rounded-3xl"
+                className="w-full border py-2 px-4 rounded"
                 type="text"
                 id="dest"
                 name="dest"
@@ -198,7 +198,7 @@ const Domestic = () => {
           <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2 flex flex-col justify-center">
               <label htmlFor="codAmount">COD Amount</label>
               <input
-                className="w-full border py-2 px-4 rounded-3xl"
+                className="w-full border py-2 px-4 rounded"
                 type="text"
                 id="codAmount"
                 name="codAmount"
@@ -213,7 +213,7 @@ const Domestic = () => {
               <select
                 name="payMode"
                 id="payMode"
-                className="border py-2 px-4 rounded-3xl"
+                className="border py-2 px-4 rounded"
                 value={formData.payMode}
                 onChange={handleChange}
 
@@ -231,7 +231,7 @@ const Domestic = () => {
               <select
                 name="isB2B"
                 id="shipmentType"
-                className="border py-2 px-4 rounded-3xl"
+                className="border py-2 px-4 rounded"
                 value={formData.isB2B}
                 onChange={handleChange}
 
@@ -244,7 +244,7 @@ const Domestic = () => {
             <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2 flex flex-col justify-center">
               <label htmlFor="invoiceAmount">Invoice Amount</label>
               <input
-                className="w-full border py-2 px-4 rounded-3xl"
+                className="w-full border py-2 px-4 rounded"
                 type="text"
                 id="invoiceAmount"
                 name="invoiceAmount"
@@ -262,7 +262,7 @@ const Domestic = () => {
               <label htmlFor="weight">Weight</label>
               <div className="w-full flex space-x-2">
               <input required
-                className="w-full border py-2 px-4 rounded-3xl"
+                className="w-full border py-2 px-4 rounded"
                 type="text"
                 id="weight"
                 name="weight"
@@ -273,7 +273,7 @@ const Domestic = () => {
               <select
                 name="weight_unit"
                 id="weight_unit"
-                className="border py-2 px-4 rounded-3xl"
+                className="border py-2 px-4 rounded"
                 value={box.weight_unit}
                 onChange={(e)=>handleBoxes(index,e)}
               >
@@ -286,7 +286,7 @@ const Domestic = () => {
             <div className="flex-1 mb-2 min-w-[70px] space-y-2">
               <label htmlFor="length">L (in cm)</label>
               <input required
-                className="w-full border py-2 px-4 rounded-3xl"
+                className="w-full border py-2 px-4 rounded"
                 type="text"
                 id="length"
                 name="length"
@@ -299,7 +299,7 @@ const Domestic = () => {
             <div className="flex-1 mb-2 min-w-[70px] space-y-2">
               <label htmlFor="breadth">B (in cm)</label>
               <input required
-                className="w-full border py-2 px-4 rounded-3xl"
+                className="w-full border py-2 px-4 rounded"
                 type="text"
                 id="breadth"
                 name="breadth"
@@ -312,7 +312,7 @@ const Domestic = () => {
             <div className="flex-1 mb-2 min-w-[70px] space-y-2">
               <label htmlFor="height">H (in cm)</label>
               <input required
-                className="w-full border py-2 px-4 rounded-3xl"
+                className="w-full border py-2 px-4 rounded"
                 type="text"
                 id="height"
                 name="height"
@@ -325,7 +325,7 @@ const Domestic = () => {
             <div className="flex-1 mb-2 min-w-[70px] space-y-2">
               <label htmlFor="quantity">Quantity</label>
               <input required
-                className="w-full border py-2 px-4 rounded-3xl"
+                className="w-full border py-2 px-4 rounded"
                 type="text"
                 id="quantity"
                 name="quantity"
@@ -340,8 +340,8 @@ const Domestic = () => {
             </div>
             </>
           ))}
-            <button type="button" className="m-2 px-5 py-1 border border-red-500 rounded-3xl bg-white text-red-500" onClick={addBox}>Add More Boxes</button>
-            <button type="submit" className="border bg-red-500 hover:bg-red-600 text-white mx-2  py-2 px-4 rounded-3xl">
+            <button type="button" className="m-2 px-5 py-1 border border-red-500 rounded bg-white text-red-500" onClick={addBox}>Add More Boxes</button>
+            <button type="submit" className="border bg-red-500 hover:bg-red-600 text-white mx-2  py-2 px-4 rounded">
               Submit and Compare
             </button>
         </form>

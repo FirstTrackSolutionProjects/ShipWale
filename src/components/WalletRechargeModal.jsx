@@ -121,14 +121,14 @@ const WalletRechargeModal = ({ onClose }) => {
                     value={amount}
                     min={100}
                     onChange={(e) => setAmount(e.target.value)}
-                    className='w-full border py-2 px-4 rounded-3xl'
+                    className='w-full border py-2 px-4 rounded'
                 />
                 <div className='flex w-full justify-evenly'>
-                    <button className='w-20 border py-2 px-4 rounded-3xl hover:bg-red-500 hover:text-white' onClick={() => { setAmount(500) }}>500</button>
-                    <button className='w-20 border py-2 px-4 rounded-3xl hover:bg-red-500 hover:text-white' onClick={() => { setAmount(1000) }}>1000</button>
-                    <button className='w-20 border py-2 px-4 rounded-3xl hover:bg-red-500 hover:text-white' onClick={() => { setAmount(2000) }}>2000</button>
+                    <button className='w-20 border py-2 px-4 rounded hover:bg-red-500 hover:text-white' onClick={() => { setAmount(500) }}>500</button>
+                    <button className='w-20 border py-2 px-4 rounded hover:bg-red-500 hover:text-white' onClick={() => { setAmount(1000) }}>1000</button>
+                    <button className='w-20 border py-2 px-4 rounded hover:bg-red-500 hover:text-white' onClick={() => { setAmount(2000) }}>2000</button>
                 </div>
-                <button type='submit' className='w-40 border py-2 px-4 rounded-3xl hover:text-white hover:bg-red-500'>Recharge Wallet</button>
+                <button type='submit' className='w-40 border py-2 px-4 rounded hover:text-white hover:bg-red-500'>Recharge Wallet</button>
             </form>
         </div>
     )

@@ -25,7 +25,7 @@ const Card = ({ report }) => {
         </div>
         <div className="absolute right-4 sm:right-8 flex items-center space-x-2">
           <div className={`${report.dispute_deduction >= 0 ? 'text-red-500' : 'text-green-500'} font-bold`}>{report.dispute_deduction >= 0 ? '-':''}₹{report.dispute_deduction}</div>
-          <div className="px-3 py-1 bg-red-500  rounded-3xl text-white cursor-pointer" onClick={() => setIsView(true)}>View</div>
+          <div className="px-3 py-1 bg-red-500  rounded text-white cursor-pointer" onClick={() => setIsView(true)}>View</div>
         </div>
       </div>
     </>
@@ -89,7 +89,7 @@ const Listing = () => {
       >
         <div className="w-full h-16 px-4  relative flex justify-between">
           <div className="text-2xl font-medium">WEIGHT DISPUTES</div>
-          {admin ? <div><button type='button' onClick={toggleCreateDisputePopup} className="mx-2 px-5 py-1 border rounded-3xl bg-red-500 text-white">Create</button></div> : null}
+          {admin ? <div><button type='button' onClick={toggleCreateDisputePopup} className="mx-2 px-5 py-1 border rounded bg-red-500 text-white">Create</button></div> : null}
         </div>
 
         <details className="w-full p-2 bg-red-500 rounded-xl text-white">

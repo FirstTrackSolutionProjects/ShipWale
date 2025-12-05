@@ -99,7 +99,7 @@ const AddForm = ({ setMode }) => {
               e.preventDefault();
               setMode(0);
             }}
-            className="px-5 py-1 bg-red-500 absolute rounded-3xl text-white  right-4"
+            className="px-5 py-1 bg-red-500 absolute rounded text-white  right-4"
           >
             X
           </div>
@@ -113,7 +113,7 @@ const AddForm = ({ setMode }) => {
             <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
               <label htmlFor="name">Warehouse Name*</label>
               <input required
-                className="w-full border py-2 px-4 rounded-3xl"
+                className="w-full border py-2 px-4 rounded"
                 type="text"
                 id="name"
                 name="name"
@@ -128,7 +128,7 @@ const AddForm = ({ setMode }) => {
             <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
               <label htmlFor="phone">Mobile Number*</label>
               <input required
-                className="w-full border py-2 px-4 rounded-3xl"
+                className="w-full border py-2 px-4 rounded"
                 type="text"
                 id="phone"
                 name="phone"
@@ -142,7 +142,7 @@ const AddForm = ({ setMode }) => {
             <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
               <label htmlFor="email">Email*</label>
               <input required
-                className="w-full border py-2 px-4 rounded-3xl"
+                className="w-full border py-2 px-4 rounded"
                 type="text"
                 id="email"
                 name="email"
@@ -155,7 +155,7 @@ const AddForm = ({ setMode }) => {
           <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
             <label htmlFor="address">Address (For Domestic Shipments)*</label>
             <input required
-              className="w-full border py-2 px-4 rounded-3xl"
+              className="w-full border py-2 px-4 rounded"
               type="text"
               maxLength={100}
               id="address"
@@ -168,7 +168,7 @@ const AddForm = ({ setMode }) => {
           <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
             <label htmlFor="international_address">Address (For International Shipments)</label>
             <input
-              className="w-full border py-2 px-4 rounded-3xl"
+              className="w-full border py-2 px-4 rounded"
               type="text"
               id="international_address"
               name="international_address"
@@ -189,7 +189,7 @@ const AddForm = ({ setMode }) => {
             <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
               <label htmlFor="pin">Pincode*</label>
               <input required
-                className="w-full border py-2 px-4 rounded-3xl"
+                className="w-full border py-2 px-4 rounded"
                 type="text"
                 id="pin"
                 name="pin"
@@ -212,7 +212,7 @@ const AddForm = ({ setMode }) => {
             <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
               <label htmlFor="city">City*</label>
               <input required
-                className="w-full border py-2 px-4 rounded-3xl"
+                className="w-full border py-2 px-4 rounded"
                 type="text"
                 id="city"
                 name="city"
@@ -226,7 +226,7 @@ const AddForm = ({ setMode }) => {
             <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2 flex flex-col justify-center">
               <label htmlFor="state">State*</label>
               <input required
-                className="w-full border py-2 px-4 rounded-3xl"
+                className="w-full border py-2 px-4 rounded"
                 type="text"
                 id="state"
                 name="state"
@@ -238,7 +238,7 @@ const AddForm = ({ setMode }) => {
             <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
               <label htmlFor="country">Country*</label>
               <input required
-                className="w-full border py-2 px-4 rounded-3xl"
+                className="w-full border py-2 px-4 rounded"
                 type="text"
                 id="country"
                 name="country"
@@ -250,7 +250,7 @@ const AddForm = ({ setMode }) => {
           </div>
           {/* <div className="flex-1 mx-2 mb-2 min-w-[300px] flex justify-center space-x-3">
             <input
-                className=" border py-2 px-4 rounded-3xl"
+                className=" border py-2 px-4 rounded"
                 type="checkbox"
                 id="same"
                 name="same"
@@ -262,7 +262,7 @@ const AddForm = ({ setMode }) => {
             </div> */}
           <button
             type="submit"
-            className="border bg-white mx-2  py-2 px-4 rounded-3xl"
+            className="border bg-white mx-2  py-2 px-4 rounded"
           >
             Create Warehouse
           </button>
@@ -312,7 +312,7 @@ const ManageForm = ({ isManage, setIsManage, name, address, pin, phone, city, st
               e.preventDefault();
               setIsManage(0);
             }}
-            className="px-5 py-1 bg-red-500 absolute rounded-3xl text-white  right-4"
+            className="px-5 py-1 bg-red-500 absolute rounded text-white  right-4"
           >
             X
           </div>
@@ -326,7 +326,7 @@ const ManageForm = ({ isManage, setIsManage, name, address, pin, phone, city, st
               <label htmlFor="name">Warehouse Name</label>
               <TextField
                 size={'small'}
-                className="w-full border py-2 px-4 rounded-3xl"
+                className="w-full border py-2 px-4 rounded"
                 type="text"
                 value={formData.name}
                 InputProps={{ readOnly: true }}
@@ -338,7 +338,7 @@ const ManageForm = ({ isManage, setIsManage, name, address, pin, phone, city, st
               <label htmlFor="phone">Mobile Number</label>
               <TextField
                 size={'small'}
-                className="w-full border py-2 px-4 rounded-3xl"
+                className="w-full border py-2 px-4 rounded"
                 value={formData.phone}
                 InputProps={{ readOnly: true }}
               />
@@ -348,7 +348,7 @@ const ManageForm = ({ isManage, setIsManage, name, address, pin, phone, city, st
             <label htmlFor="address">Address (For Domestic Shipments)</label>
             <TextField
               size="small"
-              className="w-full border py-2 px-4 rounded-3xl"
+              className="w-full border py-2 px-4 rounded"
               type="text"
               value={formData.address}
               InputProps={{ readOnly: true, maxLength: 100 }}
@@ -360,7 +360,7 @@ const ManageForm = ({ isManage, setIsManage, name, address, pin, phone, city, st
             <TextField
               id="international_address"
               size="small"
-              className="w-full border py-2 px-4 rounded-3xl"
+              className="w-full border py-2 px-4 rounded"
               type="text"
               value={formData.international_address}
               onChange={(e) => {
@@ -383,7 +383,7 @@ const ManageForm = ({ isManage, setIsManage, name, address, pin, phone, city, st
             <label htmlFor="state">City</label>
             <TextField
               size="small"
-              className="w-full border py-2 px-4 rounded-3xl"
+              className="w-full border py-2 px-4 rounded"
               type="text"
               value={formData.city}
               InputProps={{ readOnly: true }}
@@ -393,7 +393,7 @@ const ManageForm = ({ isManage, setIsManage, name, address, pin, phone, city, st
             <label htmlFor="address">State</label>
             <TextField
               size="small"
-              className="w-full border py-2 px-4 rounded-3xl"
+              className="w-full border py-2 px-4 rounded"
               type="text"
               value={formData.state}
               InputProps={{ readOnly: true }}
@@ -403,7 +403,7 @@ const ManageForm = ({ isManage, setIsManage, name, address, pin, phone, city, st
             <label htmlFor="address">Country</label>
             <TextField
               size="small"
-              className="w-full border py-2 px-4 rounded-3xl"
+              className="w-full border py-2 px-4 rounded"
               type="text"
               value={formData.country}
               InputProps={{ readOnly: true }}
@@ -424,7 +424,7 @@ const ManageForm = ({ isManage, setIsManage, name, address, pin, phone, city, st
           <div className="w-full flex justify-end px-2 mt-2">
             <button
               type="button"
-              className="border bg-red-600 text-white mx-2 py-2 px-4 rounded-3xl disabled:opacity-60"
+              className="border bg-red-600 text-white mx-2 py-2 px-4 rounded disabled:opacity-60"
               onClick={saving ? () => {} : handleUpdate}
               disabled={saving}
             >
@@ -581,7 +581,7 @@ const Listing = ({ setMode }) => {
               e.preventDefault();
               setMode(1);
             }}
-            className="px-5 py-1 bg-red-500 absolute rounded-3xl text-white  right-4"
+            className="px-5 py-1 bg-red-500 absolute rounded text-white  right-4"
           >
             Add
           </div>

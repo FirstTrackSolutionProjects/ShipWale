@@ -116,7 +116,7 @@ const FileUploadForm = ({reqId}) => {
         <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
           <label htmlFor="aadharDoc">Aadhar Card (Both Sides) *</label>
           <input
-            className="w-full border leading-8 rounded-3xl"
+            className="w-full border leading-8 rounded"
             type="file"
             onChange={handleFileChange}
             id="aadharDoc"
@@ -125,7 +125,7 @@ const FileUploadForm = ({reqId}) => {
           <button
             type="button"
             onClick={() => handleUpload("aadharDoc")}
-            className="px-5 py-1 border rounded-3xl bg-red-500 text-white"
+            className="px-5 py-1 border rounded bg-red-500 text-white"
           >
             Upload
           </button>
@@ -134,7 +134,7 @@ const FileUploadForm = ({reqId}) => {
         <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
           <label htmlFor="panDoc">PAN Card (Front Side) *</label>
           <input
-            className="w-full border leading-8 rounded-3xl"
+            className="w-full border leading-8 rounded"
             type="file"
             onChange={handleFileChange}
             id="panDoc"
@@ -143,7 +143,7 @@ const FileUploadForm = ({reqId}) => {
           <button
             type="button"
             onClick={() => handleUpload("panDoc")}
-            className="px-5 py-1 border rounded-3xl bg-red-500 text-white"
+            className="px-5 py-1 border rounded bg-red-500 text-white"
           >
             Upload
           </button>
@@ -154,7 +154,7 @@ const FileUploadForm = ({reqId}) => {
         <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
           <label htmlFor="gstDoc">GST Certificate </label>
           <input
-            className="w-full border leading-8 rounded-3xl"
+            className="w-full border leading-8 rounded"
             type="file"
             onChange={handleFileChange}
             id="gstDoc"
@@ -163,7 +163,7 @@ const FileUploadForm = ({reqId}) => {
           <button
             type="button"
             onClick={() => handleUpload("gstDoc")}
-            className="px-5 py-1 border rounded-3xl bg-red-500 text-white"
+            className="px-5 py-1 border rounded bg-red-500 text-white"
           >
             Upload
           </button>
@@ -172,7 +172,7 @@ const FileUploadForm = ({reqId}) => {
         <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
           <label htmlFor="cancelledCheque">Cancelled Cheque *</label>
           <input
-            className="w-full border leading-8 rounded-3xl"
+            className="w-full border leading-8 rounded"
             type="file"
             onChange={handleFileChange}
             id="cancelledCheque"
@@ -181,7 +181,7 @@ const FileUploadForm = ({reqId}) => {
           <button
             type="button"
             onClick={() => handleUpload("cancelledCheque")}
-            className="px-5 py-1 border rounded-3xl bg-red-500 text-white"
+            className="px-5 py-1 border rounded bg-red-500 text-white"
           >
             Upload
           </button>
@@ -192,7 +192,7 @@ const FileUploadForm = ({reqId}) => {
         <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
           <label htmlFor="selfieDoc">Upload your selfie *</label>
           <input
-            className="w-full border leading-8 rounded-3xl"
+            className="w-full border leading-8 rounded"
             type="file"
             onChange={handleFileChange}
             id="selfieDoc"
@@ -201,7 +201,7 @@ const FileUploadForm = ({reqId}) => {
           <button
             type="button"
             onClick={() => handleUpload("selfieDoc")}
-            className="px-5 py-1 border rounded-3xl bg-red-500 text-white"
+            className="px-5 py-1 border rounded bg-red-500 text-white"
           >
             Upload
           </button>
@@ -211,7 +211,7 @@ const FileUploadForm = ({reqId}) => {
       <div className="px-2 space-x-4 mb-4">
         <button
           type="submit"
-          className="px-5 py-1 border rounded-3xl bg-red-500 text-white"
+          className="px-5 py-1 border rounded bg-red-500 text-white"
         >
           Submit
         </button>
@@ -275,7 +275,7 @@ const TextForm = ({ onNext, setReqId }) => {
         <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
           <label htmlFor="address">Address*</label>
           <input required
-            className="w-full border py-2 px-4 rounded-3xl"
+            className="w-full border py-2 px-4 rounded"
             type="text"
             onChange={handleChange}
             value={formData.address}
@@ -289,7 +289,7 @@ const TextForm = ({ onNext, setReqId }) => {
         <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2 flex flex-col justify-center">
           <label htmlFor="state">State*</label>
           <input required
-            className="w-full border py-2 px-4 rounded-3xl"
+            className="w-full border py-2 px-4 rounded"
             type="text"
             onChange={handleChange}
             value={formData.state}
@@ -301,7 +301,7 @@ const TextForm = ({ onNext, setReqId }) => {
         <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2 flex flex-col justify-center">
           <label htmlFor="city">City*</label>
           <input required
-            className="w-full border py-2 px-4 rounded-3xl"
+            className="w-full border py-2 px-4 rounded"
             type="text"
             onChange={handleChange}
             value={formData.city}
@@ -315,7 +315,7 @@ const TextForm = ({ onNext, setReqId }) => {
         <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
           <label htmlFor="pin">PIN*</label>
           <input required
-            className="w-full border py-2 px-4 rounded-3xl"
+            className="w-full border py-2 px-4 rounded"
             type="text"
             onChange={handleChange}
             value={formData.pin}
@@ -329,7 +329,7 @@ const TextForm = ({ onNext, setReqId }) => {
         <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
           <label htmlFor="aadhar">Aadhar Number*</label>
           <input required
-            className="w-full border py-2 px-4 rounded-3xl"
+            className="w-full border py-2 px-4 rounded"
             type="text"
             onChange={handleChange}
             value={formData.aadhar}
@@ -341,7 +341,7 @@ const TextForm = ({ onNext, setReqId }) => {
         <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
           <label htmlFor="pan">PAN Number*</label>
           <input required
-            className="w-full border py-2 px-4 rounded-3xl"
+            className="w-full border py-2 px-4 rounded"
             type="text"
             onChange={handleChange}
             value={formData.pan}
@@ -355,7 +355,7 @@ const TextForm = ({ onNext, setReqId }) => {
         <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
           <label htmlFor="gst">GST Number</label>
           <input
-            className="w-full border py-2 px-4 rounded-3xl"
+            className="w-full border py-2 px-4 rounded"
             type="text"
             onChange={handleChange}
             value={formData.gst}
@@ -367,7 +367,7 @@ const TextForm = ({ onNext, setReqId }) => {
         <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
           <label htmlFor="msme">MSME/UDYAM Number</label>
           <input
-            className="w-full border py-2 px-4 rounded-3xl"
+            className="w-full border py-2 px-4 rounded"
             type="text"
             onChange={handleChange}
             value={formData.msme}
@@ -381,7 +381,7 @@ const TextForm = ({ onNext, setReqId }) => {
         <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
           <label htmlFor="bank">Bank Name*</label>
           <input required
-            className="w-full border py-2 px-4 rounded-3xl"
+            className="w-full border py-2 px-4 rounded"
             type="text"
             onChange={handleChange}
             value={formData.bank}
@@ -393,7 +393,7 @@ const TextForm = ({ onNext, setReqId }) => {
         <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
           <label htmlFor="ifsc">IFSC*</label>
           <input required
-            className="w-full border py-2 px-4 rounded-3xl"
+            className="w-full border py-2 px-4 rounded"
             type="text"
             onChange={handleChange}
             value={formData.ifsc}
@@ -407,7 +407,7 @@ const TextForm = ({ onNext, setReqId }) => {
         <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
           <label htmlFor="account">Account Number*</label>
           <input required
-            className="w-full border py-2 px-4 rounded-3xl"
+            className="w-full border py-2 px-4 rounded"
             type="text"
             onChange={handleChange}
             value={formData.account}
@@ -419,7 +419,7 @@ const TextForm = ({ onNext, setReqId }) => {
         <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
           <label htmlFor="cin">CIN</label>
           <input
-            className="w-full border py-2 px-4 rounded-3xl"
+            className="w-full border py-2 px-4 rounded"
             type="text"
             onChange={handleChange}
             value={formData.cin}
@@ -433,7 +433,7 @@ const TextForm = ({ onNext, setReqId }) => {
       <div className="px-2 space-x-4 mb-4">
         <button
           type="submit"
-          className="px-5 py-1 border rounded-3xl bg-red-500 text-white"
+          className="px-5 py-1 border rounded bg-red-500 text-white"
         >
           Next
         </button>
@@ -442,7 +442,7 @@ const TextForm = ({ onNext, setReqId }) => {
             e.preventDefault();
             setFormData(InitialState);
           }}
-          className="px-5 py-1 border rounded-3xl bg-red-500 text-white"
+          className="px-5 py-1 border rounded bg-red-500 text-white"
         >
           Clear
         </button>
