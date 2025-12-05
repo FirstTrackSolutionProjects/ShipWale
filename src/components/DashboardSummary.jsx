@@ -42,7 +42,7 @@ const DashboardSummary = () => {
         <DashboardSummaryCard title="Total Delivered" number={summary?summary.delivered:0} Icon={CheckCircle2} />
         <DashboardSummaryCard title="Pending Pickups" number={summary?summary.unDelivered:0} Icon={Loader2} />
         <DashboardSummaryCard title={admin?`Total Revenue`:`Total Wallet Recharge`} number={summary? (admin ? summary.revenue : summary.total_recharge) :0} Icon={admin ? IndianRupee : Wallet} />
-        <DashboardSummaryCard title="Parcel In Transit" number={summary?summary.inTransit:0} Icon={Truck} />
+        <DashboardSummaryCard title="Shipment In Transit" number={summary?summary.inTransit:0} Icon={Truck} />
         <DashboardSummaryCard title="Out For Delivery" number={summary?summary.outForDeliveries:0} Icon={Truck} />
         <DashboardSummaryCard title="Total RTO Shipments" number={summary?summary.rtoShipment:0} Icon={RotateCcw} />
         {/* <DashboardSummaryCard title="NDR Parcel" number="0" Icon={Package} /> */}
