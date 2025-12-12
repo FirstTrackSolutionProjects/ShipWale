@@ -71,7 +71,7 @@ const ComparePrices = ({method, boxes, status, origin, dest, payMode, codAmount,
 
 
 const Domestic = () => {
-  const [boxes, setBoxes] = useState([{weight : 0, weight_unit : 'g', length : 0, breadth : 0, height : 0, quantity : 1}])
+  const [boxes, setBoxes] = useState([{weight : 0, weight_unit : 'kg', length : 0, breadth : 0, height : 0, quantity : 1}])
   const [formData, setFormData] = useState({
     method : 'S',
     status: 'Delivered',
@@ -129,7 +129,7 @@ const Domestic = () => {
     setBoxes(updatedBoxes);
   };
   const addBox = () => {
-    setBoxes([...boxes, {  length: 0 , breadth : 0 , height : 0  , weight: 0, weight_unit : 'g', quantity: 1 }]);
+    setBoxes([...boxes, {  length: 0 , breadth : 0 , height : 0  , weight: 0, weight_unit : 'kg', quantity: 1 }]);
   };
   const removeBox = (index) => {
     const updatedBoxes = boxes.filter((_, i) => i !== index);

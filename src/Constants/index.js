@@ -30,6 +30,8 @@ import UpdateProfileRequestSubmissions from '../components/UpdateProfileRequestS
 import CodRemittanceAdmin from "../components/CodRemittance/CodRemittanceAdmin"
 import CodRemittanceMerchant from "../components/CodRemittance/CodRemittanceMerchant"
 import InternationalWeightDisputes from "../components/InternationalWeightDisputes"
+import Pricing from "../pages/Pricing"
+import {IndianRupee} from "lucide-react"
 // Icon components (lucide-react) for menu items
 import {
     LayoutDashboard,
@@ -100,6 +102,15 @@ export const menuItems = [
         name : "Wallet Recharge",
         isDropdown : false,
         url : 'wallet-recharge',
+        dropDownOptions : [{}]
+    },
+    {
+        
+        icon : IndianRupee,
+        name : "Rate Calculator",
+        isDropdown : false,
+        url : 'rate-calculator',
+        component: Pricing,
         dropDownOptions : [{}]
     },
     // {

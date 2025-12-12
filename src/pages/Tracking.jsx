@@ -89,6 +89,7 @@ const Tracking = () => {
 
 const Card = ({ scan }) => {
   return (
+    <>
     <div className="w-full px-4 py-3 flex items-start gap-4">
       <div className="mt-1 w-3 h-3 rounded-full bg-red-500 shadow shadow-red-200" />
       <div className="flex-1 rounded-xl border border-gray-100 bg-white p-4 shadow-sm hover:shadow-md transition-shadow">
@@ -97,6 +98,8 @@ const Card = ({ scan }) => {
         <div className="mt-1 text-xs text-gray-400">{scan?.ScanDateTime || '—'}</div>
       </div>
     </div>
+    <div className="my-2 border-b"> </div>
+    </>
   )
 }
 
