@@ -35,15 +35,19 @@ const timestampToDate = (timestamp) => {
 const DelhiveryStatusCard = ({ report, status }) => {
   return (
     <div>
-      <p>AWB : {report.awb}</p>
+      <p className="font-bold">AWB : <b className="text-red-500">{report.awb}</b></p>
       <p>Ref Id: {report.ref_id}</p>
       <p>Status : {status.Status.Status}</p>
+      <div className="my-2 border-b border-black"> </div>
       {
         (status.Scans).map((scan, index) => {
           const timestamp = scan.ScanDetail.ScanDateTime;
           const formattedTimestamp = timestampToDate(timestamp);
           return (
+            <>
             <div>{formattedTimestamp} | {scan.ScanDetail.ScannedLocation} | {scan.ScanDetail.Instructions} </div>
+            <div className="my-2 border-b border-black"> </div>
+            </>
           )
         })
       }

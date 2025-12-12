@@ -45,6 +45,7 @@ const DashboardSummary = () => {
         <DashboardSummaryCard title="Shipment In Transit" number={summary?summary.inTransit:0} Icon={Truck} />
         <DashboardSummaryCard title="Out For Delivery" number={summary?summary.outForDeliveries:0} Icon={Truck} />
         <DashboardSummaryCard title="Total RTO Shipments" number={summary?summary.rtoShipment:0} Icon={RotateCcw} />
+        {!admin ? <DashboardSummaryCard title="Pending COD Remittance" number={`₹${summary?summary.pendingCodRemittance:0}`} Icon={Users} /> : null}
         {/* <DashboardSummaryCard title="NDR Parcel" number="0" Icon={Package} /> */}
       </div>
     )

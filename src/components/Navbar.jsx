@@ -16,7 +16,7 @@ const Navbar = () => {
     { to: "/", label: "Home" },
     { to: "/about", label: "About Us" },
     { to: "/tracking", label: "Tracking", dashboard: true },
-    { to: "/price", label: "Pricing", dashboard: true },
+    // { to: "/price", label: "Pricing", dashboard: true },
    
     { to: "/blog", label: "Blog" },
     { to: "/contact", label: "Contact Us" }
@@ -50,7 +50,7 @@ const Navbar = () => {
   };
   return (
     <>
-      <nav className="fixed top-0 left-0 w-full shadow-md bg-linear-to-r from-black  to-red-400 z-10">
+      <nav className="fixed top-0 left-0 w-full shadow-md bg-black z-10">
 
         <div className="w-full px-4 sm:px-6 lg:px-10">
           <div className="flex justify-between items-center h-20">
