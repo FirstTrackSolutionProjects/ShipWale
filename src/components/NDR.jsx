@@ -38,12 +38,16 @@ const DelhiveryStatusCard = ({ report, status }) => {
       <p>AWB : {report.awb}</p>
       <p>Ref Id: {report.ref_id}</p>
       <p>Status : {status.Status.Status}</p>
+      <div className="my-2 border-b border-black"> </div>
       {
         (status.Scans).map((scan, index) => {
           const timestamp = scan.ScanDetail.ScanDateTime;
           const formattedTimestamp = timestampToDate(timestamp);
           return (
-            <div>{formattedTimestamp} | {scan.ScanDetail.ScannedLocation} | {scan.ScanDetail.Instructions} </div>
+            <>
+              <div>{formattedTimestamp} | {scan.ScanDetail.ScannedLocation} | {scan.ScanDetail.Instructions} </div>
+              <div className="my-2 border-b border-black"> </div>
+            </>
           )
         })
       }
