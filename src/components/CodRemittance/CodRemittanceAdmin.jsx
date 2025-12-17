@@ -6,6 +6,8 @@ import getCodRemittanceAdminService from '../../services/codRemittanceServices/g
 import markCodRemittanceAsPaidByOrdersService from '../../services/codRemittanceServices/markCodRemittanceAsPaidByOrders.service';
 import getS3PutUrlService from '../../services/s3Services/getS3PutUrlService';
 import s3FileUploadService from '../../services/s3Services/s3FileUploadService';
+import getPendingCodRemittanceAmountService from '../../services/codRemittanceServices/getPendingCodRemittanceAmount.service';
+import getPaidCodRemittanceAmountService from '../../services/codRemittanceServices/getPaidCodRemittanceAmount.service';
 
 const API_URL = import.meta.env.VITE_APP_API_URL;
 
@@ -87,6 +89,9 @@ const CodRemittanceAdmin = () => {
   const [error, setError] = useState('');
   const apiRef = useGridApiRef();
   const [selection, setSelection] = useState({ ids: new Set() });
+  const [pendingAmount, setPendingAmount] = useState(0);
+  const [paidAmount, setPaidAmount] = useState(0);
+  const totalAmount = useMemo(() => pendingAmount + paidAmount, [pendingAmount, paidAmount]);
 
   const selectedIds = useMemo(() => {
     if (apiRef.current) {
@@ -227,7 +232,30 @@ const CodRemittanceAdmin = () => {
     }
   };
 
-  useEffect(() => { fetchServices(); }, []);
+  useEffect(() => {
+    fetchServices();
+
+    const fetchSummary = async () => {
+      try {
+        const [pendingRes, paidRes] = await Promise.all([
+          getPendingCodRemittanceAmountService(),
+          getPaidCodRemittanceAmountService(),
+        ]);
+
+        const extractAmount = (res) => {
+          if (!res) return 0;
+          return parseInt(res.data) || 0;
+        };
+
+        setPendingAmount(extractAmount(pendingRes));
+        setPaidAmount(extractAmount(paidRes));
+      } catch (e) {
+        console.warn('Failed to fetch COD admin summary', e);
+      }
+    };
+
+    fetchSummary();
+  }, []);
   useEffect(() => { fetchRows(page, filters); }, [page]);
   const didMountRef = useRef(false);
   useEffect(() => {
@@ -395,6 +423,22 @@ const CodRemittanceAdmin = () => {
           </Box>
         </Box>
       </Paper>
+
+      {/* COD summary tiles */}
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mb: 2 }}>
+        <Box sx={{ flex: 1, minWidth: 200, p: 2, borderRadius: 1, bgcolor: '#fff7ed', border: '1px solid #fed7aa' }}>
+          <div className="text-xs font-semibold text-gray-600">Pending COD</div>
+          <div className="text-lg font-bold">₹ {pendingAmount.toFixed(2)}</div>
+        </Box>
+        <Box sx={{ flex: 1, minWidth: 200, p: 2, borderRadius: 1, bgcolor: '#e0f2fe', border: '1px solid #bae6fd' }}>
+          <div className="text-xs font-semibold text-gray-600">Paid COD</div>
+          <div className="text-lg font-bold">₹ {paidAmount.toFixed(2)}</div>
+        </Box>
+        <Box sx={{ flex: 1, minWidth: 200, p: 2, borderRadius: 1, bgcolor: '#ecfdf3', border: '1px solid #bbf7d0' }}>
+          <div className="text-xs font-semibold text-gray-600">Total COD</div>
+          <div className="text-lg font-bold">₹ {totalAmount.toFixed(2)}</div>
+        </Box>
+      </Box>
 
       {/* Action bar */}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>

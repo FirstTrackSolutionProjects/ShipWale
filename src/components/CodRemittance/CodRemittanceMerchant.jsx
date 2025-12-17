@@ -3,6 +3,8 @@ import { DataGrid } from '@mui/x-data-grid';
 import { Box, Paper, TextField, FormControl, InputLabel, Select, MenuItem, Button } from '@mui/material';
 import convertToUTCISOString from '../../helpers/convertToUTCISOString';
 import getCodRemittanceMerchantService from '../../services/codRemittanceServices/getCodRemittanceMerchant.service';
+import getPendingCodRemittanceAmountService from '../../services/codRemittanceServices/getPendingCodRemittanceAmount.service';
+import getPaidCodRemittanceAmountService from '../../services/codRemittanceServices/getPaidCodRemittanceAmount.service';
 
 const API_URL = import.meta.env.VITE_APP_API_URL;
 
@@ -82,6 +84,9 @@ const CodRemittanceMerchant = () => {
   const [error, setError] = useState('');
 
   const canSearch = useMemo(() => !loading, [loading]);
+  const [pendingAmount, setPendingAmount] = useState(0);
+  const [paidAmount, setPaidAmount] = useState(0);
+  const totalAmount = useMemo(() => pendingAmount + paidAmount, [pendingAmount, paidAmount]);
 
   const fetchServices = async () => {
     try {
@@ -117,6 +122,29 @@ const CodRemittanceMerchant = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const fetchSummary = async () => {
+      try {
+        const [pendingRes, paidRes] = await Promise.all([
+          getPendingCodRemittanceAmountService(),
+          getPaidCodRemittanceAmountService(),
+        ]);
+
+        const extractAmount = (res) => {
+          if (!res) return 0;
+          return res.data || 0;
+        };
+
+        setPendingAmount(extractAmount(pendingRes));
+        setPaidAmount(extractAmount(paidRes));
+      } catch (e) {
+        console.warn('Failed to fetch COD summary', e);
+      }
+    };
+
+    fetchSummary();
+  }, []);
 
   useEffect(() => { fetchServices(); }, []);
   useEffect(() => { fetchRows(page, filters); }, [page]);
@@ -251,6 +279,22 @@ const CodRemittanceMerchant = () => {
           </Box>
         </Box>
       </Paper>
+
+      {/* COD summary tiles */}
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mb: 2 }}>
+        <Box sx={{ flex: 1, minWidth: 200, p: 2, borderRadius: 1, bgcolor: '#fff7ed', border: '1px solid #fed7aa' }}>
+          <div className="text-xs font-semibold text-gray-600">Pending COD</div>
+          <div className="text-lg font-bold">₹ {pendingAmount.toFixed(2)}</div>
+        </Box>
+        <Box sx={{ flex: 1, minWidth: 200, p: 2, borderRadius: 1, bgcolor: '#e0f2fe', border: '1px solid #bae6fd' }}>
+          <div className="text-xs font-semibold text-gray-600">Paid COD</div>
+          <div className="text-lg font-bold">₹ {paidAmount.toFixed(2)}</div>
+        </Box>
+        <Box sx={{ flex: 1, minWidth: 200, p: 2, borderRadius: 1, bgcolor: '#ecfdf3', border: '1px solid #bbf7d0' }}>
+          <div className="text-xs font-semibold text-gray-600">Total COD</div>
+          <div className="text-lg font-bold">₹ {totalAmount.toFixed(2)}</div>
+        </Box>
+      </Box>
 
       {error ? (
         <div className="text-red-600 mt-3">{error}</div>
