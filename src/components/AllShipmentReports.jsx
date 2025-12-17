@@ -401,21 +401,34 @@ const Listing = () => {
 
   const columns = [
     { field: 'ref_id', headerName: 'Reference ID', width: 130 },
-    { field: 'ord_id', headerName: 'Order ID', width: 130 },
-    { 
-      field: 'date', 
-      headerName: 'Date', 
-      width: 180,
-      renderCell: (params) => 
-        params.value ? new Date(params.value).toLocaleString() : ''
+    { field: 'merchant_details', headerName: 'Merchant Details', width: 250,
+      renderCell: (params) => (
+        <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, height: 100, justifyContent: 'center' }}>
+          <div className="font-bold">{params.row.fullName}</div>
+          <div>{params.row.email}</div>
+          <div>{params.row.phone}</div>
+        </Box>
+      )
     },
-    { field: 'fullName', headerName: 'Merchant Name', width: 180 },
-    { field: 'email', headerName: 'Merchant Email', width: 200 },
-    { field: 'awb', headerName: 'AWB', width: 150 },
-    { 
-      field: 'service_name', 
-      headerName: 'Service', 
-      width: 150
+    { field: 'customer_details', headerName: 'Customer Details', width: 250,
+      renderCell: (params) => (
+        <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, height: 100, justifyContent: 'center' }}>
+          <div className="font-bold">{params.row.customer_name}</div>
+          <div>{params.row.customer_email}</div>
+          <div>{params.row.customer_mobile}</div>
+        </Box>
+      )
+    },
+    { field: 'shipment_details', headerName: 'Shipment Details', width: 200,
+      renderCell: (params) => (
+        <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, height: 100, justifyContent: 'center' }}>
+          <div>Pay Method: {params.row.pay_method}</div>
+          <div>Service: {params.row.service_name}</div>
+          <div>AWB: {params.row.awb}</div>
+          <div>Order ID: {params.row.ord_id}</div>
+          <div>{params.row.date ? new Date(params.row.date).toLocaleString() : ''}</div>
+        </Box>
+      )
     },
     {
       field: 'status',
@@ -671,6 +684,7 @@ const Listing = () => {
             columns={columns}
             loading={isLoading}
             hideFooter={true}
+            rowHeight={100}
             disableSelectionOnClick
             getRowId={(row) => row.ref_id}
           />
