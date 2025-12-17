@@ -1934,6 +1934,22 @@ const Listing = ({ step, setStep }) => {
             disableSelectionOnClick
             getRowId={(row) => row.ord_id}
             rowHeight={80}
+            sx={{
+              border: '1px solid #000',
+              borderRadius: 0,
+              '& .MuiDataGrid-columnHeaders': {
+                borderBottom: '1px solid #000',
+              },
+              '& .MuiDataGrid-columnHeader, & .MuiDataGrid-cell': {
+                borderRight: '1px solid #000',
+              },
+              '& .MuiDataGrid-columnHeader:first-of-type, & .MuiDataGrid-cell:first-of-type': {
+                borderLeft: '1px solid #000',
+              },
+              '& .MuiDataGrid-row': {
+                borderBottom: '1px solid #000',
+              },
+            }}
           />
         </Box>
 

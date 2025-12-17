@@ -163,7 +163,21 @@ const TransactionHistory = () => {
                         // Style tweaks to ensure no ghost rows bleed through the "No rows" overlay
                         sx={{
                             '& .MuiDataGrid-overlayWrapper': { backgroundColor: '#fff' },
-                            '& .MuiDataGrid-virtualScrollerRenderZone': rows.length === 0 ? { opacity: 0 } : {}
+                            '& .MuiDataGrid-virtualScrollerRenderZone': rows.length === 0 ? { opacity: 0 } : {},
+                            border: '1px solid #000',
+                            borderRadius: 0,
+                            '& .MuiDataGrid-columnHeaders': {
+                              borderBottom: '1px solid #000',
+                            },
+                            '& .MuiDataGrid-columnHeader, & .MuiDataGrid-cell': {
+                              borderRight: '1px solid #000',
+                            },
+                            '& .MuiDataGrid-columnHeader:first-of-type, & .MuiDataGrid-cell:first-of-type': {
+                              borderLeft: '1px solid #000',
+                            },
+                            '& .MuiDataGrid-row': {
+                              borderBottom: '1px solid #000',
+                            },
                         }}
                     />
                 </div>

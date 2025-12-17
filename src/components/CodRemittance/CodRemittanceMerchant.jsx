@@ -261,6 +261,22 @@ const CodRemittanceMerchant = () => {
           rows={rows}
           loading={loading}
           hideFooter={true}
+          sx={{
+              border: '1px solid #000',
+              borderRadius: 0,
+              '& .MuiDataGrid-columnHeaders': {
+                borderBottom: '1px solid #000',
+              },
+              '& .MuiDataGrid-columnHeader, & .MuiDataGrid-cell': {
+                borderRight: '1px solid #000',
+              },
+              '& .MuiDataGrid-columnHeader:first-of-type, & .MuiDataGrid-cell:first-of-type': {
+                borderLeft: '1px solid #000',
+              },
+              '& .MuiDataGrid-row': {
+                borderBottom: '1px solid #000',
+              },
+            }}
           columns={[
             { field: 'ord_id', headerName: 'Order ID', width: 130 },
             { field: 'awb', headerName: 'AWB', width: 150 },

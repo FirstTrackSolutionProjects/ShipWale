@@ -1531,6 +1531,22 @@ const AllInternationalShipmentReports = () => {
             hideFooter={true}
             disableSelectionOnClick
             rowHeight={90}
+            sx={{
+              border: '1px solid #000',
+              borderRadius: 0,
+              '& .MuiDataGrid-columnHeaders': {
+                borderBottom: '1px solid #000',
+              },
+              '& .MuiDataGrid-columnHeader, & .MuiDataGrid-cell': {
+                borderRight: '1px solid #000',
+              },
+              '& .MuiDataGrid-columnHeader:first-of-type, & .MuiDataGrid-cell:first-of-type': {
+                borderLeft: '1px solid #000',
+              },
+              '& .MuiDataGrid-row': {
+                borderBottom: '1px solid #000',
+              },
+            }}
             getRowId={getRowId}
           />
         </Box>
