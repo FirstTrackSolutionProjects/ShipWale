@@ -14,7 +14,7 @@ const Footer = () => {
           <div className="flex items-center gap-3 mb-3">
             <div className="h-14 w-14 rounded-full overflow-hidden bg-white flex items-center justify-center shadow-md">
               <img
-                src="/image/logo.png"
+                src="/image/logo2.png"
                 alt="Shipwale Logo"
                 className="h-10 object-contain"
               />

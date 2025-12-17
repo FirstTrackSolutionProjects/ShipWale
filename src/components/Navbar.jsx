@@ -57,11 +57,11 @@ const Navbar = () => {
 
             {/* Logo with Circle */}
             <Link to="/" className="flex items-center">
-              <div className="h-15 w-15 rounded-full overflow-hidden border-2 border-[#183B4E] flex items-center justify-center">
+              <div className="h-16 w-16 bg-white rounded-full overflow-hidden border-2 border-[#183B4E] flex items-center justify-center">
                 <img
-                  src="/image/logo.png"
+                  src="/image/logo2.png"
                   alt="Logo"
-                  className="h-14 w-auto object-contain"
+                  className="w-12 h-12 object-contain cursor-pointer"
                   onClick={() => navigate('/')}
                 />
               </div>

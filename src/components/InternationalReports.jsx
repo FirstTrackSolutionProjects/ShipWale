@@ -675,6 +675,28 @@ const Listing = () => {
             rowHeight={90}
             disableSelectionOnClick
             getRowId={getRowId}
+            sx={{
+              border: '1px solid #000',
+              borderRadius: 0,
+              '& .MuiDataGrid-columnHeaders': {
+                borderBottom: '1px solid #000',
+                backgroundColor: '#A34757',
+                color: '#FFF',
+              },
+              '& .MuiDataGrid-columnHeader': {
+                backgroundColor: '#A34757',
+                fontWeight: 'bold',
+              },
+              '& .MuiDataGrid-columnHeader, & .MuiDataGrid-cell': {
+                borderRight: '1px solid #000',
+              },
+              '& .MuiDataGrid-columnHeader:first-of-type, & .MuiDataGrid-cell:first-of-type': {
+                borderLeft: '1px solid #000',
+              },
+              '& .MuiDataGrid-row': {
+                borderBottom: '1px solid #000',
+              },
+            }}
           />
         </Box>
 
