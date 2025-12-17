@@ -187,6 +187,12 @@ const AllTransactions = () => {
               borderRadius: 0,
               '& .MuiDataGrid-columnHeaders': {
                 borderBottom: '1px solid #000',
+                backgroundColor: '#A34757',
+                color: '#FFF',
+              },
+              '& .MuiDataGrid-columnHeader': {
+                backgroundColor: '#A34757',
+                fontWeight: 'bold',
               },
               '& .MuiDataGrid-columnHeader, & .MuiDataGrid-cell': {
                 borderRight: '1px solid #000',
