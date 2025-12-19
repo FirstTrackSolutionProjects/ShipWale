@@ -133,7 +133,7 @@ const CodRemittanceMerchant = () => {
 
         const extractAmount = (res) => {
           if (!res) return 0;
-          return res.data || 0;
+          return parseInt(res.data) || 0;
         };
 
         setPendingAmount(extractAmount(pendingRes));
