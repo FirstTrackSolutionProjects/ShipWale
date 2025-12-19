@@ -284,15 +284,15 @@ const CodRemittanceMerchant = () => {
       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mb: 2 }}>
         <Box sx={{ flex: 1, minWidth: 200, p: 2, borderRadius: 1, bgcolor: '#fff7ed', border: '1px solid #fed7aa' }}>
           <div className="text-xs font-semibold text-gray-600">Pending COD</div>
-          <div className="text-lg font-bold">₹ {pendingAmount.toFixed(2)}</div>
+          <div className="text-lg font-bold">₹ {Number(pendingAmount).toFixed(2)}</div>
         </Box>
         <Box sx={{ flex: 1, minWidth: 200, p: 2, borderRadius: 1, bgcolor: '#e0f2fe', border: '1px solid #bae6fd' }}>
           <div className="text-xs font-semibold text-gray-600">Paid COD</div>
-          <div className="text-lg font-bold">₹ {paidAmount.toFixed(2)}</div>
+          <div className="text-lg font-bold">₹ {Number(paidAmount).toFixed(2)}</div>
         </Box>
         <Box sx={{ flex: 1, minWidth: 200, p: 2, borderRadius: 1, bgcolor: '#ecfdf3', border: '1px solid #bbf7d0' }}>
           <div className="text-xs font-semibold text-gray-600">Total COD</div>
-          <div className="text-lg font-bold">₹ {totalAmount.toFixed(2)}</div>
+          <div className="text-lg font-bold">₹ {Number(totalAmount).toFixed(2)}</div>
         </Box>
       </Box>
 
