@@ -116,6 +116,21 @@ const DelhiveryB2BCard = ({ scan }) => {
   )
 }
 
+const TrackingCard = ({ scan }) => {
+    return (
+        <>
+            <div className="w-full py-3 bg-white relative items-center justify-center px-8 flex border-b space-x-4">
+                <div className='flex flex-col items-center justify-center'>
+                    <div className='font-bold'>{scan?.status}</div>
+                    {scan?.description && <div>{scan.description}</div>}
+                    {scan?.location && <div>{scan.location}</div>}
+                    <div>{scan.timestamp}</div>
+                </div>
+            </div>
+        </>
+    )
+}
+
 const ResultModal = ({ data, onClose }) => {
   useEffect(() => {
     const onEsc = (e) => { if (e.key === 'Escape') onClose(); };
@@ -166,6 +181,11 @@ const ResultModal = ({ data, onClose }) => {
             {Number(data?.id) === 2 ? (
               data?.data?.slice()?.reverse()?.map((scan, index) => (
                 <Card key={index} scan={scan?.ScanDetail ?? scan} />
+              ))
+            ) : null}
+            {Number(data?.id) !== 1 && Number(data?.id) !== 2 ? (
+              data?.data?.map((scan, index) => (
+                <TrackingCard key={index} scan={scan} />
               ))
             ) : null}
           </div>
