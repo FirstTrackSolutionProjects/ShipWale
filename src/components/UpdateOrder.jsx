@@ -1826,7 +1826,7 @@ const Listing = ({ step, setStep }) => {
             )}
             
             {/* Cancel Button - only for shipped, non-cancelled, specific services */}
-            {isShipped && !isProcessing && !isCancelled && [1,2,4,5,6].includes(serviceId) && (
+            {isShipped && !isProcessing && !isCancelled && (
               <Button
                 variant="outlined"
                 color="error"
