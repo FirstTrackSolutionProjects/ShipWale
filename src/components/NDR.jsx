@@ -412,19 +412,43 @@ const Listing = () => {
 
   const columns = [
     { field: 'ref_id', headerName: 'Reference ID', width: 130 },
-    { field: 'ord_id', headerName: 'Order ID', width: 130 },
-    { 
-      field: 'date',
-      headerName: 'Date', 
-      width: 180,
-      renderCell: (params) => 
-        params.value ? new Date(params.value).toLocaleString() : ''
+    {
+      field: 'customer_details', headerName: 'Customer', width: 200,
+      renderCell: (params) => (
+        <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, height: 100, justifyContent: 'center' }}>
+          <div>{params.row.customer_name}</div>
+          <div>{params.row.customer_email}</div>
+          <div>{params.row.customer_mobile}</div>
+        </Box>
+      )
     },
-    { field: 'awb', headerName: 'AWB', width: 150 },
-    { 
-      field: 'service_name', 
-      headerName: 'Service', 
-      width: 150
+    { field: 'from_address', headerName: 'Origin', width: 200,
+      renderCell: (params) => (
+        <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, height: 100, justifyContent: 'center' }}>
+          <div>{params.row.warehouse_city}, {params.row.warehouse_state}</div>
+          <div>{params.row.warehouse_country} - {params.row.warehouse_pin}</div>
+        </Box>
+      )
+    },
+    { field: 'to_address', headerName: 'Destination', width: 200,
+      renderCell: (params) => (
+        <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, height: 100, justifyContent: 'center' }}>
+          <div>{params.row.shipping_city}, {params.row.shipping_state}</div>
+          <div>{params.row.shipping_country} - {params.row.shipping_postcode}</div>
+        </Box>
+      )
+    },
+    {
+      field: 'Shipment Details', headerName: 'Shipment Details', width: 200,
+      renderCell: (params) => (
+        <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, height: 100, justifyContent: 'center' }}>
+          <div>Pay Method: {params.row.pay_method}</div>
+          <div>Service: {params.row.service_name}</div>
+          <div>AWB: {params.row.awb}</div>
+          <div>Order ID: {params.row.ord_id}</div>
+          <div>{params.row.date ? new Date(params.row.date).toLocaleString() : ''}</div>
+        </Box>
+      )
     },
     {
       field: 'status',
@@ -632,6 +656,7 @@ const Listing = () => {
             columns={columns}
             loading={isLoading}
             hideFooter={true}
+            rowHeight={100}
             disableSelectionOnClick
             getRowId={(row) => row.ref_id}
             sx={{

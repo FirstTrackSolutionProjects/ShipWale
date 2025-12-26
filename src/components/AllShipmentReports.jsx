@@ -419,6 +419,23 @@ const Listing = () => {
         </Box>
       )
     },
+    {
+      field: 'from_to', headerName: 'Origin', width: 200,
+      renderCell: (params) => (
+        <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, height: 100, justifyContent: 'center' }}>
+          <div>{params.row.warehouse_city}, {params.row.warehouse_state}</div>
+          <div>{params.row.warehouse_country} - {params.row.warehouse_pin}</div>
+        </Box>
+      )
+    },
+    { field: 'to_address', headerName: 'Destination', width: 200,
+      renderCell: (params) => (
+        <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, height: 100, justifyContent: 'center' }}>
+          <div>{params.row.shipping_city}, {params.row.shipping_state}</div>
+          <div>{params.row.shipping_country} - {params.row.shipping_postcode}</div>
+        </Box>
+      )
+    },
     { field: 'shipment_details', headerName: 'Shipment Details', width: 200,
       renderCell: (params) => (
         <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, height: 100, justifyContent: 'center' }}>
