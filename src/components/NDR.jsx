@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { 
   Dialog, 
   DialogTitle, 
@@ -13,14 +13,41 @@ import {
   Select,
   MenuItem,
 } from '@mui/material';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, useGridApiRef } from '@mui/x-data-grid';
 import CloseIcon from '@mui/icons-material/Close';
 import * as XLSX from 'xlsx';
 import DownloadIcon from '@mui/icons-material/Download';
 import { toast } from "react-toastify";
 import convertToUTCISOString from "../helpers/convertToUTCISOString";
+import { PDFDocument } from "pdf-lib";
 
 const API_URL = import.meta.env.VITE_APP_API_URL;
+
+// Utility to merge multiple base64-encoded PDF files into a single PDF
+const mergePDFs = async (pdfBase64s) => {
+  if (!Array.isArray(pdfBase64s) || pdfBase64s.length === 0) {
+    throw new Error("No PDF data provided to mergePDFs");
+  }
+
+  const mergedPdf = await PDFDocument.create();
+
+  for (const base64 of pdfBase64s) {
+    if (!base64) continue;
+
+    // Some APIs may return data URLs ("data:application/pdf;base64,....")
+    const cleanBase64 = base64.includes(",") ? base64.split(",")[1] : base64;
+
+    const pdfBytes = Uint8Array.from(atob(cleanBase64), (c) => c.charCodeAt(0));
+    const pdf = await PDFDocument.load(pdfBytes);
+    const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+    copiedPages.forEach((page) => mergedPdf.addPage(page));
+  }
+
+  const mergedBytes = await mergedPdf.save();
+  const blob = new Blob([mergedBytes], { type: "application/pdf" });
+  const url = URL.createObjectURL(blob);
+  return url;
+};
 
 const timestampToDate = (timestamp) => {
   const date = new Date(timestamp);
@@ -359,6 +386,25 @@ const Listing = () => {
     endDate: ""
   });
   const [services, setServices] = useState([]);
+  const [selection, setSelection] = useState({ ids: new Set() });
+  const apiRef = useGridApiRef();
+
+  // Dynamic DataGrid height
+  const [dataGridHeight, setDataGridHeight] = useState(Math.round(window.innerHeight * 0.65));
+  useEffect(() => {
+    const handleResize = () => {
+      setDataGridHeight(Math.round(window.innerHeight * 0.65));
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const selectedOrderIds = useMemo(() => {
+    if (apiRef.current) {
+      return [...apiRef.current.getSelectedRows().keys()]
+    }
+    return [];
+  }, [apiRef, selection]);
 
   useEffect(() => {
     fetchServices();
@@ -408,6 +454,50 @@ const Listing = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleGetLabel = async (shipmentIds) => {
+    try {
+      if (!Array.isArray(shipmentIds)) {
+        shipmentIds = [shipmentIds.ref_id];
+      }
+      const response = await fetch(`${API_URL}/shipment/domestic/label`, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': localStorage.getItem('token')
+        },
+        body: JSON.stringify({ orders: shipmentIds })
+      });
+      const result = await response.json();
+      const base64s = result?.labels || [];
+      if (!base64s.length) {
+        toast.error("No labels found");
+        return;
+      }
+      ///DOWNLOAD EACH LABEL AND MERGE INTO A SINGLE PDF
+      const pdfBase64s = base64s;
+      const mergedPdfUrl = await mergePDFs(pdfBase64s);
+      const link = document.createElement('a');
+      link.href = mergedPdfUrl;
+      link.download = `labels_${new Date().toISOString()}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error(error);
+      alert("Failed to get label");
+    }
+  };
+
+  const handleBulkLabel = async () => {
+    if (!selectedOrderIds.length) return;
+
+    await handleGetLabel(selectedOrderIds);
+
+    // Optional: clear selection after processing
+    setSelection({ ids: new Set() });
   };
 
   const columns = [
@@ -482,6 +572,18 @@ const Listing = () => {
       <Paper sx={{ width: '100%', p: 2 }}>
         <Box sx={{ mb: 3 }}>
           <h2 className="text-2xl font-medium">Shipment Reports</h2>
+        </Box>
+
+        {/* Bulk actions */}
+        <Box sx={{ mb: 2, display: 'flex', justifyContent: 'flex-end' }}>
+          <Button
+            variant="contained"
+            size="small"
+            onClick={handleBulkLabel}
+            disabled={selectedOrderIds.length === 0}
+          >
+            Bulk Label
+          </Button>
         </Box>
 
         <Box
@@ -650,14 +752,17 @@ const Listing = () => {
           </Box>
         </Box>
 
-        <Box sx={{ height: 600, width: '100%' }}>
+        <Box sx={{ height: `${dataGridHeight}px`, width: '100%' }}>
           <DataGrid
+            apiRef={apiRef}
             rows={reports}
             columns={columns}
             loading={isLoading}
             hideFooter={true}
             rowHeight={100}
             disableSelectionOnClick
+            checkboxSelection
+            onRowSelectionModelChange={setSelection}
             getRowId={(row) => row.ref_id}
             sx={{
               border: '1px solid #000',
