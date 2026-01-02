@@ -4,6 +4,11 @@ import getFilterStartDate from '../helpers/getFilterStartDate';
 import getTodaysDate from '../helpers/getTodaysDate';
 import convertToUTCISOString from '../helpers/convertToUTCISOString';
 import getAllTransactionsAdminService from '../services/transactionServices/getAllTransactionsAdminService';
+import DownloadIcon from '@mui/icons-material/Download';
+import { IconButton } from '@mui/material';
+import * as XLSX from 'xlsx';
+import { toast } from 'react-toastify';
+import getAllTransactionsDataService from '../services/transactionServices/getAllTransactionDataService';
 
 const PAGE_SIZE = 50; // backend admin endpoint uses 50
 
@@ -114,7 +119,7 @@ const AllTransactions = () => {
         <button
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className={`px-2 sm:px-3 py-1 rounded-md text-xs sm:text-sm ${currentPage === 1 ? 'bg-gray-200 cursor-not-allowed' : 'bg-red-500 text-white hover:bg-red-600'}`}
+          className={`px-2 sm:px-3 py-1 rounded-md text-xs sm:text-sm ${currentPage === 1 ? 'bg-gray-200 cursor-not-allowed' : 'bg-blue-500 text-white hover:bg-blue-600'}`}
         >
           <span className="hidden sm:inline">Previous</span>
           <span className="sm:hidden">Prev</span>
@@ -123,7 +128,7 @@ const AllTransactions = () => {
           <button
             key={idx}
             onClick={() => p.number !== '...' && onPageChange(p.number)}
-            className={`min-w-[30px] px-2 sm:px-3 py-1 rounded-md text-xs sm:text-sm ${p.number === '...' ? 'cursor-default' : p.isCurrent ? 'bg-red-500 text-white' : 'bg-white hover:bg-gray-100 border'}`}
+            className={`min-w-[30px] px-2 sm:px-3 py-1 rounded-md text-xs sm:text-sm ${p.number === '...' ? 'cursor-default' : p.isCurrent ? 'bg-blue-500 text-white' : 'bg-white hover:bg-gray-100 border'}`}
             disabled={p.number === '...'}
           >
             {p.number}
@@ -132,7 +137,7 @@ const AllTransactions = () => {
         <button
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className={`px-2 sm:px-3 py-1 rounded-md text-xs sm:text-sm ${currentPage === totalPages ? 'bg-gray-200 cursor-not-allowed' : 'bg-red-500 text-white hover:bg-red-600'}`}
+          className={`px-2 sm:px-3 py-1 rounded-md text-xs sm:text-sm ${currentPage === totalPages ? 'bg-gray-200 cursor-not-allowed' : 'bg-blue-500 text-white hover:bg-blue-600'}`}
         >
           <span className="hidden sm:inline">Next</span>
           <span className="sm:hidden">Next</span>
@@ -146,7 +151,7 @@ const AllTransactions = () => {
       <div className='w-full max-w-7xl px-4 flex flex-col gap-4'>
         <h1 className='text-2xl font-semibold text-center'>Admin Transactions</h1>
         <div className='bg-red-500 text-white p-4 rounded-lg space-y-4'>
-          <div className='grid md:grid-cols-7 gap-3'>
+          <div className='grid md:grid-cols-8 gap-3'>
             <select name='type' value={filters.type} onChange={handleFilterChange} className='p-2 rounded text-black bg-white'>
               <option value='all'>All Types</option>
               <option value='recharge'>Recharge</option>
@@ -162,6 +167,42 @@ const AllTransactions = () => {
             <input name='merchant_business_name' value={filters.merchant_business_name} onChange={handleFilterChange} placeholder='Business Name' className='p-2 rounded text-black bg-white'/>
             <input type='date' name='startDate' value={filters.startDate} onChange={handleFilterChange} className='p-2 rounded text-black bg-white'/>
             <input type='date' name='endDate' value={filters.endDate} onChange={handleFilterChange} className='p-2 rounded text-black bg-white'/>
+            <IconButton
+              onClick={async () => {
+                try {
+                  const payload = {
+                    type: filters.type,
+                    order_id: filters.order_id,
+                    merchant_email: filters.merchant_email,
+                    merchant_name: filters.merchant_name,
+                    merchant_business_name: filters.merchant_business_name,
+                    startDate: filters.startDate ? convertToUTCISOString(new Date(filters.startDate).setHours(0,0,0,0)) : '',
+                    endDate: filters.endDate ? convertToUTCISOString(new Date(filters.endDate).setHours(23,59,59,999)) : ''
+                  }
+                  const data = await getAllTransactionsDataService(payload);
+                  const worksheet = XLSX.utils.json_to_sheet(data);
+                  const workbook = XLSX.utils.book_new();
+                  XLSX.utils.book_append_sheet(workbook, worksheet, "Reports");
+                  
+                  // Generate filename with current date
+                  const date = new Date().toISOString().split('T')[0];
+                  XLSX.writeFile(workbook, `transaction_reports_${date}.xlsx`);
+                } catch (error) {
+                  console.error('Download failed:', error);
+                  toast.error(error?.message || 'Failed to download reports');
+                }
+              }}
+              sx={{ 
+                backgroundColor: 'white',
+                borderRadius: 1,
+                '&:hover': {
+                  backgroundColor: 'grey.100',
+                },
+                minWidth: '40px'
+              }}
+            >
+              <DownloadIcon />
+            </IconButton>
           </div>
         </div>
         {error && <div className='text-red-600 text-sm'>{error}</div>}
