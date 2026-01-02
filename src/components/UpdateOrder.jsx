@@ -22,6 +22,7 @@ import {
 import { DataGrid } from '@mui/x-data-grid';
 import CloseIcon from '@mui/icons-material/Close';
 import convertToUTCISOString from "../helpers/convertToUTCISOString";
+import { DOMESTIC_ORDER_STATUS_ENUMS } from "@/Constants";
 
 const API_URL = import.meta.env.VITE_APP_API_URL
 
@@ -1579,6 +1580,7 @@ const Listing = ({ step, setStep }) => {
     customer_email: "",
     orderId: "",
     customer_name: "",
+    status: "",
     startDate: "",
     endDate: ""
   });
@@ -1611,6 +1613,7 @@ const Listing = ({ step, setStep }) => {
           ...(debouncedFilters.customer_name && { customer_name: debouncedFilters.customer_name }),
           ...(debouncedFilters.customer_email && { customer_email: debouncedFilters.customer_email }),
           ...(debouncedFilters.orderId && { orderId: debouncedFilters.orderId }),
+          ...(debouncedFilters.status && { status: debouncedFilters.status }),
           ...(debouncedFilters.startDate && { startDate: convertToUTCISOString(debouncedFilters.startDate) }),
           ...(debouncedFilters.endDate && { endDate: convertToUTCISOString(`${debouncedFilters.endDate}T23:59:59.999Z`) })
         });
@@ -1901,6 +1904,29 @@ const Listing = ({ step, setStep }) => {
               onChange={handleChange}
               sx={{ minWidth: 150 }}
             />
+            <FormControl size="small" sx={{ minWidth: '150px', mr: 1 }}>
+              <InputLabel id="status-select-label" className="bg-white w-full">Status</InputLabel>
+              <Select
+                labelId="status-select-label"
+                value={filters.status}
+                onChange={handleChange}
+                name="status"
+                label="Status"
+                sx={{
+                  backgroundColor: 'white',
+                  borderRadius: 1,
+                }}
+              >
+                <MenuItem value="">
+                  <em>All</em>
+                </MenuItem>
+                {Object.values(DOMESTIC_ORDER_STATUS_ENUMS).map((status) => (
+                  <MenuItem key={status} value={status}>
+                    {status}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
             <TextField
               label="Start Date"
               type="date"

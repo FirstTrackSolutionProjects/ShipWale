@@ -96,6 +96,12 @@ export const DOMESTIC_SHIPMENT_REPORT_STATUS_ENUMS = Object.freeze({
     RTO_DELIVERED: 'RTO DELIVERED'
 })
 
+export const DOMESTIC_ORDER_STATUS_ENUMS = Object.freeze({
+    PENDING: 'PENDING',
+    SHIPPED: 'SHIPPED',
+    CANCELLED: 'CANCELLED'
+})
+
 export const menuItems = [
     {
         
