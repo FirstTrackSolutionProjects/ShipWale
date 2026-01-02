@@ -19,6 +19,7 @@ import {
 import { DataGrid } from '@mui/x-data-grid';
 import CloseIcon from '@mui/icons-material/Close';
 import convertToUTCISOString from "../helpers/convertToUTCISOString";
+import { DOMESTIC_ORDER_STATUS_ENUMS } from "@/Constants";
 
 const API_URL = import.meta.env.VITE_APP_API_URL
 const ManageForm = ({ isManage, setIsManage, shipment, isShipped }) => {
@@ -1089,6 +1090,7 @@ const Listing = ({ step, setStep }) => {
     email: "",
     orderId: "",
     name: "",
+    status: "",
     startDate: "",
     endDate: ""
   });
@@ -1122,6 +1124,7 @@ const Listing = ({ step, setStep }) => {
           ...(debouncedFilters.name && { merchant_name: debouncedFilters.name }),
           ...(debouncedFilters.email && { merchant_email: debouncedFilters.email }),
           ...(debouncedFilters.orderId && { orderId: debouncedFilters.orderId }),
+          ...(debouncedFilters.status && { status: debouncedFilters.status }),
           ...(debouncedFilters.startDate && { startDate: convertToUTCISOString(debouncedFilters.startDate) }),
           ...(debouncedFilters.endDate && { endDate: convertToUTCISOString(`${debouncedFilters.endDate}T23:59:59.999Z`) })
         });
@@ -1208,7 +1211,8 @@ const Listing = ({ step, setStep }) => {
       headerName: 'Status',
       width: 130,
       renderCell: (params) => {
-        const isShipped = Boolean(params.row.awb);
+        const isShipped = Boolean(params.row.is_manifested);
+        const isCancelled = Boolean(params.row.cancelled);
         return (
           <Box
             sx={{
@@ -1220,7 +1224,7 @@ const Listing = ({ step, setStep }) => {
               fontSize: '0.875rem'
             }}
           >
-            {isShipped ? 'Shipped' : 'Pending'}
+            {(isShipped && !isCancelled) ? 'Shipped' : (isCancelled ? 'Cancelled' : 'Pending')}
           </Box>
         );
       }
@@ -1265,7 +1269,7 @@ const Listing = ({ step, setStep }) => {
             xs: '1fr',
             sm: 'repeat(2, 1fr)',
             md: 'repeat(3, 1fr)',
-            lg: 'repeat(auto-fill, minmax(220px, 1fr))',
+            lg: 'repeat(auto-fill, minmax(180px, 1fr))',
           },
           gap: 2,
         }}
@@ -1274,10 +1278,37 @@ const Listing = ({ step, setStep }) => {
           { label: 'Merchant Name', name: 'name' },
           { label: 'Merchant Email', name: 'email' },
           { label: 'Order ID', name: 'orderId' },
+          { label: 'Status', name: 'status', type: 'select', options: Object.values(DOMESTIC_ORDER_STATUS_ENUMS) },
           { label: 'Start Date', name: 'startDate', type: 'date' },
           { label: 'End Date', name: 'endDate', type: 'date' },
-        ].map(({ label, name, type }) => (
-          <TextField
+        ].map(({ label, name, type, options=[] }) => {
+          if (type === 'select') {
+            return (<FormControl size="small" sx={{ minWidth: '150px', mr: 1 }}>
+              <InputLabel id={`${name}-select-label`} className="bg-white w-full">{label}</InputLabel>
+              <Select
+                labelId={`${name}-select-label`}
+                value={filters[name]}
+                onChange={handleChange}
+                name={name}
+                label={label}
+                sx={{
+                  backgroundColor: 'white',
+                  borderRadius: 1,
+                }}
+              >
+                <MenuItem value="">
+                  <em>All</em>
+                </MenuItem>
+                {options.map((option) => (
+                  <MenuItem key={option} value={option}>
+                    {option}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>);
+          }
+          return (
+            <TextField
             key={name}
             label={label}
             name={name}
@@ -1298,7 +1329,8 @@ const Listing = ({ step, setStep }) => {
               },
             }}
           />
-        ))}
+          )
+        })}
       </Box>
   {/* DataGrid */}
         <Box sx={{ height: 600, width: '100%' }}>
