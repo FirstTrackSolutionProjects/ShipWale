@@ -1682,8 +1682,15 @@ const Listing = ({ step, setStep }) => {
       renderCell: (params) => 
         params.row.date ? new Date(params.row.date).toLocaleString() : ''
     },
-    { field: 'customer_name', headerName: 'Customer Name', width: 180 },
-    { field: 'customer_email', headerName: 'Email', width: 200 },
+    { field: 'customer_details', headerName: 'Customer Details', width: 250,
+      renderCell: (params) => (
+        <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, height: 80, justifyContent: 'center' }}>
+          <div className="font-bold">{params.row.customer_name}</div>
+          <div>{params.row.customer_email}</div>
+          <div>{params.row.customer_mobile}</div>
+        </Box>
+      )
+    },
     {
       field: 'shipping',
       headerName: 'Shipping Details',
