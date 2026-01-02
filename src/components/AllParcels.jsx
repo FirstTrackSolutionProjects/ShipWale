@@ -1176,6 +1176,24 @@ const Listing = ({ step, setStep }) => {
       headerName: 'Customer Reference Number',
       width: 100,
     },
+    { field: 'merchant_details', headerName: 'Merchant Details', width: 250,
+      renderCell: (params) => (
+        <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, height: 80, justifyContent: 'center' }}>
+          <div className="font-bold">{params.row.fullName}</div>
+          <div>{params.row.email}</div>
+          <div>{params.row.phone}</div>
+        </Box>
+      )
+    },
+    { field: 'customer_details', headerName: 'Customer Details', width: 250,
+      renderCell: (params) => (
+        <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, height: 80, justifyContent: 'center' }}>
+          <div className="font-bold">{params.row.customer_name}</div>
+          <div>{params.row.customer_email}</div>
+          <div>{params.row.customer_mobile}</div>
+        </Box>
+      )
+    },
     { 
       field: 'date', 
       headerName: 'Date', 
@@ -1183,8 +1201,6 @@ const Listing = ({ step, setStep }) => {
       renderCell: (params) => 
         params.row.date ? new Date(params.row.date).toLocaleString() : ''
     },
-    { field: 'fullName', headerName: 'Customer Name', width: 180 },
-    { field: 'email', headerName: 'Email', width: 200 },
     {
   field: 'shipping',
   headerName: 'Shipping Details',
