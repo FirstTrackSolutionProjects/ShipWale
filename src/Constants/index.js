@@ -86,6 +86,16 @@ export const navItems = [
     }
 ]
 
+export const DOMESTIC_SHIPMENT_REPORT_STATUS_ENUMS = Object.freeze({
+    MANIFESTED: 'MANIFESTED',
+    NOT_PICKED: 'NOT PICKED',
+    CANCELLED: 'CANCELLED',
+    IN_TRANSIT: 'IN TRANSIT',
+    DELIVERED: 'DELIVERED',
+    RTO: 'RTO',
+    RTO_DELIVERED: 'RTO DELIVERED'
+})
+
 export const menuItems = [
     {
         

@@ -19,6 +19,7 @@ import * as XLSX from 'xlsx';
 import DownloadIcon from '@mui/icons-material/Download';
 import { toast } from "react-toastify";
 import convertToUTCISOString from "../helpers/convertToUTCISOString";
+import { DOMESTIC_SHIPMENT_REPORT_STATUS_ENUMS } from "@/Constants";
 
 const API_URL = import.meta.env.VITE_APP_API_URL;
 
@@ -318,6 +319,7 @@ const Listing = () => {
     merchant_name: "",
     awb: "",
     ord_id: "",
+    status: "",
     serviceId: "",
     startDate: "",
     endDate: ""
@@ -353,6 +355,7 @@ const Listing = () => {
       merchant_name: filters.merchant_name,
       awb: filters.awb,
       ord_id: filters.ord_id,
+      status: filters.status,
       serviceId: filters.serviceId,
       startDate: startDate,
       endDate: endDate
@@ -566,6 +569,28 @@ const Listing = () => {
                 },
               }}
             />
+            <FormControl size="small" sx={{ minWidth: '150px', mr: 1 }}>
+              <InputLabel id="status-select-label" className="bg-white w-full">Status</InputLabel>
+              <Select
+                labelId="status-select-label"
+                value={filters.status}
+                onChange={(e) => setFilters({ ...filters, status: e.target.value })}
+                label="Status"
+                sx={{
+                  backgroundColor: 'white',
+                  borderRadius: 1,
+                }}
+              >
+                <MenuItem value="">
+                  <em>All</em>
+                </MenuItem>
+                {Object.values(DOMESTIC_SHIPMENT_REPORT_STATUS_ENUMS).map((status) => (
+                  <MenuItem key={status} value={status}>
+                    {status}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
             <TextField
               label="AWB"
               variant="outlined"
