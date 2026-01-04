@@ -442,7 +442,7 @@ const Listing = () => {
     { field: 'shipment_details', headerName: 'Shipment Details', width: 200,
       renderCell: (params) => (
         <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, height: 100, justifyContent: 'center' }}>
-          <div>Pay Method: {params.row.pay_method}</div>
+          <div>Pay Method: {params.row.pay_method} {params.row.pay_method === "COD" ? ` - ₹${parseInt(params.row.cod_amount)}` : ''}</div>
           <div>Service: {params.row.service_name}</div>
           <div>AWB: {params.row.awb}</div>
           <div>Order ID: {params.row.ord_id}</div>
