@@ -1563,14 +1563,15 @@ const Listing = ({ step, setStep }) => {
         body: JSON.stringify({ orders: [shipment.ord_id] })
       });
       const result = await response.json();
-      
-      const link = document.createElement('a');
-      link.href = result.label;
-      link.target = '_blank';
-      link.style.display = 'none';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      const base64label = result?.labels?.[0];
+      if (result.success && base64label) {
+        const link = document.createElement('a');
+        link.href = `data:application/pdf;base64,${base64label}`;
+        link.download = `Label_${shipment.ord_id}.pdf`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
     } catch (error) {
       console.error(error);
       alert("Failed to get label");
