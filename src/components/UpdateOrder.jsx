@@ -1560,7 +1560,7 @@ const Listing = ({ step, setStep }) => {
           'Content-Type': 'application/json',
           'Authorization': localStorage.getItem('token')
         },
-        body: JSON.stringify({ order: shipment.ord_id })
+        body: JSON.stringify({ orders: [shipment.ord_id] })
       });
       const result = await response.json();
       
