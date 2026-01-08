@@ -511,7 +511,7 @@ const ManageForm = ({ isManage, setIsManage, shipment, isShipped }) => {
             </FormControl>
             <FormControl fullWidth sx={{ minWidth: 300, flex: 1 }}>
               <TextField
-                label="Shipping Postcode"
+                label="Shipping Pincode"
                 name="postcode"
                 size="small"
                 placeholder="Ex. 813210"
@@ -587,7 +587,7 @@ const ManageForm = ({ isManage, setIsManage, shipment, isShipped }) => {
             </FormControl>
             <FormControl fullWidth sx={{ minWidth: 300,  flex: 1 }}>
               <TextField
-                label="Billing Postcode"
+                label="Billing Pincode"
                 name="Bpostcode"
                 size="small"
                 placeholder="Ex. 813210"
