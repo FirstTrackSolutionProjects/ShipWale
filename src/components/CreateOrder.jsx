@@ -435,7 +435,7 @@ const FullDetails = () => {
         </div>
         <div className="w-full flex mb-2 flex-wrap">
           <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
-            <label htmlFor="postcode">Shipping Postcode</label>
+            <label htmlFor="postcode">Shipping Pincode</label>
             <input
               className="w-full border py-2 px-4 rounded"
               type="text"
@@ -525,7 +525,7 @@ const FullDetails = () => {
             </div>
             <div className="w-full flex mb-2 flex-wrap">
               <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
-                <label htmlFor="Bpostcode">Billing Postcode</label>
+                <label htmlFor="Bpostcode">Billing Pincode</label>
                 <input
                   className="w-full border py-2 px-4 rounded"
                   type="text"
