@@ -1702,6 +1702,7 @@ const Listing = ({ step, setStep }) => {
           <Box sx={{ whiteSpace: 'normal', lineHeight: 1.5, display: 'flex', flexDirection: 'column', justifyContent: 'center', height: 80 }}>
             {isShipped ? (
               <>
+                <div>Pay Method: {params.row.pay_method} {params.row.pay_method === "COD" ? ` - ₹${parseInt(params.row.cod_amount)}` : ''}</div>
                 <div>{params.row.service_name}</div>
                 {params.row.awb && <div>AWB: {params.row.awb}</div>}
                 {params.row.shipping_vendor_reference_id && <div>LRN: {params.row.shipping_vendor_reference_id}</div>}
