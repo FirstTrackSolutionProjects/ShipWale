@@ -137,6 +137,29 @@ const EnviaCard = ({ report, status }) => {
   )
 }
 
+const ReportCard = ({ report, status }) => {
+  return (
+  <>
+      <div className="flex flex-col">
+      <p className="mt-5">AWB : {report.awb}</p>
+      {report?.lrn ? <p>LRN : {report.lrn}</p> : null}
+      {status.length ?
+        (status).map((scan, index) => {
+          return (
+            <div className='flex flex-col justify-center'>
+              <div className='font-bold'>{scan.status}</div>
+              {scan?.description ? <div>{scan.description}</div> : null}
+              {scan?.location ? <div>{scan.location}</div> : null}
+              <div>{scan.timestamp}</div>
+            </div>
+          )
+        }) : "Shipment is not yet picked up"
+      }
+      </div>
+  </>
+  )
+}
+
 const ViewDialog = ({ isOpen, onClose, report }) => {
   const [status, setStatus] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -187,16 +210,16 @@ const ViewDialog = ({ isOpen, onClose, report }) => {
       case 1:
       case 2:
         return <DelhiveryStatusCard report={report} status={status} />;
-      case 3:
-        return <MovinStatusCard report={report} status={status} />;
-      case 4:
-        return <PickrrStatusCard report={report} status={status} />;
-      case 5:
-        return <ShiprocketStatusCard report={report} status={status} />;
-      case 6:
-        return <EnviaCard report={report} status={status} />;
+      // case 3:
+      //   return <MovinStatusCard report={report} status={status} />;
+      // case 4:
+      //   return <PickrrStatusCard report={report} status={status} />;
+      // case 5:
+      //   return <ShiprocketStatusCard report={report} status={status} />;
+      // case 6:
+      //   return <EnviaCard report={report} status={status} />;
       default:
-        return null;
+        return <ReportCard report={report} status={status} />;
     }
   };
 
