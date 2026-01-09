@@ -56,6 +56,20 @@ const DelhiveryStatusCard = ({ report, status }) => {
   )
 }
 
+const DelhiveryB2BStatusCard = ({report , status}) => {
+  const timestamp = status?.scan_timestamp;
+  const formattedTimestamp = timestampToDate(timestamp);
+  return (
+    <div>
+      <p>AWB : {report.awb}</p>
+      <p>Ref Id: {report.ref_id}</p>
+      <p>LRN : {status.lrnum}</p>
+      <p>Status : {status.status}</p>
+      <div>{formattedTimestamp} | {status?.location} | {status?.scan_remark} </div>
+    </div>
+  )
+}
+
 const MovinStatusCard = ({ report, status }) => {
   return (
     <div className="flex flex-col">
@@ -208,6 +222,7 @@ const ViewDialog = ({ isOpen, onClose, report }) => {
     
     switch(report?.serviceId) {
       case 1:
+        return <DelhiveryB2BStatusCard report={report} status={status} />;
       case 2:
         return <DelhiveryStatusCard report={report} status={status} />;
       // case 3:
