@@ -14,7 +14,7 @@ const About = () => {
       >
        <img
           src="/image/about.jpg"
-          alt="About Us"
+          alt="About"
           className="w-full max-w-2xl h-auto mx-auto mb-6 rounded-xl shadow-md"
         />
 
