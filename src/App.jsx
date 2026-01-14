@@ -14,6 +14,7 @@ import PrivacyPolicy from './pages/PrivacyPolicy'
 import Faq from './pages/Faq'
 import Footer from './components/Footer'
 import RefundCancel from './pages/RefundCancel'
+import TicketRaise from './pages/TicketRaise'
 import Navbar from './components/Navbar'
 import { ToastContainer } from 'react-toastify';
 import Verify from './pages/Verify';
@@ -52,6 +53,7 @@ const App = () => {
         <Route path="/terms" element={<Terms />} />
         <Route path="/policy" element={<PrivacyPolicy />} />
         <Route path="/refund-cancel" element={<RefundCancel />} />
+        <Route path="/ticket" element={<TicketRaise />} />
         <Route path="/faq" element={<Faq />} />
         <Route path="/verify" element={<Verify />} />
         <Route path="/dashboard/*" element={<Dashboard />} />
