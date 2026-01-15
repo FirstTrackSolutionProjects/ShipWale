@@ -156,6 +156,7 @@ const MerchantManage =  () => {
         { field: 'email', headerName: 'Email', flex: 1.2, minWidth: 200 },
         { field: 'phone', headerName: 'Phone', width: 140 },
         { field: 'balance', headerName: 'Balance', width: 120, renderCell: (p)=> p.value !== undefined && p.value !== null ? `₹${p.value}` : '₹0' },
+        { field: 'total_revenue', headerName: 'Total Revenue', width: 150, renderCell: (p)=> p.value !== undefined && p.value !== null ? `₹${p.value.toFixed(2)}` : '₹0.00' },
         { field: 'createdAt', headerName: 'Joined', width: 170, renderCell: (p)=> p.value ? formatDateAndTime(p.value) : '' },
         { field: 'isActive', headerName: 'Status', width: 110, renderCell: (params)=> (
             <span className={`px-2 py-1 rounded-2xl text-xs ${params.value ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
