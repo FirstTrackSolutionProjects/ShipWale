@@ -135,6 +135,7 @@ const MerchantManage =  () => {
         merchant_email: '',
         merchant_phone: '',
         is_to_pay_merchant: '',
+        sort_by: ''
     })
 
     // View modal state
@@ -356,7 +357,7 @@ const MerchantManage =  () => {
 
                     {/* Filters */}
                     <div className="w-full bg-white p-4 rounded-xl shadow-sm border">
-                        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
                             <input
                                 type="text"
                                 className="border rounded-lg px-3 py-2 w-full outline-none focus:ring-2 focus:ring-red-400"
@@ -393,6 +394,17 @@ const MerchantManage =  () => {
                                 <option value=''>All Merchants</option>
                                 <option value='true'>To Pay Merchants</option>
                                 <option value='false'>Non To Pay Merchants</option>
+                            </select>
+                            <select
+                                className="border rounded-lg px-3 py-2 w-full outline-none focus:ring-2 focus:ring-red-400"
+                                value={filters.sort_by}
+                                onChange={handleFilterChange('sort_by')}
+                            >
+                                <option value=''>Sort By</option>
+                                <option value='total_revenue_asc'>Lowest Revenue</option>
+                                <option value='total_revenue_desc'>Highest Revenue</option>
+                                <option value='uid_asc'>Oldest User</option>
+                                <option value='uid_desc'>Newest User</option>
                             </select>
                         </div>
                     </div>
