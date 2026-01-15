@@ -207,7 +207,7 @@ export default function TicketRaise() {
 
   return (
     <div className="h-screen bg-[#efeae2] flex justify-center">
-      <div className="w-full max-w-lg flex flex-col bg-[#efeae2] shadow-lg">
+      <div className="w-full max-w-xl flex flex-col bg-[#efeae2] shadow-lg">
 
         {/* HEADER */}
         <div className="bg-[#075e54] text-white px-4 py-3 flex justify-between items-center">

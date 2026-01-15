@@ -58,7 +58,16 @@ const App = () => {
         <Route path="/verify" element={<Verify />} />
         <Route path="/dashboard/*" element={<Dashboard />} />
       </Routes>
-      { (pathname.startsWith('/dashboard') || pathname.startsWith('/login') || pathname.startsWith('/register') || pathname.startsWith('/tracking')) ? null : <Footer /> }
+      {
+        (pathname.startsWith('/dashboard') ||
+          pathname.startsWith('/login') ||
+          pathname.startsWith('/register') ||
+          pathname.startsWith('/tracking') ||
+          pathname.startsWith('/ticket'))
+        ? null 
+        : <Footer />
+        }
+
       </div>
     </>
   );
