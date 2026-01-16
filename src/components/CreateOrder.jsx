@@ -20,6 +20,18 @@ const getCurrentTime = () => {
   return `${hours}:${minutes}`;
 }
 
+const getPickupTime = (string) => {
+  const currentTime = getCurrentTime();
+  //Increment by 1 hour
+  let hour = parseInt(currentTime.split(':')[0]) + 1;
+  let minute = currentTime.split(':')[1];
+  if (hour >= 24) {
+    hour = hour - 24;
+  }
+  hour = String(hour).padStart(2, '0');
+  return `${hour}:${minute}`;
+}
+
 const schema = z.object({
   wid: z.string().min(1, "Pickup Warehouse Name is required"),
   // order: z.string().min(1, "Order ID is required"),
@@ -120,7 +132,7 @@ const FullDetails = () => {
     resolver: zodResolver(schema),
     defaultValues: {
       pickupDate: getTodaysDate(),
-      pickupTime: getCurrentTime(),
+      pickupTime: getPickupTime(),
       payMode: 'Pre-paid',
       postcode: '',
       Bpostcode: '',
