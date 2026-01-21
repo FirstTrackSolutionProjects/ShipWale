@@ -31,7 +31,7 @@ import CodRemittanceAdmin from "../components/CodRemittance/CodRemittanceAdmin"
 import CodRemittanceMerchant from "../components/CodRemittance/CodRemittanceMerchant"
 import InternationalWeightDisputes from "../components/InternationalWeightDisputes"
 import Pricing from "../pages/Pricing"
-import {IndianRupee} from "lucide-react"
+import {IndianRupee, TruckElectricIcon} from "lucide-react"
 // Icon components (lucide-react) for menu items
 import {
     LayoutDashboard,
@@ -51,6 +51,7 @@ import {
     LogOut,
     Globe2
 } from 'lucide-react'
+import B2CBulkShipment from "@/components/BulkShipment/B2CBulkShipment"
 
 export const navItems = [
     {
@@ -129,6 +130,24 @@ export const menuItems = [
         url : 'rate-calculator',
         component: Pricing,
         dropDownOptions : [{}]
+    },
+    {
+        
+        icon : IndianRupee,
+        name : "Bulk Shipment",
+        isDropdown : true,
+        url : 'bulk-shipment',
+        // component: Pricing,
+        dropDownOptions : [
+            {
+                icon : IndianRupee,
+                name : "B2C Bulk",
+                isDropdown : false,
+                url : 'bulk-shipment/b2c',
+                component: B2CBulkShipment,
+                dropDownOptions : [{}]
+            },
+        ]
     },
     // {
     //     
