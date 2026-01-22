@@ -15,8 +15,6 @@ import convertToUTCISOString from '../../helpers/convertToUTCISOString';
 const API_URL = import.meta.env.VITE_APP_API_URL;
 
 // --- LOGIC: constants.js (Configuration & Validation Rules) ---
-// NOTE: Keys here MUST match the Excel header names used in SAMPLE_DATA
-//       so that parsing, validation, and the grid stay in sync.
 const COLUMN_MAP = {
   '*Warehouse ID': {
     key: 'wid',
@@ -180,13 +178,6 @@ const COLUMN_MAP = {
     width: 150,
     validate: (v) => Number(v) >= 0 || 'Must be non-negative',
   },
-  'Discount': {
-    key: 'discount',
-    required: false,
-    type: 'number',
-    width: 120,
-    default: 0,
-  },
   'E-Waybill (For Shipment Value more than ₹49999)': {
     key: 'ewaybill',
     required: false,
@@ -200,8 +191,6 @@ const COLUMN_MAP = {
   },
 };
 
-// Allow backwards-compatible imports from older templates by
-// normalizing legacy header labels to the current ones.
 const HEADER_ALIASES = {
   'Warehouse ID': '*Warehouse ID',
   'Pickup Date': '*Pickup Date (YYYY-MM-DD)',
@@ -307,16 +296,13 @@ const parseExcel = (file) => {
     reader.onload = (e) => {
       try {
         const data = new Uint8Array(e.target.result);
-        // Use raw: false for parsing strings/dates
         const workbook = XLSX.read(data, { type: 'array', cellDates: false, raw: false }); 
         const sheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[sheetName];
         
-        // Header: 1 means the first row is headers
         const json = XLSX.utils.sheet_to_json(worksheet, { header: 1, raw: true });
-        console.log("Parsed Excel JSON:", JSON.stringify(json, null, 2));
         
-        if (json.length < 2) { // Only headers or empty file
+        if (json.length < 2) { 
           resolve([]); 
           return;
         }
@@ -326,7 +312,6 @@ const parseExcel = (file) => {
 
         const parsedData = rows.map((rowArr, excelIndex) => {
           const rowObj = {
-             // Store the original Excel row index (Row 2 in Excel is index 0 in array)
              id: excelIndex + 2, 
           };
 
@@ -342,7 +327,6 @@ const parseExcel = (file) => {
               if (value === undefined || value === null) {
                  rowObj[header] = '';
               } else {
-                 // Ensure all inputs are treated as strings initially for validation
                  rowObj[header] = String(value).trim(); 
               }
             } else {
@@ -357,7 +341,6 @@ const parseExcel = (file) => {
         reject(new Error(`Failed to parse Excel file: ${error.message}. Ensure it is a valid format.`));
       }
     };
-    // FIX: Using the error object in the rejection message
     reader.onerror = (err) => reject(new Error(`Error reading file: ${err.message || 'Unknown error during file read.'}`));
     reader.readAsArrayBuffer(file);
   });
@@ -380,7 +363,7 @@ const validateData = (data) => {
   
   // 2. Validate row data
   const validatedData = data.map((row) => {
-    const excelId = row.id; // Get the original Excel row ID
+    const excelId = row.id; 
     const rowErrors = [];
     const processedRow = {};
 
@@ -415,7 +398,6 @@ const validateData = (data) => {
 
         // Run specific validation
         if (!error && validate) {
-          // Pass the original (unprocessed) row for context-dependent validation (e.g., COD amount check)
           const validationResult = validate(processedValue, row); 
           if (validationResult !== true) {
             error = validationResult;
@@ -453,9 +435,7 @@ const validateData = (data) => {
 
 const convertToBackendPayload = (validatedData) => {
   return validatedData.map((data) => {
-    // Combine date and time, and convert to ISO standard using the helper
     const pickupDateTime = convertToUTCISOString(`${data.pickupDate}T${data.pickupTime}:00`);
-
     const customerRef = data.customer_reference_number || '';
 
     return {
@@ -479,11 +459,10 @@ const convertToBackendPayload = (validatedData) => {
       Bcountry: 'India',
       same: true,
       shippingType: data.shippingType,
-      // Use the converted full ISO string
       pickupDate: pickupDateTime,
-      pickupTime: data.pickupTime, // Keep separate for clarity/legacy fields if needed
+      pickupTime: data.pickupTime,
       shipmentValue: Number(data.shipmentValue),
-      discount: Number(data.discount) || 0,
+      // discount removed (defaults to 0 on backend if needed, or excluded if unused)
       cod: Number(data.cod) || 0,
       gst: '',
       Cgst: '',
@@ -518,7 +497,7 @@ const convertToBackendPayload = (validatedData) => {
 
 // --- UI Component: UploadSection.jsx ---
 const UploadSection = ({ step, file, fileInputRef, handleFileChange, handleDownloadSample }) => (
-    <Paper sx={{ p: 4, textAlign: 'center', boxShadow: 3, border: '2px dashed #fcd3d3' }}>
+    <Paper sx={{ p: { xs: 2, sm: 4 }, textAlign: 'center', boxShadow: 3, border: '2px dashed #fcd3d3' }}>
         {step === 'LOADING' ? (
             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <CircularProgress color="error" sx={{ mb: 2 }} />
@@ -531,36 +510,45 @@ const UploadSection = ({ step, file, fileInputRef, handleFileChange, handleDownl
                 <Typography variant="body2" color="textSecondary" sx={{ mb: 3 }}>
                     Please upload your `.xlsx` or `.xls` file following the provided format.
                 </Typography>
-                <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept=".xlsx,.xls"
-                    style={{ display: 'none' }}
-                    onChange={handleFileChange}
-                />
-                <Button
-                    variant="contained"
-                    startIcon={<UploadFileIcon />}
-                    onClick={() => fileInputRef.current.click()}
-                    sx={{ mr: 2, bgcolor: '#ef4444', '&:hover': { bgcolor: '#dc2626' } }}
+                <Box 
+                    sx={{ 
+                        display: 'flex', 
+                        justifyContent: 'center', 
+                        gap: 2, 
+                        flexDirection: { xs: 'column', sm: 'row' } // Responsive stack for buttons
+                    }}
                 >
-                    Choose File
-                </Button>
-                <Button
-                    variant="outlined"
-                    startIcon={<DownloadIcon />}
-                    onClick={handleDownloadSample}
-                    sx={{ color: '#ef4444', borderColor: '#ef4444', '&:hover': { bgcolor: '#fef2f2' } }}
-                >
-                    Download Sample
-                </Button>
+                    <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept=".xlsx,.xls"
+                        style={{ display: 'none' }}
+                        onChange={handleFileChange}
+                    />
+                    <Button
+                        variant="contained"
+                        startIcon={<UploadFileIcon />}
+                        onClick={() => fileInputRef.current.click()}
+                        sx={{ mr: { xs: 0, sm: 2 }, bgcolor: '#ef4444', '&:hover': { bgcolor: '#dc2626' } }}
+                    >
+                        Choose File
+                    </Button>
+                    <Button
+                        variant="outlined"
+                        startIcon={<DownloadIcon />}
+                        onClick={handleDownloadSample}
+                        sx={{ color: '#ef4444', borderColor: '#ef4444', '&:hover': { bgcolor: '#fef2f2' } }}
+                    >
+                        Download Sample
+                    </Button>
+                </Box>
                 {file && <Typography variant="caption" display="block" sx={{ mt: 1 }}>{file.name}</Typography>}
             </>
         )}
     </Paper>
 );
 
-// --- UI Component: ErrorSummary.jsx ---
+// --- UI Component: ErrorSummary.jsx (No changes needed) ---
 const ErrorSummary = ({ errors, onTraceError }) => {
     const downloadReport = () => {
         if (errors.length === 0) return toast.info("No errors to report.");
@@ -619,7 +607,7 @@ const ErrorSummary = ({ errors, onTraceError }) => {
 };
 
 
-// --- UI Component: DataGridPreview.jsx (Handles Grid, Filtering, Row Numbers, Scroll, Inline Validation) ---
+// --- UI Component: DataGridPreview.jsx ---
 
 const DataGridPreview = ({ 
     parsedData, 
@@ -632,7 +620,6 @@ const DataGridPreview = ({
 }) => {
     const apiRef = useGridApiRef();
 
-    // Trace error handler wrapper (standard logic)
     const traceErrorHandler = (excelId, column) => {
         const dataGridRowId = rows.find(row => row.id === excelId)?.id; 
         
@@ -651,7 +638,6 @@ const DataGridPreview = ({
         }
     };
     
-    // Custom filter model and isRowVisible logic (standard logic)
     const filterModel = useMemo(() => {
         if (!globalFilter) return { items: [] };
         return {
@@ -675,18 +661,13 @@ const DataGridPreview = ({
         return false;
     }, [globalFilter]);
     
-    // Define Grid Columns and calculate minWidth dynamically
-    const { gridColumns, minWidth } = useMemo(() => {
-        if (parsedData.length === 0) return { gridColumns: [], minWidth: 0 };
+    const { gridColumns } = useMemo(() => {
+        if (parsedData.length === 0) return { gridColumns: [] };
         
         const orderedHeaders = Object.keys(COLUMN_MAP); 
-        let totalWidth = 0; 
         
-        // Base Columns
         const baseColumns = orderedHeaders.map(header => {
-            // const isRequired = COLUMN_MAP[header]?.required;
             const width = COLUMN_MAP[header]?.width || 150;
-            totalWidth += width; 
 
             return {
                 field: header, 
@@ -732,28 +713,19 @@ const DataGridPreview = ({
             width: 70,
             sortable: false,
             filterable: false,
-            // FIX: Ensure apiRef is referenced correctly for visible row index
-            // valueGetter: (params) => {
-            //     const id = params?.id;
-            //     // If apiRef or ID isn't ready, return an empty string
-            //     if (!id || !apiRef.current) return ''; 
-                
-            //     // This retrieves the index relative to the visible, sorted rows.
-            //     const visibleIndex = apiRef.current.getRowIndexRelativeToVisibleRows(id);
-                
-            //     return visibleIndex !== -1 ? visibleIndex + 1 : ''; 
-            // },
             renderCell: (params) => {
                  const hasError = validationErrors.some(e => e.row === params.row.id);
-                 const displayValue = params.value || ''; 
+                 
+                 const visibleRowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(params.id);
+                 const displayValue = visibleRowIndex !== -1 ? visibleRowIndex + 1 : ''; 
+
                  return (
                       <Typography sx={{ fontWeight: 'bold' }} color={hasError ? 'error' : 'initial'}>
-                         {displayValue} {/* FIX: Use the value returned by valueGetter */}
+                         {displayValue} 
                       </Typography>
                  );
             }
         };
-        totalWidth += 70;
         
         // 2. Status Column
         const statusColumn = {
@@ -783,7 +755,6 @@ const DataGridPreview = ({
                 );
             }
         };
-        totalWidth += 100;
 
         // 3. Original Excel Row Index
         const originalIndexColumn = {
@@ -794,19 +765,17 @@ const DataGridPreview = ({
             filterable: false,
             renderCell: (params) => (params.value-1)
         };
-        totalWidth += 120; 
 
-        // Final ordered columns: Row, Status, Original Index, Data...
         const finalColumns = [rowNumberColumn, statusColumn, originalIndexColumn, ...baseColumns];
         
-        return { gridColumns: finalColumns, minWidth: totalWidth };
+        return { gridColumns: finalColumns };
 
     }, [parsedData, validationErrors, focusedCell, apiRef]); 
 
     return (
         <Box sx={{ flexGrow: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
             
-            {/* Global Filtering Input (omitted for brevity) */}
+            {/* Global Filtering Input: responsive padding if needed, but width is 100% */}
             <TextField
                 variant="outlined"
                 size="small"
@@ -824,7 +793,7 @@ const DataGridPreview = ({
                 }}
             />
 
-            {/* Data Grid Container */}
+            {/* Data Grid Container: Crucial for horizontal scroll on mobile */}
             <Box 
                 sx={{ 
                     flexGrow: 1, 
@@ -850,8 +819,6 @@ const DataGridPreview = ({
                     isRowVisible={isRowVisible}
                     
                     sx={{
-                        // FIX 1: Reduced buffer size to prevent trailing blank column
-                        // minWidth: `${minWidth + 1}px`, 
                         height: '100%', 
                         border: '1px solid #000',
                         borderRadius: 0,
@@ -893,7 +860,7 @@ const BulkShipment = () => {
   const [validationErrors, setValidationErrors] = useState([]);
   const [validatedPayload, setValidatedPayload] = useState([]);
   const [globalFilter, setGlobalFilter] = useState('');
-  const [focusedCell, setFocusedCell] = useState(null); // State for visual error tracing
+  const [focusedCell, setFocusedCell] = useState(null); 
   const fileInputRef = useRef(null);
 
   useEffect(() => {
@@ -901,16 +868,13 @@ const BulkShipment = () => {
     console.log("Parsed Data:", JSON.stringify(parsedData, null, 2));
   }, [validatedPayload, parsedData]);
 
-  // Rows filtered by the global search term
   const filteredRows = useMemo(() => {
     if (!globalFilter) {
-        // Map the parsed data for the DataGrid using a synthetic ID (required by DataGrid)
         return parsedData.map((row) => ({ id: `${row.id}`, ...row }));
     }
 
     const lowerCaseFilter = globalFilter.toLowerCase();
     
-    // Perform manual filtering based on all stringifiable fields
     return parsedData
         .filter(row => {
             for (const key in row) {
@@ -920,7 +884,6 @@ const BulkShipment = () => {
             }
             return false;
         })
-        // Map the filtered results to DataGrid format
         .map((row) => ({ id: `${row.id}`, ...row }));
 
   }, [parsedData, globalFilter]);
@@ -936,7 +899,7 @@ const BulkShipment = () => {
 
     setFile(uploadedFile);
     setStep('LOADING');
-    setGlobalFilter(''); // Clear filter on new upload
+    setGlobalFilter(''); 
 
     try {
       const rawData = await parseExcel(uploadedFile);
@@ -947,7 +910,6 @@ const BulkShipment = () => {
       }
 
       const { valid, errors, validatedData } = validateData(rawData);
-      console.log("Raw Data:", JSON.stringify(rawData, null, 2));
       setParsedData(rawData);
       setValidationErrors(errors);
 
@@ -967,7 +929,7 @@ const BulkShipment = () => {
       handleRemoveFile();
     } finally {
         if (fileInputRef.current) {
-            fileInputRef.current.value = ''; // Reset file input
+            fileInputRef.current.value = ''; 
         }
     }
   };
@@ -984,7 +946,6 @@ const BulkShipment = () => {
   
   const handleTraceError = useCallback((dataGridRowId, column) => {
     setFocusedCell({ id: dataGridRowId, field: column });
-    // Clear focus after highlighting
     setTimeout(() => setFocusedCell(null), 3000);
   }, []);
 
@@ -1001,13 +962,11 @@ const BulkShipment = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          // Assuming Auth token is stored in localStorage
           'Authorization': `Bearer ${localStorage.getItem('token')}`, 
         },
         body: JSON.stringify(validatedPayload),
       });
 
-      // Handle non-2xx responses generically
       if (!response.ok) {
           throw new Error(`Server responded with status ${response.status}`);
       }
@@ -1056,8 +1015,15 @@ const BulkShipment = () => {
         </Alert>
       )}
 
-      {/* Action Buttons */}
-      <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
+      {/* Action Buttons: Responsive stack applied here */}
+      <Box 
+        sx={{ 
+            display: 'flex', 
+            gap: 2, 
+            mb: 3,
+            flexDirection: { xs: 'column', sm: 'row' } // Stack on mobile
+        }}
+      >
         <Button
           variant="contained"
           startIcon={<SendIcon />}
@@ -1076,7 +1042,7 @@ const BulkShipment = () => {
         </Button>
       </Box>
 
-      {/* Data Grid and Error Summary (Takes up remaining height) */}
+      {/* Data Grid and Error Summary */}
       <DataGridPreview
         parsedData={parsedData}
         validationErrors={validationErrors}
@@ -1084,43 +1050,43 @@ const BulkShipment = () => {
         focusedCell={focusedCell}
         setGlobalFilter={setGlobalFilter}
         globalFilter={globalFilter}
-        rows={filteredRows} // Pass the filtered data set
+        rows={filteredRows} 
       />
       
     </Box>
   );
 
   return (
-    // Outer container: Full Viewport Height, allowing vertical scroll if content exceeds screen height
+    // Outer container: Added responsive padding, adjusted height/width handling
     <Box 
         sx={{ 
-            height: '100vh', 
-            width: '100%',
+            minHeight: '100vh', 
+            width: '100vw',
             display: 'flex', 
             flexDirection: 'column', 
             alignItems: 'center',
-            p: 2, 
+            p: { xs: 1, sm: 2, md: 4 }, 
             boxSizing: 'border-box',
-            overflowY: 'auto', // Main container handles vertical scroll
+            overflowY: 'auto', 
             overflowX: 'hidden',
         }}
     >
-      <Box sx={{ width: '100%', maxWidth: 1600, px: 2, flexShrink: 0 }}>
+      <Box sx={{ width: '100%', maxWidth: 1600, px: { xs: 1, sm: 2 }, flexShrink: 0 }}>
         <Typography variant="h4" component="h1" gutterBottom sx={{ mb: 4, fontWeight: 'bold', textAlign: 'center' }}>
           Domestic Bulk Shipment
         </Typography>
       </Box>
 
-      {/* Content Area - Flex Grow to take remaining space, handling content inside */}
+      {/* Content Area - Uses responsive padding */}
       <Paper 
           sx={{ 
               width: '100%', 
               maxWidth: 1600, 
-              flexGrow: 1, // Allows Paper to expand
-              minHeight: '80vh', 
+              flexGrow: 1, 
+              minHeight: { xs: '60vh', md: '80vh' }, 
               display: 'flex', 
               flexDirection: 'column', 
-              p: 4, 
+              p: { xs: 2, sm: 3, md: 4 }, 
               boxShadow: 3 
           }}
       >
