@@ -20,6 +20,7 @@ const Register = () => {
     business_name: "",
     mobile: "",
   });
+ 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { isAuthenticated, login, verified, emailVerified } = useAuth();
