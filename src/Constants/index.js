@@ -20,6 +20,7 @@ import UpdateOrderInternational from "../components/UpdateOrderInternational"
 // import KYCRequests from "../components/KYCRequests"
 import AdminSupport from '../pages/AdminSupport'; // Assuming index.js is one level up from pages
 import Support from '../pages/Support'; 
+import AdminAnalytics from '../pages/AdminAnalytics'; // NEW IMPORT
 import AllInternationalShipmentReports from "../components/AllInternationalShipmentReports"
 import InternationalReports from "../components/InternationalReports"
 import WeightDisputes from "../components/WeightDisputes"
@@ -34,6 +35,7 @@ import CodRemittanceMerchant from "../components/CodRemittance/CodRemittanceMerc
 import InternationalWeightDisputes from "../components/InternationalWeightDisputes"
 import Pricing from "../pages/Pricing"
 import {IndianRupee, TruckElectricIcon, MessageSquareText} from "lucide-react"
+import { BarChart3 } from 'lucide-react' // Import a suitable icon
 // Icon components (lucide-react) for menu items
 import {
     LayoutDashboard,
@@ -545,6 +547,15 @@ export const menuItems = [
         //     dropDownOptions : [{}]
         // }
     ]
+    },
+    {
+        icon: BarChart3, 
+        name: "Support Analytics",
+        isDropdown: false,
+        admin: true,               
+        url: 'admin/analytics',      // Navigates to /dashboard/admin/analytics
+        component: AdminAnalytics,    
+        dropDownOptions: [{}]
     },
     {
         
