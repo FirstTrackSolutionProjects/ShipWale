@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 
 import Home from './pages/Home'
@@ -15,6 +15,12 @@ import Faq from './pages/Faq'
 import Footer from './components/Footer'
 import RefundCancel from './pages/RefundCancel'
 import TicketRaise from './pages/TicketRaise'
+
+// --- NEW IMPORTS FOR PHASE 1 ---
+import Support from './pages/Support'
+import TicketDetail from './pages/TicketDetail'
+// --- END NEW IMPORTS ---
+
 import Navbar from './components/Navbar'
 import { ToastContainer } from 'react-toastify';
 import Verify from './pages/Verify';
@@ -54,6 +60,12 @@ const App = () => {
         <Route path="/policy" element={<PrivacyPolicy />} />
         <Route path="/refund-cancel" element={<RefundCancel />} />
         <Route path="/ticket" element={<TicketRaise />} />
+        
+        {/* --- NEW USER SUPPORT ROUTES (PHASE 1) --- */}
+        <Route path="/support" element={<Support />} />
+        <Route path="/support/:id" element={<TicketDetail />} />
+        {/* --- END NEW USER SUPPORT ROUTES --- */}
+        
         <Route path="/faq" element={<Faq />} />
         <Route path="/verify" element={<Verify />} />
         <Route path="/dashboard/*" element={<Dashboard />} />
