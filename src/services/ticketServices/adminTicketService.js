@@ -78,3 +78,19 @@ export const adminSubmitReply = async (ticketId, message, newStatus) => {
         throw new Error(error.response?.data?.message || `Failed to send admin reply.`);
     }
 };
+
+// --- NEW ANALYTICS FUNCTION ---
+
+export const fetchTicketAnalytics = async () => {
+    const VITE_APP_API_URL = import.meta.env.VITE_APP_API_URL;
+    try {
+        const response = await axios.get(
+            `${VITE_APP_API_URL}/support/admin/analytics`,
+            { headers: getAuthHeaders() }
+        );
+        return response.data.data;
+    } catch (error) {
+        console.error("Error fetching ticket analytics:", error.response?.data || error.message);
+        throw new Error(error.response?.data?.message || "Failed to fetch analytics data.");
+    }
+};
