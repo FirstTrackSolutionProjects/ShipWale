@@ -1,8 +1,13 @@
+// ShipWale\src\pages\TicketRaise.jsx
+
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from 'react-toastify'; 
+import { raiseTicketService } from "../services/ticketServices/raiseTicketService"; 
 
 const BOT_DELAY = 500;
 
+// The OPTIONS constant is defined here, as provided by you:
 const OPTIONS = {
   "Pickup Issue": {
     options: [
@@ -127,14 +132,22 @@ export default function TicketRaise() {
   const [currentOptions, setCurrentOptions] = useState([]);
   const [step, setStep] = useState("WELCOME");
   const [currentCategory, setCurrentCategory] = useState("");
+  const [currentSubCategory, setCurrentSubCategory] = useState("");
   const [showInput, setShowInput] = useState(false);
   const [inputText, setInputText] = useState("");
+  const [isLoading, setIsLoading] = useState(false); 
 
   const addBot = (text) =>
     setMessages((prev) => [...prev, { from: "bot", text }]);
 
   const addUser = (text) =>
     setMessages((prev) => [...prev, { from: "user", text }]);
+
+  // Scroll to bottom whenever messages update
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
 
   useEffect(() => {
     setTimeout(() => {
@@ -155,14 +168,59 @@ export default function TicketRaise() {
     }, BOT_DELAY);
   }, []);
 
+
+  const submitTicket = async (category, subCategory, description) => {
+    setIsLoading(true);
+    
+    toast.info("Attempting to create ticket...");
+
+    const data = {
+        category,
+        subCategory,
+        description,
+    };
+
+    console.log("Submitting Payload:", data); 
+
+    try {
+        const response = await raiseTicketService(data);
+        addBot(`📝 Ticket #${response.ticketId} created successfully. Our team will contact you.`);
+        toast.success(`Ticket ${response.ticketId} Raised!`);
+        setTimeout(() => navigate("/"), 2000);
+    } catch (error) {
+        console.error("Ticket Submission Failed:", error); 
+        addBot("❌ Failed to create ticket. Please provide a more detailed description below.");
+        toast.error(error.message || "Ticket creation failed.");
+        setIsLoading(false);
+        setStep("DETAILS"); // Keep user in input state if submission fails
+        setShowInput(true);
+    }
+  };
+
+  // ----------------------------------------------------
+  // FIX: Define utility function before it is called in handleOption
+  // ----------------------------------------------------
+  const askSolved = () => {
+    setTimeout(() => {
+      addBot("Is your issue resolved?");
+      setCurrentOptions(["Yes", "No"]);
+      setStep("SOLVED");
+    }, BOT_DELAY);
+  };
+  // ----------------------------------------------------
+
+
   const handleOption = (option) => {
+    if (isLoading) return; 
     addUser(option);
     setCurrentOptions([]);
 
     setTimeout(() => {
       if (step === "MAIN") {
         if (option === "Other") {
+          setCurrentCategory(option);
           addBot("Please describe your issue below:");
+          setStep("DETAILS"); 
           setShowInput(true);
         } else {
           setCurrentCategory(option);
@@ -171,38 +229,42 @@ export default function TicketRaise() {
           setStep("SUB");
         }
       } else if (step === "SUB") {
+        setCurrentSubCategory(option); 
         addBot(OPTIONS[currentCategory].replies[option]);
-        askSolved();
+        askSolved(); // This call is now safe
       } else if (step === "SOLVED") {
         handleSolved(option);
       }
     }, BOT_DELAY);
   };
 
-  const askSolved = () => {
-    setTimeout(() => {
-      addBot("Is your issue resolved?");
-      setCurrentOptions(["Yes", "No"]);
-      setStep("SOLVED");
-    }, BOT_DELAY);
-  };
-
   const handleSolved = (answer) => {
     if (answer === "Yes") {
       addBot("🙏 Thank you for contacting Shipwale Support!");
+      setTimeout(() => navigate("/"), 2000); 
     } else {
-      addBot("📝 Ticket created successfully. Our team will contact you.");
-      setTimeout(() => navigate("/"), 2000);
+      // If unresolved, ask the user for a detailed description
+      addBot("Please provide a detailed description for our team to create the ticket:");
+      setStep("DETAILS"); 
+      setShowInput(true);
     }
   };
 
-  const submitOtherIssue = () => {
-    if (!inputText.trim()) return;
+  // Function to handle submission from the input box
+  const submitDetails = () => {
+    if (!inputText.trim() || isLoading) return;
+    
     addUser(inputText);
     setShowInput(false);
+    
+    // Determine Category and SubCategory based on the flow
+    const category = currentCategory === 'Other' ? 'Other' : currentCategory;
+    const subCategory = currentCategory === 'Other' ? null : currentSubCategory;
+    const description = inputText.trim();
+
+    // Reset input field and submit
     setInputText("");
-    addBot("📝 Ticket created successfully. Our team will contact you.");
-    setTimeout(() => navigate("/"), 2000);
+    submitTicket(category, subCategory, description);
   };
 
   return (
@@ -226,13 +288,14 @@ export default function TicketRaise() {
             </div>
           ))}
 
-          {currentOptions.length > 0 && (
+          {currentOptions.length > 0 && !isLoading && (
             <div className="grid grid-cols-2 gap-2">
               {currentOptions.map((opt) => (
                 <button
                   key={opt}
                   onClick={() => handleOption(opt)}
-                  className="bg-white border rounded-full py-2 text-sm"
+                  className="bg-white border rounded-full py-2 text-sm hover:bg-gray-100 transition"
+                  disabled={isLoading}
                 >
                   {opt}
                 </button>
@@ -240,22 +303,34 @@ export default function TicketRaise() {
             </div>
           )}
 
-          {showInput && (
+          {showInput && !isLoading && (
             <div className="flex gap-2 mt-2">
               <input
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
                 placeholder="Type your issue here..."
                 className="flex-1 px-3 py-2 rounded border"
+                disabled={isLoading}
               />
               <button
-                onClick={submitOtherIssue}
-                className="bg-[#075e54] text-white px-4 rounded"
+                onClick={submitDetails}
+                className="bg-[#075e54] text-white px-4 rounded disabled:opacity-50"
+                disabled={isLoading}
               >
-                Send
+                {isLoading ? 'Sending...' : 'Send'}
               </button>
             </div>
           )}
+          
+          {/* Display loading message if submitting a ticket */}
+          {isLoading && (
+            <div className="flex justify-start">
+                <div className="px-3 py-2 rounded-xl text-sm max-w-[75%] bg-white text-gray-600">
+                    Submitting your ticket...
+                </div>
+            </div>
+          )}
+
 
           <div ref={bottomRef} />
         </div>

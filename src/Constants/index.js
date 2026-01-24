@@ -18,6 +18,8 @@ import AllShipmentReports from "../components/AllShipmentReports"
 import UpdateOrderInternational from "../components/UpdateOrderInternational"
 // import KYCVerification from "../components/KYCVerification"
 // import KYCRequests from "../components/KYCRequests"
+import AdminSupport from '../pages/AdminSupport'; // Assuming index.js is one level up from pages
+import Support from '../pages/Support'; 
 import AllInternationalShipmentReports from "../components/AllInternationalShipmentReports"
 import InternationalReports from "../components/InternationalReports"
 import WeightDisputes from "../components/WeightDisputes"
@@ -31,7 +33,7 @@ import CodRemittanceAdmin from "../components/CodRemittance/CodRemittanceAdmin"
 import CodRemittanceMerchant from "../components/CodRemittance/CodRemittanceMerchant"
 import InternationalWeightDisputes from "../components/InternationalWeightDisputes"
 import Pricing from "../pages/Pricing"
-import {IndianRupee, TruckElectricIcon} from "lucide-react"
+import {IndianRupee, TruckElectricIcon, MessageSquareText} from "lucide-react"
 // Icon components (lucide-react) for menu items
 import {
     LayoutDashboard,
@@ -120,6 +122,15 @@ export const menuItems = [
         name : "Wallet Recharge",
         isDropdown : false,
         url : 'wallet-recharge',
+        dropDownOptions : [{}]
+    },
+    {
+        icon : MessageSquareText, // Use an appropriate icon
+        name : "My Support Tickets",
+        isDropdown : false,
+        merchantOnly : true, // Assuming standard users/merchants can see their own tickets
+        url : 'support',      // Navigates to /dashboard/support
+        component : Support, 
         dropDownOptions : [{}]
     },
     {
@@ -515,6 +526,15 @@ export const menuItems = [
             component : ContactSubmissions,
             dropDownOptions : [{}]
         },
+        {
+            icon: TruckElectricIcon, // Using a distinct icon for Admin Management
+            name: "Support Management",
+            isDropdown: false,
+            admin: true,               
+            url: 'admin/support',      // Navigates to /dashboard/admin/support
+            component: AdminSupport,    
+            dropDownOptions: [{}]
+        },
         // {
         //     
         //     name : "KYC Requests",
@@ -582,6 +602,13 @@ export const menuItems = [
         dropDownOptions : [{}]
     },
 
+    {
+        name: "Support Management",
+        url: "admin/support",       // The URL slug within the dashboard (e.g., /dashboard/admin/support)
+        icon: "TicketIcon",         // Replace with your actual icon name
+        admin: true,               // Only visible to admin
+        component: AdminSupport    // The component we just imported
+    },
 
 
 ]

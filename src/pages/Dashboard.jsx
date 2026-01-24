@@ -4,6 +4,7 @@ import { Routes,Route } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { menuItems } from '../Constants';
 import { useNavigate } from 'react-router-dom';
+import AdminTicketDetail from './AdminTicketDetail';
 
 const Dashboard = () => {
   const {admin, isAuthenticated, verified} = useAuth()
@@ -41,6 +42,7 @@ return (
         <main className="flex-grow justify-center items-center overflow-y-auto">
           <Routes>
             {generateRoutes(menuItems, admin)}
+            <Route path="admin/support/:id" element={<AdminTicketDetail />} />
           </Routes>
         </main>
 
