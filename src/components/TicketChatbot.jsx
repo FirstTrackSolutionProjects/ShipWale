@@ -1,13 +1,13 @@
-// ShipWale\src\pages\TicketRaise.jsx
+// ShipWale\src\components\TicketChatbot.jsx
 
 import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+// Removed useNavigate
 import { toast } from 'react-toastify'; 
 import { raiseTicketService } from "../services/ticketServices/raiseTicketService"; 
 
 const BOT_DELAY = 500;
 
-// The OPTIONS constant is defined here, as provided by you:
+// The OPTIONS constant remains here
 const OPTIONS = {
   "Pickup Issue": {
     options: [
@@ -124,8 +124,9 @@ const OPTIONS = {
   },
 };
 
-export default function TicketRaise() {
-  const navigate = useNavigate();
+// Accepts onClose prop instead of using useNavigate
+export default function TicketChatbot({ onClose }) {
+  // Removed const navigate = useNavigate();
   const bottomRef = useRef(null);
 
   const [messages, setMessages] = useState([]);
@@ -186,20 +187,18 @@ export default function TicketRaise() {
         const response = await raiseTicketService(data);
         addBot(`📝 Ticket #${response.ticketId} created successfully. Our team will contact you.`);
         toast.success(`Ticket ${response.ticketId} Raised!`);
-        setTimeout(() => navigate("/"), 2000);
+        // Use onClose instead of navigate
+        setTimeout(() => onClose(), 2000); 
     } catch (error) {
         console.error("Ticket Submission Failed:", error); 
         addBot("❌ Failed to create ticket. Please provide a more detailed description below.");
         toast.error(error.message || "Ticket creation failed.");
         setIsLoading(false);
-        setStep("DETAILS"); // Keep user in input state if submission fails
+        setStep("DETAILS"); 
         setShowInput(true);
     }
   };
 
-  // ----------------------------------------------------
-  // FIX: Define utility function before it is called in handleOption
-  // ----------------------------------------------------
   const askSolved = () => {
     setTimeout(() => {
       addBot("Is your issue resolved?");
@@ -207,7 +206,6 @@ export default function TicketRaise() {
       setStep("SOLVED");
     }, BOT_DELAY);
   };
-  // ----------------------------------------------------
 
 
   const handleOption = (option) => {
@@ -231,7 +229,7 @@ export default function TicketRaise() {
       } else if (step === "SUB") {
         setCurrentSubCategory(option); 
         addBot(OPTIONS[currentCategory].replies[option]);
-        askSolved(); // This call is now safe
+        askSolved(); 
       } else if (step === "SOLVED") {
         handleSolved(option);
       }
@@ -241,42 +239,33 @@ export default function TicketRaise() {
   const handleSolved = (answer) => {
     if (answer === "Yes") {
       addBot("🙏 Thank you for contacting Shipwale Support!");
-      setTimeout(() => navigate("/"), 2000); 
+      // Use onClose instead of navigate
+      setTimeout(() => onClose(), 2000); 
     } else {
-      // If unresolved, ask the user for a detailed description
       addBot("Please provide a detailed description for our team to create the ticket:");
       setStep("DETAILS"); 
       setShowInput(true);
     }
   };
 
-  // Function to handle submission from the input box
   const submitDetails = () => {
     if (!inputText.trim() || isLoading) return;
     
     addUser(inputText);
     setShowInput(false);
     
-    // Determine Category and SubCategory based on the flow
     const category = currentCategory === 'Other' ? 'Other' : currentCategory;
     const subCategory = currentCategory === 'Other' ? null : currentSubCategory;
     const description = inputText.trim();
 
-    // Reset input field and submit
     setInputText("");
     submitTicket(category, subCategory, description);
   };
 
   return (
-    <div className="h-screen bg-[#efeae2] flex justify-center">
-      <div className="w-full max-w-xl flex flex-col bg-[#efeae2] shadow-lg">
-
-        {/* HEADER */}
-        <div className="bg-[#075e54] text-white px-4 py-3 flex justify-between items-center">
-          <p className="font-semibold">Shipwale Support</p>
-          <button onClick={() => navigate("/")} className="text-xl">✕</button>
-        </div>
-
+    // Removed full screen styling wrappers, leaving only the inner chat logic
+    <div className="w-full h-full flex flex-col bg-[#efeae2] overflow-hidden">
+      
         {/* CHAT BODY */}
         <div className="flex-1 overflow-y-auto px-3 py-4 space-y-3">
           {messages.map((msg, i) => (
@@ -334,7 +323,6 @@ export default function TicketRaise() {
 
           <div ref={bottomRef} />
         </div>
-      </div>
     </div>
   );
 }
