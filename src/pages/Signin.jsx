@@ -119,7 +119,7 @@ const Signin = () => {
                 onChange={() => setRememberMe(!rememberMe)}
                 className="mr-2"
               />
-              Remember Me
+              Remember me for 30 days
             </label>
 
             <p
