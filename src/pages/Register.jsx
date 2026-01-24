@@ -87,7 +87,7 @@ const Register = () => {
       toast.error("Please accept Terms & Conditions");
       return;
     }
-    
+
     const validationErrors = validate();
     if (!validationErrors) {
       try {
@@ -206,7 +206,7 @@ const Register = () => {
               onChange={handleChange}
               className="w-full focus:outline-none"
             />
-             <button
+            <button
                 type="button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 className="text-gray-500 ml-2"
@@ -264,9 +264,9 @@ const Register = () => {
 
         <p className="text-center text-sm mt-4">
           Already have an account?{" "}
-          <Link to="/login" className="text-red-600 font-semibold hover:underline">
+            <Link to="/login" className="text-red-600 font-semibold hover:underline">
             Sign In
-          </Link>
+            </Link>
         </p>
       </div>
     </div>
