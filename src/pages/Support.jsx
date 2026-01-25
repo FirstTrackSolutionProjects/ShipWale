@@ -26,6 +26,13 @@ export default function UserSupportPage() {
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
+    // --- NEW HANDLER ---
+    const handleRaiseNewTicket = () => {
+        // Dispatch event to open the floating chat window
+        window.dispatchEvent(new CustomEvent('OPEN_SUPPORT_CHAT'));
+    };
+    // --- END NEW HANDLER ---
+
     useEffect(() => {
         const loadTickets = async () => {
             try {
@@ -45,7 +52,8 @@ export default function UserSupportPage() {
     }, [navigate]);
 
     const handleViewTicket = (ticketId) => {
-        navigate(`/support/${ticketId}`);
+        // Since we removed the top-level route, this navigation is now relative to /dashboard, which is correct.
+        navigate(`/dashboard/support/${ticketId}`);
     };
 
     if (loading) {
@@ -59,7 +67,7 @@ export default function UserSupportPage() {
                 <h2 className="text-xl font-semibold mb-4">Your Support Tickets</h2>
                 <p className="text-gray-600">You have no active or historical tickets.</p>
                 <button 
-                    onClick={() => navigate('/ticket')} 
+                    onClick={handleRaiseNewTicket} // <-- FIXED
                     className="mt-4 bg-[#075e54] text-white py-2 px-4 rounded hover:bg-green-700 transition"
                 >
                     Raise a New Ticket
@@ -95,7 +103,7 @@ export default function UserSupportPage() {
                 ))}
             </div>
             <button 
-                onClick={() => navigate('/ticket')} 
+                onClick={handleRaiseNewTicket} // <-- FIXED
                 className="mt-6 bg-[#075e54] text-white py-2 px-4 rounded hover:bg-green-700 transition"
             >
                 Raise a New Ticket

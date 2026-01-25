@@ -1,27 +1,33 @@
-// ShipWale\src\components\FloatingAssistant.jsx
-
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext'; // Assuming you have useAuth hook setup
 import { MessageCircle, X } from 'lucide-react'; 
 import TicketChatbot from './TicketChatbot'; // Import the new chatbot component
 
 export default function FloatingAssistant() {
-    // Check if the user is authenticated (essential requirement)
     const { isAuthenticated } = useAuth(); 
     const [isOpen, setIsOpen] = useState(false);
 
-    // If not authenticated, do not render the button or the chat
-    if (!isAuthenticated) {
-        return null; 
-    }
+    useEffect(() => {
+        const handleOpenChat = () => {
+            setIsOpen(true);
+        };
+
+        window.addEventListener('OPEN_SUPPORT_CHAT', handleOpenChat);
+
+        return () => {
+            window.removeEventListener('OPEN_SUPPORT_CHAT', handleOpenChat);
+        };
+    }, []);
 
     const toggleOpen = () => setIsOpen(!isOpen);
     const handleClose = () => setIsOpen(false);
 
+    if (!isAuthenticated) {
+        return null; 
+    }
+
     return (
-        // Fixed positioning for the floating element
-        <div className="fixed bottom-6 right-6 z-[1000]"> 
-            
+        <div className="fixed bottom-6 right-6 z-1000"> 
             {/* Chat Modal Window */}
             {isOpen && (
                 <div 
@@ -30,7 +36,7 @@ export default function FloatingAssistant() {
                                 mb-4 border border-gray-200 flex flex-col"
                 >
                     {/* Header */}
-                    <div className="bg-[#075e54] text-white px-4 py-3 flex justify-between items-center flex-shrink-0">
+                    <div className="bg-[#075e54] text-white px-4 py-3 flex justify-between items-center shrink-0">
                         <p className="font-semibold text-sm">Shipwale Support</p>
                         <button onClick={handleClose} className="text-xl hover:text-red-300 transition">
                             <X size={20} />
@@ -38,7 +44,7 @@ export default function FloatingAssistant() {
                     </div>
 
                     {/* Chatbot Content */}
-                    <div className="flex-grow overflow-hidden">
+                    <div className="grow">
                         <TicketChatbot onClose={handleClose} />
                     </div>
                 </div>
