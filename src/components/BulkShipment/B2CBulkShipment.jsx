@@ -15,36 +15,62 @@ import convertToUTCISOString from '../../helpers/convertToUTCISOString';
 const API_URL = import.meta.env.VITE_APP_API_URL;
 
 // --- LOGIC: constants.js (Configuration & Validation Rules) ---
+const COLUMN_NAME_MAP = {
+  WAREHOUSE_ID: '*Warehouse ID',
+  PICKUP_DATE: '*Pickup Date (YYYY-MM-DD)',
+  PICKUP_TIME: '*Pickup Time (HH:MM)',
+  CUSTOMER_REF: 'Customer Reference Number',
+  PAYMENT_MODE: '*Payment Mode (cod/pre-paid)',
+  COD_AMOUNT: 'COD Amount',
+  SHIPPING_TYPE: '*Shipping Type (surface/express)',
+  CUSTOMER_NAME: '*Customer Name',
+  CUSTOMER_EMAIL: '*Customer Email',
+  CUSTOMER_PHONE: '*Customer Phone',
+  SHIPPING_ADDRESS: '*Shipping Address (Max 100 Char)',
+  SHIPPING_ADDRESS_TYPE: '*Shipping Address Type (home/office)',
+  SHIPPING_PINCODE: '*Shipping Pincode',
+  SHIPPING_CITY: '*Shipping City',
+  SHIPPING_STATE: '*Shipping State',
+  LENGTH: '*Length (cm)',
+  BREADTH: '*Breadth (cm)',
+  HEIGHT: '*Height (cm)',
+  WEIGHT: '*Weight (kg)',
+  ITEM_NAMES: '*Item Name (Comma Separated)',
+  ITEM_QUANTITIES: '*Item Quantity (Comma Separated)',
+  ITEM_UNIT_PRICES: '*Item Unit Price (Comma Separated)',
+  SHIPMENT_VALUE: '*Shipment Value',
+  E_WAYBILL: 'E-Waybill (For Shipment Value more than ₹49999)',
+}
 const COLUMN_MAP = {
-  '*Warehouse ID': {
+  [COLUMN_NAME_MAP.WAREHOUSE_ID]: {
     key: 'wid',
     required: true,
     type: 'number',
     width: 100,
     validate: (v) => !isNaN(Number(v)) || 'Must be a valid numeric ID',
   },
-  '*Pickup Date (YYYY-MM-DD)': {
+  [COLUMN_NAME_MAP.PICKUP_DATE]: {
     key: 'pickupDate',
     required: true,
     type: 'date',
     width: 150,
     validate: (v) => (v && !isNaN(new Date(v))) || 'Required/Invalid YYYY-MM-DD date',
   },
-  '*Pickup Time (HH:MM)': {
+  [COLUMN_NAME_MAP.PICKUP_TIME]: {
     key: 'pickupTime',
     required: true,
     type: 'string',
     width: 120,
     validate: (v) => /^\d{2}:\d{2}$/.test(String(v)) || 'Must be HH:MM format',
   },
-  'Customer Reference Number': {
+  [COLUMN_NAME_MAP.CUSTOMER_REF]: {
     key: 'customer_reference_number',
     required: false,
     type: 'string',
     width: 180,
     validate: (v) => String(v).length <= 15 || 'Max 15 characters',
   },
-  '*Payment Mode (cod/pre-paid)': {
+  [COLUMN_NAME_MAP.PAYMENT_MODE]: {
     key: 'payMode',
     required: true,
     type: 'enum',
@@ -52,18 +78,18 @@ const COLUMN_MAP = {
     options: ['COD', 'Pre-paid'],
     validate: (v) => ['COD', 'PRE-PAID'].includes(String(v).toUpperCase()) || 'Must be COD or Pre-paid',
   },
-  'COD Amount': {
+  [COLUMN_NAME_MAP.COD_AMOUNT]: {
     key: 'cod',
     required: false,
     type: 'number',
     width: 120,
     validate: (v, row) => (
-      String(row['*Payment Mode (cod/pre-paid)']).toUpperCase() === 'COD'
+      String(row[COLUMN_NAME_MAP.PAYMENT_MODE]).toUpperCase() === 'COD'
         ? (Number(v) >= 1 || 'Required (>= 1) for COD')
         : true
     ),
   },
-  '*Shipping Type (surface/express)': {
+  [COLUMN_NAME_MAP.SHIPPING_TYPE]: {
     key: 'shippingType',
     required: true,
     type: 'enum',
@@ -71,34 +97,34 @@ const COLUMN_MAP = {
     options: ['Surface', 'Express'],
     validate: (v) => ['SURFACE', 'EXPRESS'].includes(String(v).toUpperCase()) || 'Must be Surface or Express',
   },
-  '*Customer Name': {
+  [COLUMN_NAME_MAP.CUSTOMER_NAME]: {
     key: 'name',
     required: true,
     type: 'string',
     width: 200,
   },
-  '*Customer Email': {
+  [COLUMN_NAME_MAP.CUSTOMER_EMAIL]: {
     key: 'email',
     required: true,
     type: 'string',
     width: 200,
     validate: (v) => (String(v).includes('@') && String(v).includes('.')) || 'Invalid email format',
   },
-  '*Customer Phone': {
+  [COLUMN_NAME_MAP.CUSTOMER_PHONE]: {
     key: 'phone',
     required: true,
     type: 'string',
     width: 150,
     validate: (v) => /^\d{10}$/.test(String(v)) || 'Must be 10 digits',
   },
-  '*Shipping Address (Max 100 Char)': {
+  [COLUMN_NAME_MAP.SHIPPING_ADDRESS]: {
     key: 'address',
     required: true,
     type: 'string',
     width: 300,
     validate: (v) => String(v).length <= 100 || 'Max 100 characters',
   },
-  '*Shipping Address Type (home/office)': {
+  [COLUMN_NAME_MAP.SHIPPING_ADDRESS_TYPE]: {
     key: 'addressType',
     required: true,
     type: 'enum',
@@ -106,85 +132,85 @@ const COLUMN_MAP = {
     width: 180,
     validate: (v) => ['HOME', 'OFFICE'].includes(String(v).toUpperCase()) || 'Must be home or office',
   },
-  '*Shipping Pincode': {
+  [COLUMN_NAME_MAP.SHIPPING_PINCODE]: {
     key: 'postcode',
     required: true,
     type: 'string',
     width: 120,
     validate: (v) => /^\d{6}$/.test(String(v)) || 'Must be 6 digits',
   },
-  '*Shipping City': {
+  [COLUMN_NAME_MAP.SHIPPING_CITY]: {
     key: 'city',
     required: true,
     type: 'string',
     width: 150,
   },
-  '*Shipping State': {
+  [COLUMN_NAME_MAP.SHIPPING_STATE]: {
     key: 'state',
     required: true,
     type: 'string',
     width: 150,
   },
-  '*Length (cm)': {
+  [COLUMN_NAME_MAP.LENGTH]: {
     key: 'length',
     required: true,
     type: 'number',
     width: 120,
     validate: (v) => Number(v) > 0 || 'Must be positive',
   },
-  '*Breadth (cm)': {
+  [COLUMN_NAME_MAP.BREADTH]: {
     key: 'breadth',
     required: true,
     type: 'number',
     width: 120,
     validate: (v) => Number(v) > 0 || 'Must be positive',
   },
-  '*Height (cm)': {
+  [COLUMN_NAME_MAP.HEIGHT]: {
     key: 'height',
     required: true,
     type: 'number',
     width: 120,
     validate: (v) => Number(v) > 0 || 'Must be positive',
   },
-  '*Weight (kg)': {
+  [COLUMN_NAME_MAP.WEIGHT]: {
     key: 'weight',
     required: true,
     type: 'number',
     width: 120,
     validate: (v) => Number(v) > 0 || 'Must be positive',
   },
-  '*Item Name (Comma Separated)': {
+  [COLUMN_NAME_MAP.ITEM_NAMES]: {
     key: 'itemNames',
     required: true,
     type: 'string',
     width: 200,
   },
-  '*Item Quantity (Comma Separated)': {
+  [COLUMN_NAME_MAP.ITEM_QUANTITIES]: {
     key: 'itemQuantities',
     required: true,
     type: 'string',
     width: 200,
   },
-  '*Item Unit Price (Comma Separated)': {
+  [COLUMN_NAME_MAP.ITEM_UNIT_PRICES]: {
     key: 'itemUnitPrices',
     required: true,
     type: 'string',
     width: 200,
   },
-  '*Shipment Value': {
+  [COLUMN_NAME_MAP.SHIPMENT_VALUE]: {
     key: 'shipmentValue',
     required: true,
     type: 'number',
     width: 150,
     validate: (v) => Number(v) >= 0 || 'Must be non-negative',
   },
-  'E-Waybill (For Shipment Value more than ₹49999)': {
+  [COLUMN_NAME_MAP.E_WAYBILL]: {
     key: 'ewaybill',
     required: false,
     type: 'string',
     width: 250,
     validate: (v, row) => (
-      Number(row['*Shipment Value']) >= 50000
+      Number(row[COLUMN_NAME_MAP.SHIPMENT_VALUE]) >= 50000
         ? (String(v).length > 0 || 'Required if Shipment Value >= 50000')
         : true
     ),
@@ -596,7 +622,7 @@ const ErrorSummary = ({ errors, onTraceError }) => {
                         onClick={() => onTraceError(err.row, err.column)}
                     >
                         <Typography variant="body2" color="error">
-                            <span style={{ fontWeight: 'bold' }}>Row {err.row}</span> (Column "{err.column}"): {err.message}
+                            <span style={{ fontWeight: 'bold' }}>Row {err.row-1}</span> (Column "{err.column}"): {err.message}
                             <ArrowDownwardIcon sx={{ fontSize: 14, ml: 1, color: '#ef4444' }} />
                         </Typography>
                     </Box>
@@ -766,7 +792,7 @@ const DataGridPreview = ({
             renderCell: (params) => (params.value-1)
         };
 
-        const finalColumns = [rowNumberColumn, statusColumn, originalIndexColumn, ...baseColumns];
+        const finalColumns = [originalIndexColumn, statusColumn, ...baseColumns];
         
         return { gridColumns: finalColumns };
 
@@ -1061,7 +1087,7 @@ const BulkShipment = () => {
     <Box 
         sx={{ 
             minHeight: '100vh', 
-            width: '100vw',
+            width: '100%',
             display: 'flex', 
             flexDirection: 'column', 
             alignItems: 'center',
