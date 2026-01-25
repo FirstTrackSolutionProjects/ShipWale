@@ -104,7 +104,7 @@ export default function AdminTicketDetail() {
 
             <div className="bg-white rounded-lg shadow-xl p-6">
                 <h1 className="text-3xl font-bold text-gray-800 mb-2">Admin View: Ticket #{ticket.ticket_id}</h1>
-                <p className="text-gray-600 mb-4">Client: <span className="font-semibold">{ticket.fullName} (UID: {ticket.uid})</span></p>
+                <p className="text-gray-600 mb-4">Client: <span className="font-semibold">{ticket.fullName} (Email: {ticket.email})</span></p>
 
                 <div className="flex justify-between items-start mb-6 border-b pb-4">
                     {/* Status Display */}
