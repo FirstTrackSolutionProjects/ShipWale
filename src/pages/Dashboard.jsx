@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { menuItems } from '../Constants';
 import { useNavigate } from 'react-router-dom';
 import AdminTicketDetail from './AdminTicketDetail';
+import TicketDetail from './TicketDetail'; // <--- NEW IMPORT for merchant ticket view
 
 const Dashboard = () => {
   const {admin, isAuthenticated, verified} = useAuth()
@@ -43,6 +44,8 @@ return (
           <Routes>
             {generateRoutes(menuItems, admin)}
             <Route path="admin/support/:id" element={<AdminTicketDetail />} />
+            {/* FIX: Add the standard merchant ticket detail route */}
+            <Route path="support/:id" element={<TicketDetail />} /> 
           </Routes>
         </main>
 

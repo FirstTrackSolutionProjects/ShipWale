@@ -85,7 +85,7 @@ export default function TicketDetail() {
     return (
         <div className="p-4 md:p-8 max-w-5xl mx-auto bg-gray-50 min-h-screen">
             <button 
-                onClick={() => navigate('/support')} 
+                onClick={() => navigate('/dashboard/support')} // <-- FIX: Use the full dashboard route
                 className="text-blue-600 hover:text-blue-800 mb-4 flex items-center"
             >
                 &larr; Back to All Tickets

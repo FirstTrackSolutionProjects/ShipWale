@@ -68,8 +68,9 @@ const App = () => {
         {/* <Route path="/ticket" element={<TicketRaise />} /> */}
         
         {/* --- EXISTING USER SUPPORT ROUTES (PHASE 1) --- */}
-        <Route path="/support" element={<Support />} />
-        <Route path="/support/:id" element={<TicketDetail />} />
+        {/* REMOVE: These routes bypass the dashboard layout, causing sidebar disappearance */}
+        {/* <Route path="/support" element={<Support />} /> */} 
+        {/* <Route path="/support/:id" element={<TicketDetail />} /> */} 
         {/* --- END USER SUPPORT ROUTES --- */}
         
         <Route path="/faq" element={<Faq />} />
