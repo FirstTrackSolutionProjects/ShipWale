@@ -528,15 +528,6 @@ export const menuItems = [
             component : ContactSubmissions,
             dropDownOptions : [{}]
         },
-        {
-            icon: MessageSquareText, // Using a distinct icon for Admin Management
-            name: "Support Management",
-            isDropdown: false,
-            admin: true,               
-            url: 'admin/support',      // Navigates to /dashboard/admin/support
-            component: AdminSupport,    
-            dropDownOptions: [{}]
-        },
         // {
         //     
         //     name : "KYC Requests",
@@ -547,6 +538,15 @@ export const menuItems = [
         //     dropDownOptions : [{}]
         // }
     ]
+    },
+    {
+        icon: TruckElectricIcon, // Using a distinct icon for Admin Management
+        name: "Support Management",
+        isDropdown: false,
+        admin: true,               
+        url: 'admin/support',      // Navigates to /dashboard/admin/support
+        component: AdminSupport,    
+        dropDownOptions: [{}]
     },
     {
         icon: BarChart3, 
@@ -612,15 +612,6 @@ export const menuItems = [
         url : 'logout',
         dropDownOptions : [{}]
     },
-
-    {
-        name: "Support Management",
-        url: "admin/support",       // The URL slug within the dashboard (e.g., /dashboard/admin/support)
-        icon: "TicketIcon",         // Replace with your actual icon name
-        admin: true,               // Only visible to admin
-        component: AdminSupport    // The component we just imported
-    },
-
 
 ]
 
