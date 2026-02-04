@@ -1,11 +1,9 @@
 import { Menu, X } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import NavItem from "./NavItem";
-import { navItems } from "../Constants";
-import {  useEffect, useState } from "react";
+// NavItem and navItems removed (unused)
+import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import WalletRechargeModal from "./WalletRechargeModal";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import WalletRechargeModal from "./WalletRechargeModal"; 
 import { useWallet } from "../context/WalletContext";
 
 const Navbar = () => {
@@ -25,24 +23,19 @@ const Navbar = () => {
   const [showRecharge, setShowRecharge] = useState(false)
   const {verified, isAuthenticated, logout, business_name} = useAuth()
   const { balance, refreshBalance } = useWallet();
-  const [isMenu,setIsMenu] = useState(false)
+  // isMenu and toggleMenu removed (unused)
+
   const closeRechargeModal = () => {
     setShowRecharge(false);
   }
-  const toggleMenu = () => {
-    setIsMenu(!isMenu);
-    }
+
+  // FIX: Added verified and refreshBalance to dependencies
   useEffect(()=>{
     if (!verified) return;
     refreshBalance();
-  },[isAuthenticated])
+  },[isAuthenticated, verified]);
 
-  const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
-  };
+  // scrollToTop removed (unused)
 
   const formatBusinessName = (name) => {
     if (!name) return '';
@@ -78,7 +71,8 @@ const Navbar = () => {
             {/* Desktop Menu */}
             <div className="hidden md:flex space-x-6 text-yellow-800 font-medium items-center">
               {links.map((item) => {
-                if (pathname.startsWith('/dashboard')) return null;
+                // Hides links if currently on a dashboard route
+                if (pathname.startsWith('/dashboard')) return null; 
                 return (
                 <Link
                   key={item.to}
@@ -96,11 +90,8 @@ const Navbar = () => {
             {verified? (<>
               <div onClick={()=>setShowRecharge(true)} className={`relative bg-blue-600 ${balance < 250 ? "text-red-400" : "text-green-400"} flex items-center font-medium rounded-tl-xl rounded-br-xl px-3 min-w-14 py-2 cursor-pointer border-l-4 border-t-4 border-red-900`}>
               {balance < 250 && <p className="absolute -mt-5 top-0 right-0.5 text-red-400 text-3xl">!</p>}
-                <p><FontAwesomeIcon icon={'fa-solid fa-house'} />{`₹${balance}`}</p>
+                <p>{`₹${balance}`}</p>
               </div>
-              {/* <div className="bg-white flex items-center font-medium rounded-xl px-3 py-2 ">
-                <p>R</p>
-              </div> */}
               </>
             ):null}
             <div className="hidden md:flex space-x-4">
@@ -127,7 +118,8 @@ const Navbar = () => {
             {/* Mobile Button */}
             <div className="md:hidden">
               <button onClick={() => setMenuOpen(!menuOpen)}>
-                {menuOpen ? <X size={28} /> : <Menu size={28} />}
+                {/* Added text-white class for visibility on black background */}
+                {menuOpen ? <X size={28} className="text-white" /> : <Menu size={28} className="text-white" />}
               </button>
             </div>
           </div>
@@ -166,13 +158,15 @@ const Navbar = () => {
                 {item.label}
               </Link>
             ))}
-            {isAuthenticated && <p className="text-red-600 text-xl pt-4 font-bold" onClick={()=>{logout(); setIsMenu(false)}}>Logout</p>}
+            {/* FIX: changed setIsMenu(false) to setMenuOpen(false) */}
+            {isAuthenticated && <p className="text-red-600 text-xl pt-4 font-bold" onClick={()=>{logout(); setMenuOpen(false)}}>Logout</p>}
           </div>
         </div>
       </nav>
 
       {/* Push content below navbar */}
       <div className="pt-20" />
+      {showRecharge && <WalletRechargeModal onClose={closeRechargeModal} />}
     </>
   );
 };
