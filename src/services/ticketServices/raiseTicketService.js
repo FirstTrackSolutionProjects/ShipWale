@@ -22,7 +22,7 @@ export const raiseTicketService = async (data) => {
             data,
             {
                 headers: {
-                    Authorization: `Bearer ${token}`,
+                    Authorization: `${token}`,
                     "Content-Type": "application/json",
                 },
             }

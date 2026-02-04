@@ -8,7 +8,7 @@ const getAuthHeaders = () => {
         throw new Error("Authentication token not found. Please log in.");
     }
     return {
-        Authorization: `Bearer ${token}`,
+        Authorization: `${token}`,
         "Content-Type": "application/json",
     };
 };

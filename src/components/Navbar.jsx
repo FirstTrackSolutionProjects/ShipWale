@@ -3,10 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 // NavItem and navItems removed (unused)
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import WalletRechargeModal from "./WalletRechargeModal";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-// FIX: Import the required solid icon for Font Awesome
-import { faHouse } from '@fortawesome/free-solid-svg-icons'; 
+import WalletRechargeModal from "./WalletRechargeModal"; 
 import { useWallet } from "../context/WalletContext";
 
 const Navbar = () => {
@@ -36,7 +33,7 @@ const Navbar = () => {
   useEffect(()=>{
     if (!verified) return;
     refreshBalance();
-  },[isAuthenticated, verified, refreshBalance]) 
+  },[isAuthenticated, verified]);
 
   // scrollToTop removed (unused)
 
@@ -93,8 +90,7 @@ const Navbar = () => {
             {verified? (<>
               <div onClick={()=>setShowRecharge(true)} className={`relative bg-blue-600 ${balance < 250 ? "text-red-400" : "text-green-400"} flex items-center font-medium rounded-tl-xl rounded-br-xl px-3 min-w-14 py-2 cursor-pointer border-l-4 border-t-4 border-red-900`}>
               {balance < 250 && <p className="absolute -mt-5 top-0 right-0.5 text-red-400 text-3xl">!</p>}
-                {/* FIX: Use imported faHouse object */}
-                <p><FontAwesomeIcon icon={faHouse} className="mr-1" />{`₹${balance}`}</p>
+                <p>{`₹${balance}`}</p>
               </div>
               </>
             ):null}
