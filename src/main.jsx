@@ -11,11 +11,9 @@ createRoot(document.getElementById('root')).render(
   // <StrictMode>
     <BrowserRouter>
       <AuthProvider>
-        <FormProvider>
       <WalletProvider>
         <App />
       </WalletProvider>
-      </FormProvider>
       </AuthProvider>
     </BrowserRouter>
   // </StrictMode>,
