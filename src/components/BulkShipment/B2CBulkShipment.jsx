@@ -9,8 +9,8 @@ import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import { toast } from 'react-toastify';
-// FIX: Corrected relative path for helper function
-import convertToUTCISOString from '../../helpers/convertToUTCISOString'; 
+import createB2CBulkShipmentsService from '../../services/bulkServices/createB2CBulkShipments.service';
+import getB2CBulkShipmentPriceService from '../../services/bulkServices/getB2CBulkShipmentPrice.service';
 
 const API_URL = import.meta.env.VITE_APP_API_URL;
 
@@ -41,6 +41,7 @@ const COLUMN_NAME_MAP = {
   SHIPMENT_VALUE: '*Shipment Value',
   E_WAYBILL: 'E-Waybill (For Shipment Value more than ₹49999)',
 }
+
 const COLUMN_MAP = {
   [COLUMN_NAME_MAP.WAREHOUSE_ID]: {
     key: 'wid',
@@ -216,84 +217,82 @@ const COLUMN_MAP = {
     ),
   },
 };
-
-const HEADER_ALIASES = {
-  'Warehouse ID': '*Warehouse ID',
-  'Pickup Date': '*Pickup Date (YYYY-MM-DD)',
-  'Pickup Time': '*Pickup Time (HH:MM)',
-  'Payment Mode': '*Payment Mode (cod/pre-paid)',
-  'Shipping Type': '*Shipping Type (surface/express)',
-  'Customer Name': '*Customer Name',
-  'Customer Email': '*Customer Email',
-  'Customer Phone': '*Customer Phone',
-  'Shipping Address': '*Shipping Address (Max 100 Char)',
-  '*Shipping Address Type (home/office)': '*Shipping Address Type (home/office)',
-  'Shipping Pincode': '*Shipping Pincode',
-  'Shipping City': '*Shipping City',
-  'Shipping State': '*Shipping State',
-  'Length (cm)': '*Length (cm)',
-  'Breadth (cm)': '*Breadth (cm)',
-  'Height (cm)': '*Height (cm)',
-  'Weight (kg)': '*Weight (kg)',
-  'Item Name': '*Item Name (Comma Separated)',
-  'Item Quantity': '*Item Quantity (Comma Separated)',
-  'Item Unit Price': '*Item Unit Price (Comma Separated)',
-  'Shipment Value': '*Shipment Value',
-  'E-Waybill': 'E-Waybill (For Shipment Value more than ₹49999)',
-};
+//   'Warehouse ID': COLUMN_NAME_MAP.WAREHOUSE_ID,
+//   'Pickup Date': COLUMN_NAME_MAP.PICKUP_DATE,
+//   'Pickup Time': COLUMN_NAME_MAP.PICKUP_TIME,
+//   'Payment Mode': COLUMN_NAME_MAP.PAYMENT_MODE,
+//   'Shipping Type': COLUMN_NAME_MAP.SHIPPING_TYPE,
+//   'Customer Name': COLUMN_NAME_MAP.CUSTOMER_NAME,
+//   'Customer Email': COLUMN_NAME_MAP.CUSTOMER_EMAIL,
+//   'Customer Phone': COLUMN_NAME_MAP.CUSTOMER_PHONE,
+//   'Shipping Address': COLUMN_NAME_MAP.SHIPPING_ADDRESS,
+//   'Shipping Address Type': COLUMN_NAME_MAP.SHIPPING_ADDRESS_TYPE,
+//   'Shipping Pincode': COLUMN_NAME_MAP.SHIPPING_PINCODE,
+//   'Shipping City': COLUMN_NAME_MAP.SHIPPING_CITY,
+//   'Shipping State': COLUMN_NAME_MAP.SHIPPING_STATE,
+//   'Length (cm)': COLUMN_NAME_MAP.LENGTH,
+//   'Breadth (cm)': COLUMN_NAME_MAP.BREADTH,
+//   'Height (cm)': COLUMN_NAME_MAP.HEIGHT,
+//   'Weight (kg)': COLUMN_NAME_MAP.WEIGHT,
+//   'Item Name': COLUMN_NAME_MAP.ITEM_NAMES,
+//   'Item Quantity': COLUMN_NAME_MAP.ITEM_QUANTITIES,
+//   'Item Unit Price': COLUMN_NAME_MAP.ITEM_UNIT_PRICES,
+//   'Shipment Value': COLUMN_NAME_MAP.SHIPMENT_VALUE,
+//   'E-Waybill': COLUMN_NAME_MAP.E_WAYBILL,
+// };
 
 const SAMPLE_DATA = [
   {
-    '*Warehouse ID': 1, 
-    '*Pickup Date (YYYY-MM-DD)': '2024-06-20', 
-    '*Pickup Time (HH:MM)': '10:00', 
-    'Customer Reference Number': 'CUSTREF1',
-    '*Payment Mode (cod/pre-paid)': 'cod', 
-    'COD Amount': 1500, 
-    '*Shipping Type (surface/express)': 'express',
-    '*Customer Name': 'Anil Kumar', 
-    '*Customer Email': 'anil@test.com', 
-    '*Customer Phone': '9876543210',
-    '*Shipping Address (Max 100 Char)': '45, Sector 12, Noida', 
-    '*Shipping Address Type (home/office)': 'home',
-    '*Shipping Pincode': '201301', 
-    '*Shipping City': 'Noida', 
-    '*Shipping State': 'UP',
-    '*Length (cm)': 15, 
-    '*Breadth (cm)': 10, 
-    '*Height (cm)': 8, 
-    '*Weight (kg)': 1.2, 
-    '*Item Name (Comma Separated)': 'Item1, Item2',
-    '*Item Quantity (Comma Separated)': '1, 2',
-    '*Item Unit Price (Comma Separated)': '100, 200',
-    '*Shipment Value': 1500,
-    'E-Waybill (For Shipment Value more than ₹49999)': '',
+    [COLUMN_NAME_MAP.WAREHOUSE_ID]: 1, 
+    [COLUMN_NAME_MAP.PICKUP_DATE]: '2024-06-20', 
+    [COLUMN_NAME_MAP.PICKUP_TIME]: '10:00', 
+    [COLUMN_NAME_MAP.CUSTOMER_REF]: 'CUSTREF1',
+    [COLUMN_NAME_MAP.PAYMENT_MODE]: 'cod', 
+    [COLUMN_NAME_MAP.COD_AMOUNT]: 1500, 
+    [COLUMN_NAME_MAP.SHIPPING_TYPE]: 'express',
+    [COLUMN_NAME_MAP.CUSTOMER_NAME]: 'Anil Kumar', 
+    [COLUMN_NAME_MAP.CUSTOMER_EMAIL]: 'anil@test.com', 
+    [COLUMN_NAME_MAP.CUSTOMER_PHONE]: '9876543210',
+    [COLUMN_NAME_MAP.SHIPPING_ADDRESS]: '45, Sector 12, Noida', 
+    [COLUMN_NAME_MAP.SHIPPING_ADDRESS_TYPE]: 'home',
+    [COLUMN_NAME_MAP.SHIPPING_PINCODE]: '201301', 
+    [COLUMN_NAME_MAP.SHIPPING_CITY]: 'Noida', 
+    [COLUMN_NAME_MAP.SHIPPING_STATE]: 'UP',
+    [COLUMN_NAME_MAP.LENGTH]: 15, 
+    [COLUMN_NAME_MAP.BREADTH]: 10, 
+    [COLUMN_NAME_MAP.HEIGHT]: 8, 
+    [COLUMN_NAME_MAP.WEIGHT]: 1.2, 
+    [COLUMN_NAME_MAP.ITEM_NAMES]: 'Item1, Item2',
+    [COLUMN_NAME_MAP.ITEM_QUANTITIES]: '1, 2',
+    [COLUMN_NAME_MAP.ITEM_UNIT_PRICES]: '100, 200',
+    [COLUMN_NAME_MAP.SHIPMENT_VALUE]: 1500,
+    [COLUMN_NAME_MAP.E_WAYBILL]: '',
   },
   {
-    '*Warehouse ID': 2, 
-    '*Pickup Date (YYYY-MM-DD)': '2024-06-19', 
-    '*Pickup Time (HH:MM)': '14:00', 
-    'Customer Reference Number': 'CUSTREF1',
-    '*Payment Mode (cod/pre-paid)': 'Pre-paid', 
-    'COD Amount': 0, 
-    '*Shipping Type (surface/express)': 'surface',
-    '*Customer Name': 'Anil Kumar', 
-    '*Customer Email': 'anil@test.com', 
-    '*Customer Phone': '9876543210',
-    '*Shipping Address (Max 100 Char)': '45, Sector 12, Noida', 
-    '*Shipping Address Type (home/office)': 'home',
-    '*Shipping Pincode': '201301', 
-    '*Shipping City': 'Noida', 
-    '*Shipping State': 'UP',
-    '*Length (cm)': 15, 
-    '*Breadth (cm)': 10, 
-    '*Height (cm)': 8, 
-    '*Weight (kg)': 1.2, 
-    '*Item Name (Comma Separated)': 'Item1, Item2',
-    '*Item Quantity (Comma Separated)': '1, 2',
-    '*Item Unit Price (Comma Separated)': '100, 200',
-    '*Shipment Value': 50000,
-    'E-Waybill (For Shipment Value more than ₹49999)': 'ABCDEFGH',
+    [COLUMN_NAME_MAP.WAREHOUSE_ID]: 2, 
+    [COLUMN_NAME_MAP.PICKUP_DATE]: '2024-06-19', 
+    [COLUMN_NAME_MAP.PICKUP_TIME]: '14:00', 
+    [COLUMN_NAME_MAP.CUSTOMER_REF]: 'CUSTREF1',
+    [COLUMN_NAME_MAP.PAYMENT_MODE]: 'Pre-paid', 
+    [COLUMN_NAME_MAP.COD_AMOUNT]: 0, 
+    [COLUMN_NAME_MAP.SHIPPING_TYPE]: 'surface',
+    [COLUMN_NAME_MAP.CUSTOMER_NAME]: 'Anil Kumar', 
+    [COLUMN_NAME_MAP.CUSTOMER_EMAIL]: 'anil@test.com', 
+    [COLUMN_NAME_MAP.CUSTOMER_PHONE]: '9876543210',
+    [COLUMN_NAME_MAP.SHIPPING_ADDRESS]: '45, Sector 12, Noida', 
+    [COLUMN_NAME_MAP.SHIPPING_ADDRESS_TYPE]: 'home',
+    [COLUMN_NAME_MAP.SHIPPING_PINCODE]: '201301', 
+    [COLUMN_NAME_MAP.SHIPPING_CITY]: 'Noida', 
+    [COLUMN_NAME_MAP.SHIPPING_STATE]: 'UP',
+    [COLUMN_NAME_MAP.LENGTH]: 15, 
+    [COLUMN_NAME_MAP.BREADTH]: 10, 
+    [COLUMN_NAME_MAP.HEIGHT]: 8, 
+    [COLUMN_NAME_MAP.WEIGHT]: 1.2, 
+    [COLUMN_NAME_MAP.ITEM_NAMES]: 'Item1, Item2',
+    [COLUMN_NAME_MAP.ITEM_QUANTITIES]: '1, 2',
+    [COLUMN_NAME_MAP.ITEM_UNIT_PRICES]: '100, 200',
+    [COLUMN_NAME_MAP.SHIPMENT_VALUE]: 50000,
+    [COLUMN_NAME_MAP.E_WAYBILL]: 'ABCDEFGH',
   },
 ];
 
@@ -342,7 +341,7 @@ const parseExcel = (file) => {
           };
 
           headers.forEach((rawHeader, index) => {
-            const header = HEADER_ALIASES[rawHeader] || rawHeader;
+            const header = rawHeader;
             let value = rowArr[index];
             const colDef = COLUMN_MAP[header];
 
@@ -460,62 +459,38 @@ const validateData = (data) => {
 };
 
 const convertToBackendPayload = (validatedData) => {
-  return validatedData.map((data) => {
-    const pickupDateTime = convertToUTCISOString(`${data.pickupDate}T${data.pickupTime}:00`);
+  return validatedData.map((data, index) => {
     const customerRef = data.customer_reference_number || '';
 
+    // Attach a stable ID so that the backend can reference
+    // individual shipments in error objects and the frontend
+    // can map failed results back to the original rows.
     return {
-      ord_id: customerRef,
-      wid: Number(data.wid),
-      payMode: data.payMode,
-      name: data.name,
-      email: data.email,
-      phone: data.phone,
-      address: data.address,
-      addressType: data.addressType || 'home',
-      postcode: data.postcode,
-      city: data.city,
-      state: data.state,
-      country: 'India',
-      Baddress: data.address,
-      BaddressType: data.addressType || 'home',
-      Bpostcode: data.postcode,
-      Bcity: data.city,
-      Bstate: data.state,
-      Bcountry: 'India',
-      same: true,
-      shippingType: data.shippingType,
-      pickupDate: pickupDateTime,
-      pickupTime: data.pickupTime,
-      shipmentValue: Number(data.shipmentValue),
-      // discount removed (defaults to 0 on backend if needed, or excluded if unused)
-      cod: Number(data.cod) || 0,
-      gst: '',
-      Cgst: '',
-      isB2B: false,
-      ewaybill: data.ewaybill || '',
-      invoiceNumber: '',
-      invoiceDate: '',
-      invoiceAmount: Number(data.shipmentValue),
-      insurance: false,
-      customer_reference_number: customerRef,
-
-      boxes: [{
-        box_no: 1,
-        length: Number(data.length),
-        breadth: Number(data.breadth),
-        height: Number(data.height),
-        weight: Number(data.weight),
-        weight_unit: 'kg',
-        quantity: 1,
-      }],
-      orders: [{
-        box_no: 1,
-        product_name: `Bulk Item - ${customerRef}`,
-        product_quantity: 1,
-        selling_price: Number(data.shipmentValue),
-        tax_in_percentage: 0,
-      }],
+      ID: index + 1,
+      WAREHOUSE_ID: Number(data.wid),
+      PICKUP_DATE: data.pickupDate,
+      PICKUP_TIME: data.pickupTime,
+      CUSTOMER_REF: customerRef,
+      PAYMENT_MODE: data.payMode,
+      COD_AMOUNT: Number(data.cod) || 0,
+      SHIPPING_TYPE: data.shippingType,
+      CUSTOMER_NAME: data.name,
+      CUSTOMER_EMAIL: data.email,
+      CUSTOMER_PHONE: data.phone,
+      SHIPPING_ADDRESS: data.address,
+      SHIPPING_ADDRESS_TYPE: data.addressType || 'home',
+      SHIPPING_PINCODE: data.postcode,
+      SHIPPING_CITY: data.city,
+      SHIPPING_STATE: data.state,
+      LENGTH: Number(data.length),
+      BREADTH: Number(data.breadth),
+      HEIGHT: Number(data.height),
+      WEIGHT: Math.round(Number(data.weight) * 1000),
+      ITEM_NAMES: data.itemNames,
+      ITEM_QUANTITIES: data.itemQuantities,
+      ITEM_UNIT_PRICES: data.itemUnitPrices,
+      SHIPMENT_VALUE: Number(data.shipmentValue),
+      E_WAYBILL: data.ewaybill || '',
     };
   });
 };
@@ -885,14 +860,14 @@ const BulkShipment = () => {
   const [parsedData, setParsedData] = useState([]);
   const [validationErrors, setValidationErrors] = useState([]);
   const [validatedPayload, setValidatedPayload] = useState([]);
+  const [priceInfo, setPriceInfo] = useState(null);
+  const [isPriceLoading, setIsPriceLoading] = useState(false);
   const [globalFilter, setGlobalFilter] = useState('');
   const [focusedCell, setFocusedCell] = useState(null); 
+  const [apiSuccessfulShipments, setApiSuccessfulShipments] = useState([]);
+  const [apiFailedShipments, setApiFailedShipments] = useState([]);
+  const [apiSummary, setApiSummary] = useState(null);
   const fileInputRef = useRef(null);
-
-  useEffect(() => {
-    console.log("Validated Payload:", JSON.stringify(validatedPayload, null, 2));
-    console.log("Parsed Data:", JSON.stringify(parsedData, null, 2));
-  }, [validatedPayload, parsedData]);
 
   const filteredRows = useMemo(() => {
     if (!globalFilter) {
@@ -965,8 +940,12 @@ const BulkShipment = () => {
     setParsedData([]);
     setValidationErrors([]);
     setValidatedPayload([]);
+    setPriceInfo(null);
     setGlobalFilter('');
     setFocusedCell(null);
+    setApiSuccessfulShipments([]);
+    setApiFailedShipments([]);
+    setApiSummary(null);
     setStep('UPLOAD');
   }, []);
   
@@ -984,42 +963,126 @@ const BulkShipment = () => {
     setStep('SUBMITTING');
     
     try {
-      const response = await fetch(`${API_URL}/order/domestic/bulk/create`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`, 
-        },
-        body: JSON.stringify(validatedPayload),
+      const serviceId = 2; // Delhivery 500gm B2C service
+      const vendorId = null;
+
+      const result = await createB2CBulkShipmentsService({
+        bulkShipmentsData: validatedPayload,
+        serviceId,
+        vendorId,
       });
 
-      if (!response.ok) {
-          throw new Error(`Server responded with status ${response.status}`);
-      }
-      
-      const result = await response.json();
+      const successfulShipments = result?.data?.successfulShipments || [];
+      const failedShipments = result?.data?.failedShipments || [];
 
-      if (result.success) {
-        const successCount = result.results?.filter(r => r.success).length || validatedPayload.length;
-        const failedResults = result.results?.filter(r => r.success === false) || [];
-        const failedCount = failedResults.length;
-        
-        toast.success(`Bulk submission complete. ${successCount} orders created.`);
-        if (failedCount > 0) {
-            toast.warn(`${failedCount} orders failed server-side processing. Check console for details.`);
-            console.error("Server-side bulk submission failures:", failedResults);
-        }
+      setApiSuccessfulShipments(successfulShipments);
+      setApiFailedShipments(failedShipments);
+      setApiSummary({
+        message: result?.message || 'Bulk submission processed.',
+        status: result?.status,
+      });
 
-        handleRemoveFile();
-      } else {
-        toast.error(result.message || 'Bulk submission failed due to a server error.');
-        setStep('PREVIEW');
+      const successCount = successfulShipments.length;
+      const failedCount = failedShipments.length;
+
+      if (successCount > 0) {
+        toast.success(result?.message || `Bulk submission complete. ${successCount} shipments created.`);
       }
+
+      if (failedCount > 0) {
+        toast.warn(`${failedCount} shipments failed server-side processing. Review the failure report section below.`);
+        console.error('Bulk shipment failures:', failedShipments);
+      }
+
+      if (successCount === 0 && failedCount === 0) {
+        toast.error(result?.message || 'Bulk submission failed due to a server error.');
+      }
+
+      // Stay on PREVIEW so that user can inspect results and download reports
+      setStep('PREVIEW');
 
     } catch (error) {
       console.error('Submission error:', error);
-      toast.error('An unexpected error occurred during bulk submission.');
+      toast.error(error.message || 'An unexpected error occurred during bulk submission.');
       setStep('PREVIEW');
+    }
+  };
+
+  const handleDownloadFailedReport = useCallback(() => {
+    if (!apiFailedShipments.length) {
+      toast.info('No failed shipments to report.');
+      return;
+    }
+
+    const rowsForReport = apiFailedShipments.map((failure, index) => {
+      const matchingPayload = validatedPayload.find(p => p.ID === failure.ID) || {};
+
+      return {
+        'Sr No.': index + 1,
+        'Shipment ID': failure.ID ?? '',
+        [COLUMN_NAME_MAP.WAREHOUSE_ID]: matchingPayload.WAREHOUSE_ID ?? '',
+        [COLUMN_NAME_MAP.PICKUP_DATE]: matchingPayload.PICKUP_DATE ?? '',
+        [COLUMN_NAME_MAP.PICKUP_TIME]: matchingPayload.PICKUP_TIME ?? '',
+        [COLUMN_NAME_MAP.CUSTOMER_REF]: matchingPayload.CUSTOMER_REF ?? '',
+        [COLUMN_NAME_MAP.PAYMENT_MODE]: matchingPayload.PAYMENT_MODE ?? '',
+        [COLUMN_NAME_MAP.COD_AMOUNT]: matchingPayload.COD_AMOUNT ?? '',
+        [COLUMN_NAME_MAP.SHIPPING_TYPE]: matchingPayload.SHIPPING_TYPE ?? '',
+        [COLUMN_NAME_MAP.CUSTOMER_NAME]: matchingPayload.CUSTOMER_NAME ?? '',
+        [COLUMN_NAME_MAP.CUSTOMER_EMAIL]: matchingPayload.CUSTOMER_EMAIL ?? '',
+        [COLUMN_NAME_MAP.CUSTOMER_PHONE]: matchingPayload.CUSTOMER_PHONE ?? '',
+        [COLUMN_NAME_MAP.SHIPPING_ADDRESS]: matchingPayload.SHIPPING_ADDRESS ?? '',
+        [COLUMN_NAME_MAP.SHIPPING_ADDRESS_TYPE]: matchingPayload.SHIPPING_ADDRESS_TYPE ?? '',
+        [COLUMN_NAME_MAP.SHIPPING_PINCODE]: matchingPayload.SHIPPING_PINCODE ?? '',
+        [COLUMN_NAME_MAP.SHIPPING_CITY]: matchingPayload.SHIPPING_CITY ?? '',
+        [COLUMN_NAME_MAP.SHIPPING_STATE]: matchingPayload.SHIPPING_STATE ?? '',
+        [COLUMN_NAME_MAP.LENGTH]: matchingPayload.LENGTH ?? '',
+        [COLUMN_NAME_MAP.BREADTH]: matchingPayload.BREADTH ?? '',
+        [COLUMN_NAME_MAP.HEIGHT]: matchingPayload.HEIGHT ?? '',
+        [COLUMN_NAME_MAP.WEIGHT]: matchingPayload.WEIGHT ?? '',
+        [COLUMN_NAME_MAP.ITEM_NAMES]: matchingPayload.ITEM_NAMES ?? '',
+        [COLUMN_NAME_MAP.ITEM_QUANTITIES]: matchingPayload.ITEM_QUANTITIES ?? '',
+        [COLUMN_NAME_MAP.ITEM_UNIT_PRICES]: matchingPayload.ITEM_UNIT_PRICES ?? '',
+        [COLUMN_NAME_MAP.SHIPMENT_VALUE]: matchingPayload.SHIPMENT_VALUE ?? '',
+        [COLUMN_NAME_MAP.E_WAYBILL]: matchingPayload.E_WAYBILL ?? '',
+        'Error Message': failure.MESSAGE || failure.message || 'Unknown error',
+      };
+    });
+
+    const ws = XLSX.utils.json_to_sheet(rowsForReport);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Failed Shipments');
+    XLSX.writeFile(wb, 'Shipwale_Bulk_Shipment_Failed_Shipments_Report.xlsx');
+    toast.info('Failed shipments report downloaded.');
+  }, [apiFailedShipments, validatedPayload]);
+
+  const handleGetBulkPrice = async () => {
+    if (validationErrors.length > 0 || validatedPayload.length === 0) {
+      toast.error('Cannot calculate price due to validation errors or empty payload.');
+      return;
+    }
+
+    try {
+      setIsPriceLoading(true);
+      const serviceId = 2; // Delhivery 500gm B2C service
+      const vendorId = null;
+
+      const result = await getB2CBulkShipmentPriceService({
+        bulkShipmentsData: validatedPayload,
+        serviceId,
+        vendorId,
+      });
+
+      if (result?.data?.totalPrice !== undefined) {
+        setPriceInfo(result.data);
+        toast.success(result.message || `Total price calculated: ₹${result.data.totalPrice}`);
+      } else {
+        toast.error('Unexpected response while calculating price.');
+      }
+    } catch (error) {
+      console.error('Price calculation error:', error);
+      toast.error(error.message || 'Error calculating bulk shipment price.');
+    } finally {
+      setIsPriceLoading(false);
     }
   };
 
@@ -1041,6 +1104,75 @@ const BulkShipment = () => {
         </Alert>
       )}
 
+      {priceInfo && (
+        <Alert severity="info" sx={{ mb: 2 }}>
+          Total price for {validatedPayload.length} shipments: ₹{priceInfo.totalPrice}
+        </Alert>
+      )}
+
+      {apiSummary && (
+        <Box sx={{ mb: 2 }}>
+          <Alert severity={apiSuccessfulShipments.length ? 'success' : 'error'} sx={{ mb: 1 }}>
+            <Typography fontWeight="bold">{apiSummary.message}</Typography>
+            <Typography variant="body2">
+              Successful: {apiSuccessfulShipments.length} | Failed: {apiFailedShipments.length}
+            </Typography>
+          </Alert>
+
+          {apiSuccessfulShipments.length > 0 && (
+            <Box sx={{ mb: 2, p: 2, border: '1px solid #e5e7eb', borderRadius: 1, overflowX: 'auto' }}>
+              <Typography variant="subtitle2" gutterBottom>
+                Successful Shipments (AWB / Order ID / Reference ID)
+              </Typography>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
+                <thead>
+                  <tr>
+                    <th style={{ border: '1px solid #e5e7eb', padding: 4 }}>#</th>
+                    <th style={{ border: '1px solid #e5e7eb', padding: 4 }}>Shipment ID</th>
+                    <th style={{ border: '1px solid #e5e7eb', padding: 4 }}>Order ID</th>
+                    <th style={{ border: '1px solid #e5e7eb', padding: 4 }}>Reference ID</th>
+                    <th style={{ border: '1px solid #e5e7eb', padding: 4 }}>AWB</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {apiSuccessfulShipments.map((s, index) => (
+                    <tr key={`${s.ID || index}-${s.AWB || 'awb'}`}>
+                      <td style={{ border: '1px solid #e5e7eb', padding: 4 }}>{index + 1}</td>
+                      <td style={{ border: '1px solid #e5e7eb', padding: 4 }}>{s.ID ?? ''}</td>
+                      <td style={{ border: '1px solid #e5e7eb', padding: 4 }}>{s.ORDER_ID ?? ''}</td>
+                      <td style={{ border: '1px solid #e5e7eb', padding: 4 }}>{s.REFERENCE_ID ?? ''}</td>
+                      <td style={{ border: '1px solid #e5e7eb', padding: 4 }}>{s.AWB ?? ''}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </Box>
+          )}
+
+          {apiFailedShipments.length > 0 && (
+            <Box sx={{ mb: 2, p: 2, border: '1px solid #fee2e2', borderRadius: 1, bgcolor: '#fef2f2' }}>
+              <Box display="flex" justifyContent="space-between" alignItems="center" sx={{ mb: 1 }}>
+                <Typography variant="subtitle2" color="error">
+                  Failed Shipments ({apiFailedShipments.length})
+                </Typography>
+                <Button
+                  size="small"
+                  variant="text"
+                  color="error"
+                  startIcon={<DownloadIcon />}
+                  onClick={handleDownloadFailedReport}
+                >
+                  Download Failed Report
+                </Button>
+              </Box>
+              <Typography variant="body2" color="error">
+                Showing API errors returned from the bulk shipment create API. Use the download button for a full CSV report.
+              </Typography>
+            </Box>
+          )}
+        </Box>
+      )}
+
       {/* Action Buttons: Responsive stack applied here */}
       <Box 
         sx={{ 
@@ -1058,6 +1190,14 @@ const BulkShipment = () => {
           sx={{ bgcolor: '#ef4444', '&:hover': { bgcolor: '#dc2626' } }}
         >
           {step === 'SUBMITTING' ? 'Submitting...' : `Submit ${validatedPayload.length} Valid Orders`}
+        </Button>
+        <Button
+          variant="outlined"
+          startIcon={<SearchIcon />}
+          onClick={handleGetBulkPrice}
+          disabled={validationErrors.length > 0 || validatedPayload.length === 0 || step === 'SUBMITTING' || isPriceLoading}
+        >
+          {isPriceLoading ? 'Calculating Price...' : 'Get Total Price'}
         </Button>
         <Button
           variant="outlined"
