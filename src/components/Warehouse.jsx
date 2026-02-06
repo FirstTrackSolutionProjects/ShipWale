@@ -538,7 +538,7 @@ const Card = ({ name, address, pin, phone, wid, justCreated, state, city, intern
     <>
   <ManageForm isManage={isManage} setIsManage={setIsManage} name={name} address={address} pin={pin} phone={phone} wid={wid} state={state} city={city} international_address={international_address} />
       <div className="w-full h-16 bg-white relative items-center px-8 flex border-b">
-        <div>{name} <span className="text-gray-400">(ID : {wid})</span></div>
+        <div>{name}</div>
         <div className="absolute right-8 flex space-x-2 items-center">
           
           <div className="cursor-pointer py-1 px-2 rounded-lg bg-red-500 text-white" onClick={() => setCheckWarehouse(true)}>Check</div>
