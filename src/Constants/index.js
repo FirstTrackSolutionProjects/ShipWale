@@ -102,6 +102,14 @@ export const DOMESTIC_SHIPMENT_REPORT_STATUS_ENUMS = Object.freeze({
     RTO_DELIVERED: 'RTO DELIVERED'
 })
 
+export const USER_ROLES = Object.freeze({
+    ADMIN: 'ADMIN',
+    MERCHANT: 'MERCHANT',
+    ADMIN_EMPLOYEE: 'ADMIN_EMPLOYEE',
+    MERCHANT_EMPLOYEE: 'MERCHANT_EMPLOYEE',
+    SUBMERCHANT: 'SUBMERCHANT'
+})
+
 export const DOMESTIC_ORDER_STATUS_ENUMS = Object.freeze({
     PENDING: 'PENDING',
     SHIPPED: 'SHIPPED',
@@ -150,6 +158,7 @@ export const menuItems = [
         name : "Bulk Shipment",
         isDropdown : true,
         url : 'bulk-shipment',
+        merchantOnly : true,
         // component: Pricing,
         dropDownOptions : [
             {

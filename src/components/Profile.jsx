@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { jwtDecode } from 'jwt-decode'
+import { USER_ROLES } from '@/Constants';
 const API_URL = import.meta.env.VITE_APP_API_URL
 const Profile = () => {
-  const admin = jwtDecode(localStorage.getItem('token')).admin;
+  const admin = jwtDecode(localStorage.getItem('token')).role === USER_ROLES.ADMIN;
   const INITIAL_STATE = {
     name: '',
     business_name: '',

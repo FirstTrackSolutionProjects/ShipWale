@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { jwtDecode } from "jwt-decode"
 import { Users, Warehouse, Package, CheckCircle2, Loader2, IndianRupee, Wallet, Truck, RotateCcw } from 'lucide-react'
 import { useNavigate } from "react-router-dom"
+import { USER_ROLES } from "@/Constants"
 const API_URL = import.meta.env.VITE_APP_API_URL
 
 const DashboardSummaryCard = ({title, number, Icon, onClick=() => {}}) => {
@@ -20,7 +21,7 @@ const DashboardSummaryCard = ({title, number, Icon, onClick=() => {}}) => {
 
 const DashboardSummary = () => { 
   const [summary, setSummary] = useState(null)
-  const admin = jwtDecode(localStorage.getItem('token')).admin
+  const admin = jwtDecode(localStorage.getItem('token')).role === USER_ROLES.ADMIN
   const navigate = useNavigate()
   useEffect(() => {
       const getStatistics = async () => {
