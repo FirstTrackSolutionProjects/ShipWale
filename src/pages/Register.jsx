@@ -20,6 +20,7 @@ const Register = () => {
     business_name: "",
     mobile: "",
   });
+  const [acceptTerms, setAcceptTerms] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { isAuthenticated, login, verified, emailVerified } = useAuth();
@@ -81,6 +82,12 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!acceptTerms) {
+      toast.error("Please accept Terms & Conditions");
+      return;
+    }
+
     const validationErrors = validate();
     if (!validationErrors) {
       try {
@@ -170,7 +177,7 @@ const Register = () => {
           <div className="flex items-center border border-gray-300 rounded-md px-3 py-2 focus-within:ring-2 focus-within:ring-red-500">
             <FaLock className="text-gray-500 mr-2" />
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               placeholder="Password"
               required
               name="reg_password"
@@ -178,13 +185,20 @@ const Register = () => {
               onChange={handleChange}
               className="w-full focus:outline-none"
             />
+            <button 
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="text-gray-500 ml-2"
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
           </div>
 
           {/* Confirm Password */}
           <div className="flex items-center border border-gray-300 rounded-md px-3 py-2 focus-within:ring-2 focus-within:ring-red-500">
             <FaLock className="text-gray-500 mr-2" />
             <input
-              type="password"
+              type={showConfirmPassword ? "text" : "password"}
               placeholder="Confirm Password"
               required
               name="confirm_password"
@@ -192,6 +206,13 @@ const Register = () => {
               onChange={handleChange}
               className="w-full focus:outline-none"
             />
+            <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="text-gray-500 ml-2"
+              >
+                {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
           </div>
 
           {/* Business Name */}
@@ -208,9 +229,34 @@ const Register = () => {
             />
           </div>
 
+          { /*Terms & conditions */}
+          <div className="flex items-start gap-2 text-sm">
+            <input
+              type="checkbox"
+              checked={acceptTerms}
+              onChange={(e) => setAcceptTerms(e.target.checked)}
+              className="mt-1 accent-red-600"
+              />
+              <p className="text-gray-600">
+                I agree to the {" "}
+                <Link to="/terms" className="text-red-600 underline">
+                Terms and Conditions
+                </Link>{" "}
+                &{" "}
+                <Link to="/privacy-policy" className="text-red-600 underline">
+                Privacy Policy 
+                </Link>
+              </p>
+          </div>
+
           <button
             type="submit"
-            className="w-full bg-red-900 text-white py-2 rounded-md font-semibold hover:bg-red-700 transition"
+            disabled={!acceptTerms}
+            className={`w-full py-2 rounded-md font-semibold transition
+              ${acceptTerms
+                ? "bg-red-900 text-white hover:bg-red-700"
+                : "bg-gray-300 text-gray-500 cursor-not-allowed"
+              }`}
           >
             REGISTER
           </button>
@@ -218,9 +264,9 @@ const Register = () => {
 
         <p className="text-center text-sm mt-4">
           Already have an account?{" "}
-          <Link to="/login" className="text-red-600 font-semibold hover:underline">
+            <Link to="/login" className="text-red-600 font-semibold hover:underline">
             Sign In
-          </Link>
+            </Link>
         </p>
       </div>
     </div>

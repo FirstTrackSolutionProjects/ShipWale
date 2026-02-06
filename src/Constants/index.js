@@ -18,6 +18,9 @@ import AllShipmentReports from "../components/AllShipmentReports"
 import UpdateOrderInternational from "../components/UpdateOrderInternational"
 // import KYCVerification from "../components/KYCVerification"
 // import KYCRequests from "../components/KYCRequests"
+import AdminSupport from '../pages/AdminSupport'; // Assuming index.js is one level up from pages
+import Support from '../pages/Support'; 
+import AdminAnalytics from '../pages/AdminAnalytics'; // NEW IMPORT
 import AllInternationalShipmentReports from "../components/AllInternationalShipmentReports"
 import InternationalReports from "../components/InternationalReports"
 import WeightDisputes from "../components/WeightDisputes"
@@ -31,7 +34,8 @@ import CodRemittanceAdmin from "../components/CodRemittance/CodRemittanceAdmin"
 import CodRemittanceMerchant from "../components/CodRemittance/CodRemittanceMerchant"
 import InternationalWeightDisputes from "../components/InternationalWeightDisputes"
 import Pricing from "../pages/Pricing"
-import {IndianRupee, TruckElectricIcon} from "lucide-react"
+import {IndianRupee, TruckElectricIcon, MessageSquareText} from "lucide-react"
+import { BarChart3 } from 'lucide-react' // Import a suitable icon
 // Icon components (lucide-react) for menu items
 import {
     LayoutDashboard,
@@ -120,6 +124,15 @@ export const menuItems = [
         name : "Wallet Recharge",
         isDropdown : false,
         url : 'wallet-recharge',
+        dropDownOptions : [{}]
+    },
+    {
+        icon : MessageSquareText, // Use an appropriate icon
+        name : "My Support Tickets",
+        isDropdown : false,
+        merchantOnly : true, // Assuming standard users/merchants can see their own tickets
+        url : 'support',      // Navigates to /dashboard/support
+        component : Support, 
         dropDownOptions : [{}]
     },
     {
@@ -527,6 +540,24 @@ export const menuItems = [
     ]
     },
     {
+        icon: TruckElectricIcon, // Using a distinct icon for Admin Management
+        name: "Support Management",
+        isDropdown: false,
+        admin: true,               
+        url: 'admin/support',      // Navigates to /dashboard/admin/support
+        component: AdminSupport,    
+        dropDownOptions: [{}]
+    },
+    {
+        icon: BarChart3, 
+        name: "Support Analytics",
+        isDropdown: false,
+        admin: true,               
+        url: 'admin/analytics',      // Navigates to /dashboard/admin/analytics
+        component: AdminAnalytics,    
+        dropDownOptions: [{}]
+    },
+    {
         
         icon : Wallet,
         name : "Manual Recharge",
@@ -581,8 +612,6 @@ export const menuItems = [
         url : 'logout',
         dropDownOptions : [{}]
     },
-
-
 
 ]
 

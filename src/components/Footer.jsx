@@ -21,7 +21,7 @@ const Footer = () => {
             </div>
 
             <h1 className="text-2xl font-bold flex items-center">
-                <span className="text-white">Ship</span>
+                <span className="text-white ml-2">Ship</span>
                 <span className="ml-1 bg-gradient-to-r from-gray-200 via-yellow-400 to-gray-200 text-transparent bg-clip-text">
                   Wale
                 </span>
@@ -48,7 +48,8 @@ const Footer = () => {
             <li><Link to="/policy" className="hover:text-yellow-400">Privacy & Policy</Link></li>
             <li><Link to="/terms" className="hover:text-yellow-400">Terms of Use</Link></li>
             <li><Link to="/refund-cancel" className="hover:text-yellow-400">Refund & Cancellation</Link></li>
-            <li><Link to="/ticket" className="hover:text-yellow-400">Raise Ticket</Link></li>
+            {/* REMOVED: Old Raise Ticket Link */}
+            {/* <li><Link to="/ticket" className="hover:text-yellow-400">Raise Ticket</Link></li> */}
           </ul>
         </div>
 
