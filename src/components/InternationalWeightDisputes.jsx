@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import CreateInternationalWeightDisputePopup from "./CreateInternationalWeightDisputePopup";
 import ViewInternationalWeightDisputePopup from "./ViewInternationalWeightDisputePopup";
 import { useAuth } from "../context/AuthContext";
+import { USER_ROLES } from "@/Constants";
 const API_URL = import.meta.env.VITE_APP_API_URL
 
 const Card = ({ report }) => {
@@ -34,7 +35,8 @@ const Card = ({ report }) => {
 
 const Listing = () => {
   const [reports, setReports] = useState([])
-  const {admin} = useAuth();
+  const {role} = useAuth();
+  const admin = role === USER_ROLES.ADMIN;
   const [filteredReports, setFilteredReports] = useState([]);
   const [filters, setFilters] = useState({
     orderId: ""

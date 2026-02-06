@@ -14,6 +14,7 @@ import { toast } from "react-toastify";
 const API_URL = import.meta.env.VITE_APP_API_URL;
 import DownloadIcon from '@mui/icons-material/Download';
 import getAllInternationalShipmentReportsDataService from '../services/shipmentServices/internationalShipmentServices/getAllInternationalShipmentReportsDataService';
+import { USER_ROLES } from "../Constants";
 
 // Tracking cards (unchanged functional rendering)
 const WorldFirstCourierTrackingCard = ({ scan }) => (
@@ -182,7 +183,7 @@ const Listing = () => {
       const token = localStorage.getItem('token');
       if (token) {
         const decoded = jwtDecode(token);
-        setIsAdmin(Boolean(decoded?.admin));
+        setIsAdmin(Boolean(decoded?.role === USER_ROLES.ADMIN));
       }
     } catch (_) {}
 

@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { FaBars, FaTimes } from 'react-icons/fa'; // Import FontAwesome icons
-import { menuItems } from '../Constants'; // Import sidebar items
+import { menuItems, USER_ROLES } from '../Constants'; // Import sidebar items
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import SidebarItem from './SidebarItem.jsx';
 import WalletRechargeModal from './WalletRechargeModal.jsx';
 const Sidebar2 = () => {
-  const {admin, logout} = useAuth();
+  const {role, logout} = useAuth();
+  const admin = role === USER_ROLES.ADMIN;
   const navigate = useNavigate();
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);

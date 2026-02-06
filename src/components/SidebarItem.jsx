@@ -3,10 +3,12 @@ import React, { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { FaChevronUp, FaChevronDown } from 'react-icons/fa'
 import { useAuth } from '../context/AuthContext'
+import { USER_ROLES } from '@/Constants'
 const SidebarItem = ({ item, setShowRecharge, toggleSidebar = () => {}, sidebarExpanded = true }) => {
     const location = useLocation()
     const navigate = useNavigate()
-    const {admin} = useAuth()
+    const {role} = useAuth()
+    const admin = role === USER_ROLES.ADMIN;
     const [isOpen, setIsOpen] = useState(false)
     const [isCurrentMenu, setIsCurrentMenu] = useState(location.pathname === `/dashboard/${item.url}`)
     useEffect(() => {

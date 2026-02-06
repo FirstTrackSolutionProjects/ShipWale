@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }) => {
     if (!token) return false;
     try {
         const decoded = await validateToken();
-        setAuthState({isAuthenticated: true, email: decoded.email, verified: decoded.verified, name : decoded.name, id : decoded.id, business_name: decoded.business_name, admin: decoded.admin, emailVerified: decoded.email_verified, phone: decoded.phone});
+        setAuthState({isAuthenticated: true, email: decoded.email, verified: decoded.verified, name : decoded.name, id : decoded.id, business_name: decoded.business_name, role: decoded.role, emailVerified: decoded.email_verified, phone: decoded.phone});
         return true;
     } catch (error) {
       console.log(error);

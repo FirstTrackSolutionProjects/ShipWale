@@ -2,13 +2,14 @@ import React, { createElement } from 'react';
 import Sidebar2 from '../components/Sidebar2';
 import { Routes,Route } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { menuItems } from '../Constants';
+import { menuItems, USER_ROLES } from '../Constants';
 import { useNavigate } from 'react-router-dom';
 import AdminTicketDetail from './AdminTicketDetail';
 import TicketDetail from './TicketDetail'; // <--- NEW IMPORT for merchant ticket view
 
 const Dashboard = () => {
-  const {admin, isAuthenticated, verified} = useAuth()
+  const {role, isAuthenticated, verified} = useAuth()
+  const admin = role === USER_ROLES.ADMIN;
   const navigate = useNavigate();
   if (!isAuthenticated) {
     navigate('/login');
