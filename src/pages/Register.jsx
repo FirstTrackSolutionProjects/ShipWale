@@ -10,6 +10,7 @@ import registerService from '../services/register';
 import { toast } from 'react-toastify';
 import { Box, Button, TextField } from '@mui/material';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { USER_ROLES } from '../Constants'; // Assuming Constants.jsx is the path
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -19,6 +20,7 @@ const Register = () => {
     confirm_password: "",
     business_name: "",
     mobile: "",
+    role: USER_ROLES.MERCHANT, // Default role selection
   });
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -40,6 +42,11 @@ const Register = () => {
 
   const validate = () => {
     let validationErrors = false;
+
+    if (!Object.values(USER_ROLES).includes(formData.role)) {
+      toast.error("Invalid user role selected");
+      validationErrors = true;
+    }
 
     if (!/^[A-Za-z\s]+$/.test(formData.name)) {
       toast.error("Full name should contain alphabets only")
@@ -160,6 +167,7 @@ const Register = () => {
           </div>
 
           {/* Email */}
+          {/* Email */}
           <div className="flex items-center border border-gray-300 rounded-md px-3 py-2 focus-within:ring-2 focus-within:ring-red-500">
             <FaEnvelope className="text-gray-500 mr-2" />
             <input
@@ -227,6 +235,25 @@ const Register = () => {
               onChange={handleChange}
               className="w-full focus:outline-none"
             />
+          </div>
+          
+          {/* Role Selection */}
+          <div className="flex flex-col border border-gray-300 rounded-md px-3 py-2 focus-within:ring-2 focus-within:ring-red-500">
+            <label htmlFor="role-select" className="text-gray-500 text-sm mb-1">Register As:</label>
+            <select
+              id="role-select"
+              required
+              name="role"
+              value={formData.role}
+              onChange={handleChange}
+              className="w-full focus:outline-none border-none bg-transparent"
+            >
+              <option value={USER_ROLES.MERCHANT}>Merchant</option>
+              <option value={USER_ROLES.SUBMERCHANT}>Sub-merchant</option>
+              <option value={USER_ROLES.MERCHANT_EMPLOYEE}>Merchant Employee</option>
+              <option value={USER_ROLES.ADMIN_EMPLOYEE}>Admin Employee</option>
+              {/* Note: ADMIN role is excluded from public registration */}
+            </select>
           </div>
 
           { /*Terms & conditions */}

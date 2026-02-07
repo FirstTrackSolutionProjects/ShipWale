@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { FaEnvelope, FaLock } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { USER_ROLES } from '../Constants'; // ADDED: Import USER_ROLES
 import EmailOTPVerificationModal from '../components/Modals/EmailOTPVerificationModal'
 import { toast } from 'react-toastify';
 import loginService from '../services/login'
@@ -14,6 +15,7 @@ const Signin = () => {
   const [emailModalOpen, setEmailModalOpen] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [role, setRole] = useState(USER_ROLES.MERCHANT); // Role state
   
   // ⭐ ADDED
   const [rememberMe, setRememberMe] = useState(false);
@@ -34,7 +36,7 @@ const Signin = () => {
     } else if (isAuthenticated && !emailVerified){
       setEmailModalOpen(true)
     }
-  },[isAuthenticated])
+  },[isAuthenticated, verified, emailVerified, navigate])
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -42,6 +44,7 @@ const Signin = () => {
       const formData = {
         email,
         password,
+        role, // Send selected role
         
         // ⭐ SEND REMEMBER ME VALUE (optional)
         rememberMe  
@@ -108,6 +111,25 @@ const Signin = () => {
             >
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </button>
+          </div>
+
+          {/* Role Selection (New) */}
+          <div className="flex flex-col border border-gray-300 rounded-md px-3 py-2 focus-within:ring-2 focus-within:ring-red-500">
+            <label htmlFor="role-select" className="text-gray-500 text-sm mb-1">Sign In As:</label>
+            <select
+              id="role-select"
+              required
+              name="role"
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              className="w-full focus:outline-none border-none bg-transparent"
+            >
+              <option value={USER_ROLES.ADMIN}>Admin</option>
+              <option value={USER_ROLES.MERCHANT}>Merchant</option>
+              <option value={USER_ROLES.SUBMERCHANT}>Sub-merchant</option>
+              <option value={USER_ROLES.MERCHANT_EMPLOYEE}>Merchant Employee</option>
+              <option value={USER_ROLES.ADMIN_EMPLOYEE}>Admin Employee</option>
+            </select>
           </div>
 
           {/* ⭐ REMEMBER ME CHECKBOX */}
