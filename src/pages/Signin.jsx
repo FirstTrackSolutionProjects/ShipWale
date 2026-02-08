@@ -4,15 +4,15 @@ import { FaEnvelope, FaLock } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { USER_ROLES } from '../Constants'; // ADDED: Import USER_ROLES
-import EmailOTPVerificationModal from '../components/Modals/EmailOTPVerificationModal'
+// import EmailOTPVerificationModal from '../components/Modals/EmailOTPVerificationModal' // REMOVED: No longer needed
 import { toast } from 'react-toastify';
 import loginService from '../services/login'
 import ForgotPasswordModal from '../components/ForgotPasswordModal';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const Signin = () => {
-  const { isAuthenticated, emailVerified, login, verified } = useAuth();
-  const [emailModalOpen, setEmailModalOpen] = useState(false);
+  const { isAuthenticated, login, verified } = useAuth();
+  // const [emailModalOpen, setEmailModalOpen] = useState(false); // REMOVED
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState(USER_ROLES.MERCHANT); // Role state
@@ -24,19 +24,18 @@ const Signin = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
-  const closeEmailModal = () => {
-    setEmailModalOpen(false);
-  }
+  // const closeEmailModal = () => { // REMOVED
+  //   setEmailModalOpen(false);
+  // }
 
   useEffect(()=>{
     if (isAuthenticated && verified){
       navigate('/dashboard')
-    } else if(isAuthenticated && emailVerified){
+    } else if(isAuthenticated){
       navigate('/verify')
-    } else if (isAuthenticated && !emailVerified){
-      setEmailModalOpen(true)
-    }
-  },[isAuthenticated, verified, emailVerified, navigate])
+    } 
+    // Removed logic for opening EmailOTPVerificationModal as email verification is inline during registration now.
+  },[isAuthenticated, verified, navigate])
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -65,7 +64,7 @@ const Signin = () => {
 
   return (
     <>
-    {emailModalOpen && <EmailOTPVerificationModal open={emailModalOpen} onClose={closeEmailModal} />}
+    {/* Removed EmailOTPVerificationModal rendering */}
     <div className="min-h-screen bg-gradient-to-b from-red-50 to-gray-100 flex items-center justify-center p-6">
 
       <div className="w-full max-w-md bg-white rounded-xl shadow-xl p-6">
