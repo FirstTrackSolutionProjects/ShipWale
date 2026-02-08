@@ -117,7 +117,7 @@ const AddForm = ({ setMode }) => {
                 type="text"
                 id="name"
                 name="name"
-                maxLength={36}
+                maxLength={32}
                 placeholder="Warehouse Name"
                 value={formData.name}
                 onChange={handleChange}
