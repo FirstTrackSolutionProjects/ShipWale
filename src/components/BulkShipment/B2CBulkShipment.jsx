@@ -1,5 +1,5 @@
 import React, { useState, useRef, useMemo, useCallback, useEffect } from 'react';
-import { Box, Paper, Button, Typography, Alert, CircularProgress, TextField, IconButton } from '@mui/material';
+import { Box, Paper, Button, Typography, Alert, CircularProgress, TextField, IconButton, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { DataGrid, useGridApiRef } from '@mui/x-data-grid';
 import * as XLSX from 'xlsx';
 import DownloadIcon from '@mui/icons-material/Download';
@@ -867,7 +867,64 @@ const BulkShipment = () => {
   const [apiSuccessfulShipments, setApiSuccessfulShipments] = useState([]);
   const [apiFailedShipments, setApiFailedShipments] = useState([]);
   const [apiSummary, setApiSummary] = useState(null);
+  const [services, setServices] = useState([]);
+  const [vendors, setVendors] = useState([]);
+  const [selectedServiceId, setSelectedServiceId] = useState('');
+  const [selectedVendorId, setSelectedVendorId] = useState('');
   const fileInputRef = useRef(null);
+
+  // Fetch domestic active shipment services for dropdown
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
+    const fetchServices = async () => {
+      try {
+        const res = await fetch(`${API_URL}/services/active-shipments/domestic/b2c`, {
+          headers: {
+            Authorization: `${token}`,
+          },
+        });
+        const data = await res.json();
+        if (data?.success && Array.isArray(data.data)) {
+          setServices(data.data);
+          // Prefer previously hardcoded serviceId 2 if available, else first service
+          const preferred = data.data.find((s) => s.service_id === 2) || data.data[0];
+          if (preferred) {
+            setSelectedServiceId(String(preferred.service_id));
+          }
+        }
+      } catch (err) {
+        console.error('Failed to fetch domestic services for bulk shipment', err);
+      }
+    };
+
+    fetchServices();
+  }, []);
+
+  const fetchVendorsForService = useCallback(async (serviceId) => {
+    setVendors([]);
+    setSelectedVendorId('');
+
+    if (!serviceId) return;
+
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
+    try {
+      const res = await fetch(`${API_URL}/services/active-shipments/international/${serviceId}/vendors`, {
+        headers: {
+          Authorization: `${token}`,
+        },
+      });
+      const data = await res.json();
+      if (data?.success && Array.isArray(data.data)) {
+        setVendors(data.data);
+      }
+    } catch (err) {
+      console.error('Failed to fetch vendors for service', serviceId, err);
+    }
+  }, []);
 
   const filteredRows = useMemo(() => {
     if (!globalFilter) {
@@ -954,22 +1011,36 @@ const BulkShipment = () => {
     setTimeout(() => setFocusedCell(null), 3000);
   }, []);
 
+  const handleServiceChange = (event) => {
+    const value = event.target.value;
+    setSelectedServiceId(value);
+    fetchVendorsForService(value);
+  };
+
+  const handleVendorChange = (event) => {
+    setSelectedVendorId(event.target.value);
+  };
+
   const handleSubmitBulk = async () => {
     if (validationErrors.length > 0 || validatedPayload.length === 0) {
       toast.error('Cannot submit due to validation errors or empty payload.');
       return;
     }
+
+    const serviceIdNumber = selectedServiceId ? Number(selectedServiceId) : null;
+    if (!serviceIdNumber) {
+      toast.error('Please select a service before submitting.');
+      return;
+    }
+    const vendorIdNumber = selectedVendorId ? Number(selectedVendorId) : null;
     
     setStep('SUBMITTING');
     
     try {
-      const serviceId = 2; // Delhivery 500gm B2C service
-      const vendorId = null;
-
       const result = await createB2CBulkShipmentsService({
         bulkShipmentsData: validatedPayload,
-        serviceId,
-        vendorId,
+        serviceId: serviceIdNumber,
+        vendorId: vendorIdNumber,
       });
 
       const successfulShipments = result?.data?.successfulShipments || [];
@@ -1017,6 +1088,15 @@ const BulkShipment = () => {
     const rowsForReport = apiFailedShipments.map((failure, index) => {
       const matchingPayload = validatedPayload.find(p => p.ID === failure.ID) || {};
 
+      // Backend payload stores weight in grams; convert back to kg for the report
+      let weightInKg = '';
+      if (matchingPayload.WEIGHT !== undefined && matchingPayload.WEIGHT !== null && matchingPayload.WEIGHT !== '') {
+        const numericWeight = Number(matchingPayload.WEIGHT);
+        if (!isNaN(numericWeight)) {
+          weightInKg = numericWeight / 1000;
+        }
+      }
+
       return {
         'Sr No.': index + 1,
         'Shipment ID': failure.ID ?? '',
@@ -1038,7 +1118,7 @@ const BulkShipment = () => {
         [COLUMN_NAME_MAP.LENGTH]: matchingPayload.LENGTH ?? '',
         [COLUMN_NAME_MAP.BREADTH]: matchingPayload.BREADTH ?? '',
         [COLUMN_NAME_MAP.HEIGHT]: matchingPayload.HEIGHT ?? '',
-        [COLUMN_NAME_MAP.WEIGHT]: matchingPayload.WEIGHT ?? '',
+        [COLUMN_NAME_MAP.WEIGHT]: weightInKg,
         [COLUMN_NAME_MAP.ITEM_NAMES]: matchingPayload.ITEM_NAMES ?? '',
         [COLUMN_NAME_MAP.ITEM_QUANTITIES]: matchingPayload.ITEM_QUANTITIES ?? '',
         [COLUMN_NAME_MAP.ITEM_UNIT_PRICES]: matchingPayload.ITEM_UNIT_PRICES ?? '',
@@ -1061,15 +1141,19 @@ const BulkShipment = () => {
       return;
     }
 
+    const serviceIdNumber = selectedServiceId ? Number(selectedServiceId) : null;
+    if (!serviceIdNumber) {
+      toast.error('Please select a service before calculating price.');
+      return;
+    }
+    const vendorIdNumber = selectedVendorId ? Number(selectedVendorId) : null;
+
     try {
       setIsPriceLoading(true);
-      const serviceId = 2; // Delhivery 500gm B2C service
-      const vendorId = null;
-
       const result = await getB2CBulkShipmentPriceService({
         bulkShipmentsData: validatedPayload,
-        serviceId,
-        vendorId,
+        serviceId: serviceIdNumber,
+        vendorId: vendorIdNumber,
       });
 
       if (result?.data?.totalPrice !== undefined) {
@@ -1091,6 +1175,39 @@ const BulkShipment = () => {
   const renderPreview = () => (
     <Box sx={{ flexGrow: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
       <Typography variant="h6" gutterBottom>File Preview: {file?.name}</Typography>
+      <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 2, mb: 2 }}>
+        <FormControl size="small" sx={{ minWidth: 220 }}>
+          <InputLabel id="bulk-service-label">Service</InputLabel>
+          <Select
+            labelId="bulk-service-label"
+            value={selectedServiceId}
+            label="Service"
+            onChange={handleServiceChange}
+          >
+            {services.map((s) => (
+              <MenuItem key={s.service_id} value={String(s.service_id)}>
+                {s.service_name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        <FormControl size="small" sx={{ minWidth: 220 }} disabled={!vendors.length}>
+          <InputLabel id="bulk-vendor-label">Vendor (optional)</InputLabel>
+          <Select
+            labelId="bulk-vendor-label"
+            value={selectedVendorId}
+            label="Vendor (optional)"
+            onChange={handleVendorChange}
+          >
+            {vendors.map((v) => (
+              <MenuItem key={v.id} value={String(v.id)}>
+                {v.vendor_name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Box>
       
       {/* Validation Summary Alert */}
       {validationErrors.length > 0 ? (
@@ -1106,7 +1223,7 @@ const BulkShipment = () => {
 
       {priceInfo && (
         <Alert severity="info" sx={{ mb: 2 }}>
-          Total price for {validatedPayload.length} shipments: ₹{priceInfo.totalPrice}
+          Total price for {validatedPayload.length} shipments: ₹{Number(priceInfo.totalPrice).toFixed(2)}
         </Alert>
       )}
 
