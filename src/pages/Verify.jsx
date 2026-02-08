@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FileUpload, CheckCircle } from "@mui/icons-material";
 import { z } from "zod";
+import { USER_ROLES } from '../Constants'; 
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import checkIncompleteRequest from "../services/checkIncompleteRequest";
@@ -334,10 +335,13 @@ const TextForm = ({ onNext }) => {
 
 const Verify = () => {  
   const navigate = useNavigate();  
-  const {isAuthenticated ,verified, emailVerified} = useAuth()
+  const {isAuthenticated ,verified, role} = useAuth()
   const [step, setStep] = useState(1);
   const [reqId, setReqId] = useState(null);
   const nextStep = () => setStep((prevStep) => prevStep + 1);
+
+  // Only Merchants require verification
+  const requiresVerification = role === USER_ROLES.MERCHANT;
 
   const incompleteRequest = async () => {
     const response = await checkIncompleteRequest();
@@ -355,18 +359,34 @@ const Verify = () => {
   }
 
   useEffect(()=>{
-    if (isAuthenticated && verified){
-        navigate('/dashboard')
-    } else if (isAuthenticated && !emailVerified){
+    if (!isAuthenticated){
         navigate('/login')
-    } else if (!isAuthenticated){
-        navigate('/login')
-    } else {
-        incompleteRequest()
-        pendingRequest()
+        return;
     }
     
-  },[isAuthenticated])
+    // 1. If already verified, redirect to dashboard
+    if (verified) {
+        navigate('/dashboard');
+        return;
+    }
+    
+    // 2. If authenticated but the role does NOT require verification (e.g., Admin Employee),
+    // send them to the dashboard immediately.
+    if (!requiresVerification) {
+        navigate('/dashboard');
+        return;
+    }
+
+    // If here: isAuthenticated=true, !verified, role=MERCHANT. Proceed with KYC forms.
+    incompleteRequest()
+    pendingRequest()
+    
+  },[isAuthenticated, verified, navigate, role, requiresVerification])
+
+  // Prevent rendering forms if the user is redirecting or doesn't need verification
+  if (!isAuthenticated || !requiresVerification || verified) {
+      return null;
+  }
 
   return (
     <Box

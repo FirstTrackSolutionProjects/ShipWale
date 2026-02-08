@@ -9,16 +9,39 @@ import TicketDetail from './TicketDetail'; // <--- NEW IMPORT for merchant ticke
 
 const Dashboard = () => {
   const {role, isAuthenticated, verified} = useAuth()
-  const admin = role === USER_ROLES.ADMIN;
   const navigate = useNavigate();
-  if (!isAuthenticated) {
-    navigate('/login');
-    return null;
+
+  // Define which roles are exempt from the `verified` check (i.e., non-MERCHANT roles)
+  const isKycExempt = role !== USER_ROLES.MERCHANT; 
+  
+  // A user needs verification if they are a Merchant AND not yet verified
+  const needsKycVerification = !verified && !isKycExempt; // !verified && role === MERCHANT
+  const admin = role === USER_ROLES.ADMIN;
+
+  // Use useEffect for navigation guards
+  React.useEffect(() => {
+    if (!isAuthenticated) {
+        navigate('/login');
+        return;
+    }
+
+    // 1. If the user needs verification (i.e., they are a Merchant and verified=0)
+    if (needsKycVerification) {
+         navigate('/verify');
+         return;
+    }
+    
+    // 2. If they are authenticated and either verified=1 OR they are KYC Exempt,
+    // they fall through and the dashboard renders.
+
+  }, [isAuthenticated, verified, navigate, role, needsKycVerification]);
+
+  // CRUCIAL: Stop rendering the complex dashboard structure if authentication 
+  // is pending or verification is required, preventing blank screens during redirect.
+  if (!isAuthenticated || needsKycVerification) {
+    return null; 
   }
-  if (!verified) {
-    navigate('/verify');
-    return null;
-  }
+  
   const generateRoutes = (items, admin) => {
     return items.flatMap((item, index) => {
       if ((item.admin && !admin) || (item.merchantOnly && admin)) {

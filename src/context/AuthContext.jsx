@@ -19,18 +19,13 @@ export const AuthProvider = ({ children }) => {
     navigate('/login');
   };
 
-  const verifyEmail = () => {
-    setAuthState((prev)=>(
-      {...prev, emailVerified: true}
-    ));
-  }
 
   const isAuthenticated = async () => {
     const token = localStorage.getItem('token');
     if (!token) return false;
     try {
         const decoded = await validateToken();
-        setAuthState({isAuthenticated: true, email: decoded.email, verified: decoded.verified, name : decoded.name, id : decoded.id, business_name: decoded.business_name, role: decoded.role, emailVerified: decoded.email_verified, phone: decoded.phone});
+        setAuthState({isAuthenticated: true, email: decoded.email, verified: decoded.verified, name : decoded.name, id : decoded.id, business_name: decoded.business_name, role: decoded.role, phone: decoded.phone});
         return true;
     } catch (error) {
       console.log(error);
@@ -43,7 +38,7 @@ export const AuthProvider = ({ children }) => {
     isAuthenticated()
   }, []);
   return (
-    <AuthContext.Provider value={{ ...authState, login, logout, verifyEmail }}>
+    <AuthContext.Provider value={{ ...authState, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
