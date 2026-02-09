@@ -1629,12 +1629,12 @@ const Listing = ({ step, setStep }) => {
         
         const result = await response.json();
         if (result.success) {
-          // Sort orders to prioritize unshipped orders
-          const unShippedShipments = result.order.filter(shipment => !shipment.awb);
-          const shippedShipments = result.order.filter(shipment => shipment.awb);
-          const sortedShipments = [...unShippedShipments, ...shippedShipments];
+          // // Sort orders to prioritize unshipped orders
+          // const unShippedShipments = result.order.filter(shipment => !shipment.awb);
+          // const shippedShipments = result.order.filter(shipment => shipment.awb);
+          // const sortedShipments = [...unShippedShipments, ...shippedShipments];
           
-          setShipments(sortedShipments);
+          setShipments(result.order);
           setTotalPages(result.totalPages || 1);
         } else {
           alert("Failed to fetch parcels");
