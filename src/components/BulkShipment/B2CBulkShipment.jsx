@@ -1,6 +1,7 @@
 import React, { useState, useRef, useMemo, useCallback, useEffect } from 'react';
 import { Box, Paper, Button, Typography, Alert, CircularProgress, TextField, IconButton, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { DataGrid, useGridApiRef } from '@mui/x-data-grid';
+import { useNavigate } from 'react-router-dom';
 import * as XLSX from 'xlsx';
 import DownloadIcon from '@mui/icons-material/Download';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
@@ -497,7 +498,7 @@ const convertToBackendPayload = (validatedData) => {
 
 
 // --- UI Component: UploadSection.jsx ---
-const UploadSection = ({ step, file, fileInputRef, handleFileChange, handleDownloadSample }) => (
+const UploadSection = ({ step, file, fileInputRef, handleFileChange, handleDownloadSample, handleViewWarehouses }) => (
     <Paper sx={{ p: { xs: 2, sm: 4 }, textAlign: 'center', boxShadow: 3, border: '2px dashed #fcd3d3' }}>
         {step === 'LOADING' ? (
             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -533,6 +534,13 @@ const UploadSection = ({ step, file, fileInputRef, handleFileChange, handleDownl
                         sx={{ mr: { xs: 0, sm: 2 }, bgcolor: '#ef4444', '&:hover': { bgcolor: '#dc2626' } }}
                     >
                         Choose File
+                    </Button>
+                    <Button
+                        variant="contained"
+                        onClick={handleViewWarehouses}
+                        sx={{ bgcolor: '#3b82f6', '&:hover': { bgcolor: '#2563eb' } }}
+                    >
+                        View Created Warehouses
                     </Button>
                     <Button
                         variant="outlined"
@@ -855,6 +863,7 @@ const DataGridPreview = ({
 // --- Main Component: BulkShipment.jsx ---
 
 const BulkShipment = () => {
+  const navigate = useNavigate();
   const [step, setStep] = useState('UPLOAD'); 
   const [file, setFile] = useState(null);
   const [parsedData, setParsedData] = useState([]);
@@ -1006,6 +1015,10 @@ const BulkShipment = () => {
     setStep('UPLOAD');
   }, []);
   
+  const handleViewWarehouses = useCallback(() => {
+    navigate('/dashboard/warehouse');
+  }, [navigate]);
+
   const handleTraceError = useCallback((dataGridRowId, column) => {
     setFocusedCell({ id: dataGridRowId, field: column });
     setTimeout(() => setFocusedCell(null), 3000);
@@ -1380,6 +1393,7 @@ const BulkShipment = () => {
             fileInputRef={fileInputRef} 
             handleFileChange={handleFileChange} 
             handleDownloadSample={generateSampleExcel} 
+            handleViewWarehouses={handleViewWarehouses}
           />
         ) : renderPreview()}
 
