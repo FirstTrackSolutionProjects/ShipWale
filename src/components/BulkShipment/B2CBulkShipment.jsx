@@ -61,7 +61,7 @@ const COLUMN_MAP = {
   [COLUMN_NAME_MAP.PICKUP_TIME]: {
     key: 'pickupTime',
     required: true,
-    type: 'string',
+    type: 'time',
     width: 120,
     validate: (v) => /^\d{2}:\d{2}$/.test(String(v)) || 'Must be HH:MM format',
   },
@@ -309,6 +309,16 @@ const convertCellDateToISO = (excelDate) => {
   return String(excelDate);
 }
 
+const convertCellTimeToHHMM = (excelTime) => {
+  if (typeof excelTime === 'number') {
+    const totalSeconds = Math.round(excelTime * 24 * 60 * 60);
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+  }
+  return String(excelTime);
+}
+
 const generateSampleExcel = () => {
   const ws = XLSX.utils.json_to_sheet(SAMPLE_DATA);
   const wb = XLSX.utils.book_new();
@@ -349,6 +359,9 @@ const parseExcel = (file) => {
             if (colDef) {
               if (colDef.type === 'date' && value) {
                 value = convertCellDateToISO(value);
+              }
+              if (colDef.type === 'time' && value) {
+                value = convertCellTimeToHHMM(value);
               }
               if (value === undefined || value === null) {
                  rowObj[header] = '';
