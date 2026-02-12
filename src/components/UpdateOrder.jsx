@@ -208,8 +208,8 @@ const ManageForm = ({ isManage, setIsManage, shipment, isShipped }) => {
         }))
       }
     }
-    if (formData.Bpostcode.length == 6) pinToAdd()
-  }, [formData.Bpostcode])
+    if (formData?.Bpostcode?.length == 6) pinToAdd()
+  }, [formData?.Bpostcode])
 
   const addProduct = () => {
     setOrders([...orders, { box_no: 1, product_name: '', product_quantity: 0, selling_price: 0, tax_in_percentage: '' }]);
