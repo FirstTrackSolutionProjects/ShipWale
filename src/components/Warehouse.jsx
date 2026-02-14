@@ -245,7 +245,7 @@ const Warehouse = () => {
 					Accept: 'application/json',
 					Authorization: localStorage.getItem('token'),
 				},
-				body: JSON.stringify({ wid: warehouse?.WAREHOUSE_I }),
+				body: JSON.stringify({ wid: warehouse?.WAREHOUSE_ID }),
 			});
 			const data = await response.json();
 			if (!data?.success) {
