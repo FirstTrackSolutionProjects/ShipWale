@@ -144,10 +144,16 @@ const Register = () => {
     } else if (isAuthenticated && role === USER_ROLES.MERCHANT) {
       navigate("/verify")
     }
-    
-    // Timer logic
+  },[isAuthenticated, verified, navigate, role]) // Navigation dependencies added
+
+  // Timer useEffect: Handles starting, stopping, and cleanup of the countdown
+  useEffect(() => {
+    // If otpSent is true and the timer is active (timer > 0)
     if (otpSent && timer > 0) {
-        if (timerRef.current) clearInterval(timerRef.current);
+        // Clear any existing interval before setting a new one
+        if (timerRef.current) {
+            clearInterval(timerRef.current);
+        }
         
         timerRef.current = setInterval(() => {
             setTimer((prev) => {
@@ -160,10 +166,13 @@ const Register = () => {
         }, 1000);
     }
     
+    // Cleanup on unmount or when dependencies (otpSent, timer) change
     return () => {
-        if (timerRef.current) clearInterval(timerRef.current);
+        if (timerRef.current) {
+            clearInterval(timerRef.current);
+        }
     };
-  },[isAuthenticated, otpSent, verified])
+  },[otpSent, timer]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -392,9 +401,10 @@ const Register = () => {
               className="w-full focus:outline-none border-none bg-transparent"
             >
               <option value={USER_ROLES.MERCHANT}>Merchant</option>
-              <option value={USER_ROLES.SUBMERCHANT}>Sub-merchant</option>
-              <option value={USER_ROLES.MERCHANT_EMPLOYEE}>Merchant Employee</option>
-              <option value={USER_ROLES.ADMIN_EMPLOYEE}>Admin Employee</option>
+              {/* Temporarily hidden roles */}
+              {/* <option value={USER_ROLES.SUBMERCHANT}>Sub-merchant</option> */}
+              {/* <option value={USER_ROLES.MERCHANT_EMPLOYEE}>Merchant Employee</option> */}
+              {/* <option value={USER_ROLES.ADMIN_EMPLOYEE}>Admin Employee</option> */}
               {/* Note: ADMIN role is excluded from public registration */}
             </select>
           </div>

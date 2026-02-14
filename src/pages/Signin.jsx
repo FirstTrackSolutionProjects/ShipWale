@@ -125,9 +125,10 @@ const Signin = () => {
             >
               <option value={USER_ROLES.ADMIN}>Admin</option>
               <option value={USER_ROLES.MERCHANT}>Merchant</option>
-              <option value={USER_ROLES.SUBMERCHANT}>Sub-merchant</option>
+              {/* Temporarily hidden roles */}
+              {/* <option value={USER_ROLES.SUBMERCHANT}>Sub-merchant</option>
               <option value={USER_ROLES.MERCHANT_EMPLOYEE}>Merchant Employee</option>
-              <option value={USER_ROLES.ADMIN_EMPLOYEE}>Admin Employee</option>
+              <option value={USER_ROLES.ADMIN_EMPLOYEE}>Admin Employee</option> */}
             </select>
           </div>
 
