@@ -297,6 +297,29 @@ const Warehouse = () => {
 		setCreateOpen(true);
 	};
 
+	const fillCityState = async (pin) => {
+		try {
+			const normalizedPin = (pin || '').toString().replace(/\D/g, '').slice(0, 6);
+			if (!normalizedPin || normalizedPin.length < 6) {
+				setCreateForm((prev) => ({ ...prev, city: '', state: '' }));
+				return;
+			}
+			const resp = await fetch(`https://api.postalpincode.in/pincode/${normalizedPin}`);
+			const data = await resp.json();
+			const status = data?.[0]?.Status;
+			const office = data?.[0]?.PostOffice?.[0];
+			if (status === 'Success' && office) {
+				const city = office.District || '';
+				const state = office.State || '';
+				setCreateForm((prev) => ({ ...prev, city, state }));
+			} else {
+				setCreateForm((prev) => ({ ...prev, city: '', state: '' }));
+			}
+		} catch (err) {
+			setCreateForm((prev) => ({ ...prev, city: '', state: '' }));
+		}
+	};
+
 	const handleCreateFormChange = (e) => {
 		const { name, value } = e.target;
 		setCreateForm((prev) => ({ ...prev, [name]: value }));
@@ -569,6 +592,27 @@ const Warehouse = () => {
 							required
 						/>
 						<TextField
+							label="Pincode"
+							name="pin"
+							size="small"
+							value={createForm.pin}
+							onChange={(e) => {
+								const next = (e.target.value || '').replace(/\D/g, '').slice(0, 10);
+								setCreateForm((prev) => ({ ...prev, pin: next }));
+								if (next.length === 6) {
+									fillCityState(next);
+								} else if (next.length < 6) {
+									setCreateForm((prev) => ({ ...prev, city: '', state: '' }));
+								}
+							}}
+							onBlur={() => {
+								if ((createForm.country || '').toLowerCase() === 'india') {
+									fillCityState(createForm.pin);
+								}
+							}}
+							required
+						/>
+						<TextField
 							label="City"
 							name="city"
 							size="small"
@@ -590,17 +634,6 @@ const Warehouse = () => {
 							size="small"
 							value={createForm.country}
 							onChange={handleCreateFormChange}
-							required
-						/>
-						<TextField
-							label="Pincode"
-							name="pin"
-							size="small"
-							value={createForm.pin}
-							onChange={(e) => {
-								const next = (e.target.value || '').replace(/\D/g, '').slice(0, 10);
-								setCreateForm((prev) => ({ ...prev, pin: next }));
-							}}
 							required
 						/>
 					</Box>
