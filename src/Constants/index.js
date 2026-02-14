@@ -211,7 +211,6 @@ export const menuItems = [
         icon : WarehouseIcon,
         name : "Warehouse",
         isDropdown : false,
-        merchantOnly : true,
         url : 'warehouse',
         component : Warehouse,
         dropDownOptions : [{}]
