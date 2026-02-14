@@ -31,7 +31,8 @@ const Register = () => {
   // --- OTP STATE & LOGIC ---
   const [otp, setOtp] = useState('');
   const [otpSent, setOtpSent] = useState(false);
-  const [timer, setTimer] = useState(0); // 5 minutes (300 seconds)
+  const [timer, setTimer] = useState(0); // 30-second regeneration cooldown
+  const [otpValidUntil, setOtpValidUntil] = useState(0); // Absolute timestamp (ms) for 5-minute validity
   const timerRef = useRef(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const emailRef = useRef(''); // Stores the email that received the OTP
@@ -72,7 +73,8 @@ const Register = () => {
         
         emailRef.current = email; 
         setOtpSent(true);
-        setTimer(30); // Start the 5-minute timer (300s)
+        setTimer(30); // Start 30-second regeneration cooldown
+        setOtpValidUntil(Date.now() + 300 * 1000); // OTP valid for 5 minutes (300,000 ms)
         setOtp(''); // Clear previous OTP input
         toast.success("OTP sent to your email. Active for 5 minutes.");
 
@@ -126,8 +128,11 @@ const Register = () => {
 
     // OTP validation only required on final submission
     if (isSubmission && !validationErrors) {
-        if (!otpSent || timer === 0) {
-            toast.error("Please generate the OTP and ensure it has not expired.");
+        if (!otpSent) {
+            toast.error("Please generate the OTP.");
+            validationErrors = true;
+        } else if (Date.now() > otpValidUntil) {
+            toast.error("The OTP has expired (5 minute limit). Please generate a new one.");
             validationErrors = true;
         } else if (otp.length !== 6) {
             toast.error("Please enter the 6-digit OTP.");
@@ -146,9 +151,9 @@ const Register = () => {
     }
   },[isAuthenticated, verified, navigate, role]) // Navigation dependencies added
 
-  // Timer useEffect: Handles starting, stopping, and cleanup of the countdown
+  // Timer useEffect: Handles starting, stopping, and cleanup of the 30s regeneration cooldown
   useEffect(() => {
-    // If otpSent is true and the timer is active (timer > 0)
+    // If otpSent is true and the cooldown timer is active (timer > 0)
     if (otpSent && timer > 0) {
         // Clear any existing interval before setting a new one
         if (timerRef.current) {
