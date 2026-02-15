@@ -23,6 +23,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import CloseIcon from '@mui/icons-material/Close';
 import convertToUTCISOString from "../helpers/convertToUTCISOString";
 import { DOMESTIC_ORDER_STATUS_ENUMS } from "@/Constants";
+import WarehouseSelect from "./UiComponents/WarehouseSelect";
 
 const API_URL = import.meta.env.VITE_APP_API_URL
 
@@ -51,20 +52,8 @@ const ManageForm = ({ isManage, setIsManage, shipment, isShipped }) => {
   const [orders, setOrders] = useState([
     { box_no: 1, product_name: '', product_quantity: 0, selling_price: 0, tax_in_percentage: '' }
   ]);
-  const [warehouses, setWarehouses] = useState([])
   
   useEffect(() => {
-    const getWarehouses = async () => {
-      await fetch(`${API_URL}/warehouse/warehouses`, {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'Authorization': localStorage.getItem('token'),
-        }
-      }).then(response => response.json()).then(result => setWarehouses(result.rows))
-    }
-    getWarehouses();
     fetch(`${API_URL}/order/domestic`, {
       method: 'POST',
       headers: {
@@ -404,21 +393,10 @@ const ManageForm = ({ isManage, setIsManage, shipment, isShipped }) => {
         <form onSubmit={handleSubmit}>
           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, my: 2 }}>
             <FormControl fullWidth sx={{ minWidth: 300 }}>
-              <InputLabel>Pickup Warehouse Name</InputLabel>
-              <Select
+              <WarehouseSelect
                 value={formData.wid}
-                onChange={handleChange}
-                size="small"
-                name="wid"
-                label="Pickup Warehouse Name"
-              >
-                <MenuItem value="">Select Warehouse</MenuItem>
-                {warehouses.map((warehouse) => (
-                  <MenuItem key={warehouse.wid} value={warehouse.wid}>
-                    {warehouse.warehouseName}
-                  </MenuItem>
-                ))}
-              </Select>
+                onChange={(wid) => setFormData(prev => ({ ...prev, wid }))}
+              />
             </FormControl>
             <FormControl sx={{ minWidth: 300, flex: 1 }}>
               <TextField

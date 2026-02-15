@@ -3,6 +3,7 @@ import { useForm, useFieldArray } from 'react-hook-form';
 import { v4 as uuidv4 } from 'uuid';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import WarehouseSelect from './UiComponents/WarehouseSelect';
 const API_URL = import.meta.env.VITE_APP_API_URL
 
 const getTodaysDate = () => {
@@ -127,7 +128,6 @@ const schema = z.object({
   path: ["ewaybill"], // Error path
 });
 const FullDetails = () => {
-  const [warehouses, setWarehouses] = useState([]);
   const { register, control, handleSubmit, watch, formState: { errors }, setValue } = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -199,22 +199,6 @@ const FullDetails = () => {
     }
     if (watch('Bpostcode').length == 6) pinToAdd()
   }, [watch('Bpostcode')])
-
-  useEffect(() => {
-    const getWarehouses = async () => {
-      const response = await fetch(`${API_URL}/warehouse/warehouses`, {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'Authorization': localStorage.getItem('token'),
-        }
-      });
-      const result = await response.json();
-      setWarehouses(result.rows);
-    };
-    getWarehouses();
-  }, []);
 
   const onSubmit = async (data) => {
     const now = new Date();
@@ -328,23 +312,12 @@ const FullDetails = () => {
     <div className="w-full p-4 flex flex-col items-center">
       <div className="text-3xl font-medium text-center my-8">Enter Shipping Details</div>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="w-full flex mb-2 flex-wrap">
-          <div className="flex-1 mx-2 mb-2 min-w-[300px] space-y-2">
-            <label htmlFor="wid">Pickup Warehouse Name</label>
-            <select
-              className="w-full border py-2 px-4 rounded"
-              id="wid"
-              {...register("wid")}
-            >
-              <option value="">Select Warehouse</option>
-              {warehouses.length ?
-                warehouses.map((warehouse, index) => (
-                  <option key={index} value={warehouse.wid}>{warehouse.warehouseName}</option>
-                )) : null
-              }
-            </select>
-            {errors.wid && <span className='text-red-500'>{errors.wid.message}</span>}
-          </div>
+        <div className="w-full flex mb-2 px-2 flex-wrap">
+          <WarehouseSelect
+            onChange={(wid)=>setValue("wid", wid)}
+            value={watch("wid")}
+          />
+          {errors.wid && <span className='text-red-500'>{errors.wid.message}</span>}
         </div>
 
         <div className="w-full flex mb-2 flex-wrap">
