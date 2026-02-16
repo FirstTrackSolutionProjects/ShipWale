@@ -3,17 +3,19 @@ import { Link } from "react-router-dom";
 import { FaEnvelope, FaLock } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import EmailOTPVerificationModal from '../components/Modals/EmailOTPVerificationModal'
+import { USER_ROLES } from '../Constants'; // ADDED: Import USER_ROLES
+// import EmailOTPVerificationModal from '../components/Modals/EmailOTPVerificationModal' // REMOVED: No longer needed
 import { toast } from 'react-toastify';
 import loginService from '../services/login'
 import ForgotPasswordModal from '../components/ForgotPasswordModal';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const Signin = () => {
-  const { isAuthenticated, emailVerified, login, verified } = useAuth();
-  const [emailModalOpen, setEmailModalOpen] = useState(false);
+  const { isAuthenticated, login, verified } = useAuth();
+  // const [emailModalOpen, setEmailModalOpen] = useState(false); // REMOVED
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [role, setRole] = useState(USER_ROLES.MERCHANT); // Role state
   
   // ⭐ ADDED
   const [rememberMe, setRememberMe] = useState(false);
@@ -22,19 +24,18 @@ const Signin = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
-  const closeEmailModal = () => {
-    setEmailModalOpen(false);
-  }
+  // const closeEmailModal = () => { // REMOVED
+  //   setEmailModalOpen(false);
+  // }
 
   useEffect(()=>{
     if (isAuthenticated && verified){
       navigate('/dashboard')
-    } else if(isAuthenticated && emailVerified){
+    } else if(isAuthenticated){
       navigate('/verify')
-    } else if (isAuthenticated && !emailVerified){
-      setEmailModalOpen(true)
-    }
-  },[isAuthenticated])
+    } 
+    // Removed logic for opening EmailOTPVerificationModal as email verification is inline during registration now.
+  },[isAuthenticated, verified, navigate])
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -42,6 +43,7 @@ const Signin = () => {
       const formData = {
         email,
         password,
+        role, // Send selected role
         
         // ⭐ SEND REMEMBER ME VALUE (optional)
         rememberMe  
@@ -62,7 +64,7 @@ const Signin = () => {
 
   return (
     <>
-    {emailModalOpen && <EmailOTPVerificationModal open={emailModalOpen} onClose={closeEmailModal} />}
+    {/* Removed EmailOTPVerificationModal rendering */}
     <div className="min-h-screen bg-gradient-to-b from-red-50 to-gray-100 flex items-center justify-center p-6">
 
       <div className="w-full max-w-md bg-white rounded-xl shadow-xl p-6">
@@ -108,6 +110,26 @@ const Signin = () => {
             >
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </button>
+          </div>
+
+          {/* Role Selection (New) */}
+          <div className="flex flex-col border border-gray-300 rounded-md px-3 py-2 focus-within:ring-2 focus-within:ring-red-500">
+            <label htmlFor="role-select" className="text-gray-500 text-sm mb-1">Sign In As:</label>
+            <select
+              id="role-select"
+              required
+              name="role"
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              className="w-full focus:outline-none border-none bg-transparent"
+            >
+              <option value={USER_ROLES.ADMIN}>Admin</option>
+              <option value={USER_ROLES.MERCHANT}>Merchant</option>
+              {/* Temporarily hidden roles */}
+              {/* <option value={USER_ROLES.SUBMERCHANT}>Sub-merchant</option>
+              <option value={USER_ROLES.MERCHANT_EMPLOYEE}>Merchant Employee</option>
+              <option value={USER_ROLES.ADMIN_EMPLOYEE}>Admin Employee</option> */}
+            </select>
           </div>
 
           {/* ⭐ REMEMBER ME CHECKBOX */}
