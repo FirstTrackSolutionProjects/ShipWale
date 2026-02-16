@@ -1154,23 +1154,6 @@ const ShipList = ({ shipment, isShipOpen, setIsShipOpen, setIsShipped, getParcel
 
 
 const PickupRequest = ({ setPickup }) => {
-  const [warehouses, setWarehouses] = useState([]);
-  useEffect(() => {
-    const getWarehouses = async () => {
-      const response = await fetch(`${API_URL}/warehouse/warehouses`, {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'Authorization': localStorage.getItem('token'),
-        }
-      });
-      const result = await response.json();
-      setWarehouses(result.rows);
-    };
-    getWarehouses();
-  }, []);
-  
   const [formData, setFormData] = useState({
     wid: "",
     pickDate: "",
@@ -1211,20 +1194,13 @@ const PickupRequest = ({ setPickup }) => {
       <DialogContent>
         <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 1 }}>
           <FormControl fullWidth required>
-            <InputLabel>Pickup Warehouse Name</InputLabel>
-            <Select
-              value={formData.wid}
-              onChange={handleChange}
-              name="wid"
-              label="Pickup Warehouse Name"
-            >
-              <MenuItem value="">Select Warehouse</MenuItem>
-              {warehouses.map((warehouse) => (
-                <MenuItem key={warehouse.wid} value={warehouse.wid}>
-                  {warehouse.warehouseName}
-                </MenuItem>
-              ))}
-            </Select>
+            <InputLabel shrink>Pickup Warehouse Name</InputLabel>
+            <Box sx={{ mt: 2 }}>
+              <WarehouseSelect
+                value={formData.wid}
+                onChange={(wid) => setFormData((prev) => ({ ...prev, wid }))}
+              />
+            </Box>
           </FormControl>
           
           <FormControl fullWidth required>
