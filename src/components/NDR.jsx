@@ -61,6 +61,15 @@ const timestampToDate = (timestamp) => {
 }
 
 const DelhiveryStatusCard = ({ report, status }) => {
+  if (!status || !status.Status) {
+    return (
+      <div>
+        <p>AWB : {report?.awb}</p>
+        <p>Ref Id: {report?.ref_id}</p>
+        <p className="mt-4">Shipment is not yet picked up or no status available.</p>
+      </div>
+    );
+  }
   return (
     <div>
       <p>AWB : {report.awb}</p>
@@ -68,14 +77,14 @@ const DelhiveryStatusCard = ({ report, status }) => {
       <p>Status : {status.Status.Status}</p>
       <div className="my-2 border-b border-black"> </div>
       {
-        (status.Scans).map((scan, index) => {
+        (status.Scans || []).map((scan, index) => {
           const timestamp = scan.ScanDetail.ScanDateTime;
-          const formattedTimestamp = timestampToDate(timestamp);
+          const formattedTimestamp = timestamp ? timestampToDate(timestamp) : "N/A";
           return (
-            <>
+            <React.Fragment key={index}>
               <div>{formattedTimestamp} | {scan.ScanDetail.ScannedLocation} | {scan.ScanDetail.Instructions} </div>
               <div className="my-2 border-b border-black"> </div>
-            </>
+            </React.Fragment>
           )
         })
       }
@@ -165,8 +174,17 @@ const EnviaCard = ({ report, status }) => {
 }
 
 const DelhiveryB2BStatusCard = ({report , status}) => {
+  if (!status) {
+    return (
+      <div>
+        <p>AWB : {report?.awb}</p>
+        <p>Ref Id: {report?.ref_id}</p>
+        <p className="mt-4">Shipment is not yet picked up or no status available.</p>
+      </div>
+    );
+  }
   const timestamp = status?.scan_timestamp;
-  const formattedTimestamp = timestampToDate(timestamp);
+  const formattedTimestamp = timestamp ? timestampToDate(timestamp) : "N/A";
   return (
     <div>
       <p>AWB : {report.awb}</p>
