@@ -100,6 +100,12 @@ const CodRemittanceAdmin = () => {
     return [];
   }, [apiRef, selection]);
 
+  const selectedTotalAmount = useMemo(() => {
+    return rows
+      .filter(row => selectedIds.includes(row.ord_id))
+      .reduce((sum, row) => sum + (Number(row.amount) || 0), 0);
+  }, [rows, selectedIds]);
+
   useEffect(() => {
     console.log('Selected IDs:', selectedIds);
   }, [selectedIds]);
@@ -442,7 +448,7 @@ const CodRemittanceAdmin = () => {
 
       {/* Action bar */}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
-        <div className="text-sm text-gray-600">Selected: {selectedIds.length}</div>
+        <div className="text-sm text-gray-600">Selected: {selectedIds.length} | Total: ₹ {selectedTotalAmount.toFixed(2)}</div>
         <Button
           variant="contained"
           color="primary"
