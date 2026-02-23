@@ -379,6 +379,7 @@ const Listing = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [selectedReport, setSelectedReport] = useState(null);
   const [isViewOpen, setIsViewOpen] = useState(false);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [filters, setFilters] = useState({
     awb: "",
     ord_id: "",
@@ -551,19 +552,28 @@ const Listing = () => {
     {
       field: 'actions',
       headerName: 'Actions',
-      width: 200,
+      width: 220,
       renderCell: (params) => (
         <Box display="flex h-16" gap={1}>
           <Button
+            variant="outlined"
+            size="small"
+            onClick={() => {
+              setSelectedReport(params.row);
+              setIsDetailsOpen(true);
+            }}
+          >
+            Details
+          </Button>
+          <Button
             variant="contained"
             size="small"
-            sx={{ mr: 1 }}
             onClick={() => {
               setSelectedReport(params.row);
               setIsViewOpen(true);
             }}
           >
-            View Status
+            Status
           </Button>
         </Box>
       )
@@ -827,7 +837,137 @@ const Listing = () => {
         onClose={() => setIsViewOpen(false)}
         report={selectedReport}
       />
+
+      {selectedReport && (
+        <OrderDetailsDialog
+          isOpen={isDetailsOpen}
+          onClose={() => setIsDetailsOpen(false)}
+          orderId={selectedReport.ord_id}
+          shipment={selectedReport}
+        />
+      )}
     </div>
+  );
+};
+
+const OrderDetailsDialog = ({ isOpen, onClose, orderId, shipment }) => {
+  const [boxes, setBoxes] = useState([]);
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!isOpen || !orderId) return;
+    const fetchAll = async () => {
+      setLoading(true);
+      try {
+        const [ordRes, boxRes] = await Promise.all([
+          fetch(`${API_URL}/order/domestic`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') },
+            body: JSON.stringify({ order: orderId }),
+          }).then(res => res.json()),
+          fetch(`${API_URL}/order/domestic/boxes`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': localStorage.getItem('token') },
+            body: JSON.stringify({ order: orderId }),
+          }).then(res => res.json())
+        ]);
+        if (ordRes.success) setItems(ordRes.order);
+        if (boxRes.success) setBoxes(boxRes.order);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchAll();
+  }, [isOpen, orderId]);
+
+  return (
+    <Dialog open={isOpen} onClose={onClose} maxWidth="md" fullWidth>
+      <DialogTitle dividers>
+        <Box display="flex" justifyContent="space-between" alignItems="center">
+          <div>Order Details - {orderId}</div>
+          <IconButton onClick={onClose}><CloseIcon /></IconButton>
+        </Box>
+      </DialogTitle>
+      <DialogContent dividers>
+        {loading ? <Box p={4} textAlign="center">Loading...</Box> : (
+          <Box className="space-y-6 text-sm">
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4 bg-gray-50 p-4 rounded-lg">
+              <div><span className="font-semibold text-gray-500 block">Customer</span>{shipment.customer_name}</div>
+              <div><span className="font-semibold text-gray-500 block">Contact</span>{shipment.customer_mobile}</div>
+              <div><span className="font-semibold text-gray-500 block">Type</span>{shipment.is_b2b ? "B2B" : "B2C"}</div>
+              <div><span className="font-semibold text-gray-500 block">Service</span>{shipment.service_name}</div>
+              <div><span className="font-semibold text-gray-500 block">AWB</span>{shipment.awb || 'N/A'}</div>
+            </div>
+
+            <div>
+              <h3 className="font-bold text-lg mb-2">Packages ({boxes.length})</h3>
+              <div className="overflow-x-auto border rounded-lg">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="bg-gray-100 border-b">
+                      <th className="p-2">Box #</th>
+                      <th className="p-2">L x B x H (cm)</th>
+                      <th className="p-2">Weight</th>
+                      <th className="p-2">Qty</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {boxes.map((b, i) => (
+                      <tr key={i} className="border-b">
+                        <td className="p-2">{b.box_no}</td>
+                        <td className="p-2">{b.length} x {b.breadth} x {b.height}</td>
+                        <td className="p-2">{b.weight} {b.weight_unit}</td>
+                        <td className="p-2">{b.quantity}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div>
+              <h3 className="font-bold text-lg mb-2">Items</h3>
+              <div className="overflow-x-auto border rounded-lg">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="bg-gray-100 border-b">
+                      <th className="p-2">Box #</th>
+                      <th className="p-2">Product Name</th>
+                      <th className="p-2">Qty</th>
+                      <th className="p-2">Price</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {items.map((it, i) => (
+                      <tr key={i} className="border-b">
+                        <td className="p-2">{it.box_no}</td>
+                        <td className="p-2">{it.product_name}</td>
+                        <td className="p-2">{it.product_quantity}</td>
+                        <td className="p-2">₹{it.selling_price}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            
+            <div className="grid md:grid-cols-2 gap-4 border-t pt-4">
+               <div>
+                  <h4 className="font-semibold text-gray-600">Origin</h4>
+                  <p>{shipment.warehouse_city}, {shipment.warehouse_state} {shipment.warehouse_pin}</p>
+               </div>
+               <div>
+                  <h4 className="font-semibold text-gray-600">Destination</h4>
+                  <p>{shipment.shipping_city}, {shipment.shipping_state} {shipment.shipping_postcode}</p>
+               </div>
+            </div>
+          </Box>
+        )}
+      </DialogContent>
+    </Dialog>
   );
 };
 
