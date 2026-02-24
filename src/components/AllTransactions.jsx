@@ -160,6 +160,7 @@ const AllTransactions = () => {
               <option value='refund'>Refund</option>
               <option value='dispute_charge'>Dispute Charge</option>
               {/* <option value='extra'>Extra Charge</option> */}
+              <option value='rto'>RTO Charge</option>
             </select>
             <input name='order_id' value={filters.order_id} onChange={handleFilterChange} placeholder='Order ID' className='p-2 rounded text-black bg-white'/>
             <input name='merchant_email' value={filters.merchant_email} onChange={handleFilterChange} placeholder='Merchant Email' className='p-2 rounded text-black bg-white'/>
