@@ -155,7 +155,6 @@ const Listing = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [selectedReport, setSelectedReport] = useState(null);
   const [isViewOpen, setIsViewOpen] = useState(false);
-  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [isExtraOpen, setIsExtraOpen] = useState(false);
   const [extraSubmitting, setExtraSubmitting] = useState(false);
   const [extraForm, setExtraForm] = useState({ amount: "", reason: "" });
@@ -468,21 +467,11 @@ const Listing = () => {
     {
       field: "actions",
       headerName: "Actions",
-      width: 240,
+      width: 180,
       sortable: false,
       filterable: false,
       renderCell: (params) => (
         <Box display="flex" gap={1} height={90} alignItems={'center'}>
-          <Button
-            variant="outlined"
-            size="small"
-            onClick={() => {
-              setSelectedReport(params.row);
-              setIsDetailsOpen(true);
-            }}
-          >
-            Details
-          </Button>
           <Button
             variant="contained"
             size="small"
@@ -717,15 +706,6 @@ const Listing = () => {
 
       <ViewDialog isOpen={isViewOpen} onClose={() => setIsViewOpen(false)} report={selectedReport} />
 
-      {selectedReport && (
-        <InternationalDetailsDialog
-          isOpen={isDetailsOpen}
-          onClose={() => setIsDetailsOpen(false)}
-          iid={selectedReport.iid || selectedReport.ref_id}
-          shipment={selectedReport}
-        />
-      )}
-
       {/* Extra Charge Dialog */}
       <Dialog open={isExtraOpen} onClose={() => !extraSubmitting && setIsExtraOpen(false)} maxWidth="sm" fullWidth>
         <DialogTitle>
@@ -802,122 +782,6 @@ const Listing = () => {
           </DialogActions>
         </Dialog>
     </div>
-  );
-};
-
-const InternationalDetailsDialog = ({ isOpen, onClose, iid, shipment }) => {
-  const [dockets, setDockets] = useState([]);
-  const [items, setItems] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (!isOpen || !iid) return;
-    const fetchAll = async () => {
-      setLoading(true);
-      try {
-        const [dRes, iRes] = await Promise.all([
-          fetch(`${API_URL}/order/international/dockets`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json", Authorization: localStorage.getItem("token") },
-            body: JSON.stringify({ iid }),
-          }).then(r => r.json()),
-          fetch(`${API_URL}/order/international/items`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json", Authorization: localStorage.getItem("token") },
-            body: JSON.stringify({ iid }),
-          }).then(r => r.json())
-        ]);
-        if (dRes.dockets) setDockets(dRes.dockets);
-        if (iRes.dockets) setItems(iRes.dockets);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchAll();
-  }, [isOpen, iid]);
-
-  return (
-    <Dialog open={isOpen} onClose={onClose} maxWidth="lg" fullWidth>
-      <DialogTitle dividers>
-        <Box display="flex" justifyContent="space-between" alignItems="center">
-          <div>International Shipment Details - {iid}</div>
-          <IconButton onClick={onClose}><CloseIcon /></IconButton>
-        </Box>
-      </DialogTitle>
-      <DialogContent dividers>
-        {loading ? <Box p={4} textAlign="center">Loading...</Box> : (
-          <Box className="space-y-6 text-sm">
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-4 bg-gray-50 p-4 rounded-lg">
-              <div><span className="font-semibold text-gray-500 block">Consignee</span>{shipment.consignee_name}</div>
-              <div><span className="font-semibold text-gray-500 block">Type</span>{shipment.is_b2b ? "B2B" : "B2C"}</div>
-              <div><span className="font-semibold text-gray-500 block">Service</span>{shipment.service_name}</div>
-              <div><span className="font-semibold text-gray-500 block">Vendor</span>{shipment.vendor_name}</div>
-              <div><span className="font-semibold text-gray-500 block">AWB</span>{shipment.awb || 'N/A'}</div>
-            </div>
-
-            {/* Dockets */}
-            <div>
-              <h3 className="font-bold text-lg mb-2">Dockets ({dockets.length})</h3>
-              <div className="overflow-x-auto border rounded-lg">
-                <table className="w-full text-left border-collapse">
-                  <thead>
-                    <tr className="bg-gray-100 border-b">
-                      <th className="p-2">#</th>
-                      <th className="p-2">Dimensions (L x W x H)</th>
-                      <th className="p-2">Weight</th>
-                      <th className="p-2">Qty</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {dockets.map((d, i) => (
-                      <tr key={i} className="border-b">
-                        <td className="p-2">{d.box_no}</td>
-                        <td className="p-2">{d.length} x {d.breadth} x {d.height} cm</td>
-                        <td className="p-2">{d.docket_weight} {d.docket_weight_unit}</td>
-                        <td className="p-2">{d.quantity}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            {/* Items per docket */}
-            <div>
-              <h3 className="font-bold text-lg mb-2">Items</h3>
-              <div className="overflow-x-auto border rounded-lg">
-                <table className="w-full text-left border-collapse">
-                  <thead>
-                    <tr className="bg-gray-100 border-b">
-                      <th className="p-2">Box #</th>
-                      <th className="p-2">Description</th>
-                      <th className="p-2">HS Code</th>
-                      <th className="p-2">Qty</th>
-                      <th className="p-2">Rate</th>
-                      <th className="p-2">Unit</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {items.map((it, i) => (
-                      <tr key={i} className="border-b">
-                        <td className="p-2">{it.box_no}</td>
-                        <td className="p-2">{it.description}</td>
-                        <td className="p-2">{it.hscode}</td>
-                        <td className="p-2">{it.quantity}</td>
-                        <td className="p-2">₹{it.rate}</td>
-                        <td className="p-2">{it.unit}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </Box>
-        )}
-      </DialogContent>
-    </Dialog>
   );
 };
 
