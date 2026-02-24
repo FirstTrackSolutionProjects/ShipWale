@@ -34,6 +34,7 @@ import CodRemittanceAdmin from "../components/CodRemittance/CodRemittanceAdmin"
 import CodRemittanceMerchant from "../components/CodRemittance/CodRemittanceMerchant"
 import InternationalWeightDisputes from "../components/InternationalWeightDisputes"
 import Pricing from "../pages/Pricing"
+import PendingRTO from "../components/PendingRTO/PendingRTO"
 import {IndianRupee, TruckElectricIcon, MessageSquareText} from "lucide-react"
 import { BarChart3 } from 'lucide-react' // Import a suitable icon
 // Icon components (lucide-react) for menu items
@@ -376,6 +377,15 @@ export const menuItems = [
                 ]
             }
         ]
+    },
+    {
+        icon : Banknote,
+        name : "Pending RTO",
+        isDropdown : false,
+        admin: true,
+        url : 'pending-rto',
+        component : PendingRTO,
+        dropDownOptions : [{}]
     },
     {
         
