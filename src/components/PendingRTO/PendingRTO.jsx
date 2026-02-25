@@ -78,23 +78,25 @@ const PendingRTO = () => {
   };
 
   const columns = [
-    { field: 'ord_id', headerName: 'Order ID', flex: 1 },
-    { field: 'fullName', headerName: 'Merchant', flex: 1 },
-    { field: 'awb', headerName: 'AWB', flex: 1 },
-    { field: 'service_name', headerName: 'Service', flex: 2 },
+    { field: 'ord_id', headerName: 'Order ID', flex: 1, minWidth: 100 },
+    { field: 'fullName', headerName: 'Merchant', flex: 1, minWidth: 150 },
+    { field: 'awb', headerName: 'AWB', flex: 1, minWidth: 150 },
+    { field: 'service_name', headerName: 'Service', flex: 2, minWidth: 200 },
     {
       field: 'actions',
       headerName: 'Actions',
       flex: 1,
+      minWidth: 120,
       sortable: false,
       renderCell: (params) => (
-        <Box display="flex" gap={1}>
+        <Box display="flex" gap={1} alignItems="center" height="100%">
           <Button
             variant="contained"
             color="success"
             size="small"
             disabled={!!actionLoading[params.row.ord_id]}
             onClick={() => openProcessDialog(params.row.ord_id)}
+            sx={{ whiteSpace: 'nowrap', flexShrink: 0 }}
           >
             {actionLoading[params.row.ord_id] ? <CircularProgress size={18} /> : 'Process'}
           </Button>
@@ -104,9 +106,11 @@ const PendingRTO = () => {
   ];
 
   return (
-    <Box p={2}>
-      <Typography variant="h5" mb={2}>Pending RTOs</Typography>
-      <Box sx={{ height: 500, width: '100%', background: 'white', borderRadius: 2, boxShadow: 1 }}>
+    <Box p={{ xs: 1, sm: 2 }}>
+      <Typography variant="h5" mb={2} sx={{ fontSize: { xs: '1.2rem', sm: '1.5rem' } }}>
+        Pending RTOs
+      </Typography>
+      <Box sx={{ height: 500, width: '100%', background: 'white', borderRadius: 2, boxShadow: 1, overflowX: 'auto' }}>
         <DataGrid
           rows={rows}
           columns={columns}
@@ -117,6 +121,7 @@ const PendingRTO = () => {
           sx={{
               border: '1px solid #000',
               borderRadius: 0,
+              minWidth: 720, // Forces horizontal scroll instead of squashing columns
               '& .MuiDataGrid-columnHeaders': {
                 borderBottom: '1px solid #000',
                 backgroundColor: '#A34757',
@@ -134,6 +139,9 @@ const PendingRTO = () => {
               },
               '& .MuiDataGrid-row': {
                 borderBottom: '1px solid #000',
+              },
+              '& .MuiDataGrid-cell': {
+                whiteSpace: 'nowrap',
               },
             }}
           rowsPerPageOptions={[20, 50, 100]}
