@@ -12,9 +12,16 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Chip,
+  Tooltip,
+  Typography,
+  Divider,
 } from '@mui/material';
-import { DataGrid, useGridApiRef } from '@mui/x-data-grid';
 import CloseIcon from '@mui/icons-material/Close';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import InventoryIcon from '@mui/icons-material/Inventory';
+import ListAltIcon from '@mui/icons-material/ListAlt';
+import { DataGrid, useGridApiRef } from '@mui/x-data-grid';
 import * as XLSX from 'xlsx';
 import DownloadIcon from '@mui/icons-material/Download';
 import { toast } from "react-toastify";
@@ -883,87 +890,246 @@ const OrderDetailsDialog = ({ isOpen, onClose, orderId, shipment }) => {
     fetchAll();
   }, [isOpen, orderId]);
 
-  return (
-    <Dialog open={isOpen} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle dividers>
-        <Box display="flex" justifyContent="space-between" alignItems="center">
-          <div>Order Details - {orderId}</div>
-          <IconButton onClick={onClose}><CloseIcon /></IconButton>
-        </Box>
-      </DialogTitle>
-      <DialogContent dividers>
-        {loading ? <Box p={4} textAlign="center">Loading...</Box> : (
-          <Box className="space-y-6 text-sm">
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-4 bg-gray-50 p-4 rounded-lg">
-              <div><span className="font-semibold text-gray-500 block">Customer</span>{shipment.customer_name}</div>
-              <div><span className="font-semibold text-gray-500 block">Contact</span>{shipment.customer_mobile}</div>
-              <div><span className="font-semibold text-gray-500 block">Type</span>{shipment.is_b2b ? "B2B" : "B2C"}</div>
-              <div><span className="font-semibold text-gray-500 block">Service</span>{shipment.service_name}</div>
-              <div><span className="font-semibold text-gray-500 block">AWB</span>{shipment.awb || 'N/A'}</div>
-            </div>
+  const handleCopy = (text) => {
+    navigator.clipboard.writeText(text);
+    toast.success("Copied to clipboard");
+  };
 
-            <div>
-              <h3 className="font-bold text-lg mb-2">Packages ({boxes.length})</h3>
-              <div className="overflow-x-auto border rounded-lg">
+  const getStatusColor = (status) => {
+    switch (status?.toUpperCase()) {
+      case 'DELIVERED': return 'success';
+      case 'CANCELLED': return 'error';
+      case 'RTO':
+      case 'RTO DELIVERED': return 'warning';
+      default: return 'primary';
+    }
+  };
+
+  return (
+    <Dialog 
+      open={isOpen} 
+      onClose={onClose} 
+      maxWidth="md" 
+      fullWidth
+      PaperProps={{
+        sx: { borderRadius: 3, boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)' }
+      }}
+    >
+      <DialogTitle sx={{ p: 3 }}>
+        <Box display="flex" justifyContent="space-between" alignItems="center">
+          <Box display="flex" alignItems="center" gap={2}>
+            <Typography variant="h5" fontWeight="700" color="text.primary">
+              Order Details - {orderId}
+            </Typography>
+            <Chip 
+              label={shipment.status || 'PENDING'} 
+              color={getStatusColor(shipment.status)} 
+              size="small" 
+              sx={{ fontWeight: 600, px: 1 }}
+            />
+          </Box>
+          <IconButton onClick={onClose} sx={{ '&:hover': { color: 'error.main', bgcolor: 'error.light' } }}>
+            <CloseIcon fontSize="medium" />
+          </IconButton>
+        </Box>
+        <Divider sx={{ mt: 2 }} />
+      </DialogTitle>
+      
+      <DialogContent sx={{ p: 3, pt: 0 }}>
+        {loading ? (
+          <Box p={8} textAlign="center" display="flex" flexDirection="column" alignItems="center" gap={2}>
+            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-red-500"></div>
+            <Typography color="text.secondary">Fetching order details...</Typography>
+          </Box>
+        ) : (
+          <Box className="space-y-8">
+            {/* Info Cards Section */}
+            <Box className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Customer Info */}
+              <Paper variant="outlined" sx={{ p: 2, borderRadius: 2, bgcolor: '#F9FAFB', border: '1px solid #E5E7EB' }}>
+                <Typography variant="subtitle2" color="text.secondary" fontWeight="700" sx={{ letterSpacing: '0.05em' }} gutterBottom>
+                  CUSTOMER INFORMATION
+                </Typography>
+                <Box className="grid grid-cols-2 gap-y-4 mt-4">
+                  <Box>
+                    <Typography variant="caption" color="text.secondary" fontWeight="600" display="block">Customer Name</Typography>
+                    <Typography variant="body2" fontWeight="600" color="text.primary">{shipment.customer_name}</Typography>
+                  </Box>
+                  <Box>
+                    <Typography variant="caption" color="text.secondary" fontWeight="600" display="block">Contact Number</Typography>
+                    <Typography variant="body2">{shipment.customer_mobile}</Typography>
+                  </Box>
+                  <Box sx={{ gridColumn: 'span 2' }}>
+                    <Typography variant="caption" color="text.secondary" fontWeight="600" display="block">Customer Email</Typography>
+                    <Typography variant="body2" sx={{ wordBreak: 'break-all' }}>{shipment.customer_email || 'N/A'}</Typography>
+                  </Box>
+                </Box>
+              </Paper>
+
+              {/* Shipment Meta Info */}
+              <Paper variant="outlined" sx={{ p: 2, borderRadius: 2, bgcolor: '#F9FAFB', border: '1px solid #E5E7EB' }}>
+                <Typography variant="subtitle2" color="text.secondary" fontWeight="700" sx={{ letterSpacing: '0.05em' }} gutterBottom>
+                  SHIPMENT INFO
+                </Typography>
+                <Box className="grid grid-cols-2 gap-y-4 mt-4">
+                  <Box>
+                    <Typography variant="caption" color="text.secondary" fontWeight="600" display="block">Service Type</Typography>
+                    <Chip label={shipment.is_b2b ? "B2B" : "B2C"} size="small" color="default" sx={{ mt: 0.5, fontWeight: 700, height: 20 }} />
+                  </Box>
+                  <Box>
+                    <Typography variant="caption" color="text.secondary" fontWeight="600" display="block">Courier Service</Typography>
+                    <Typography variant="body2" fontWeight="600">{shipment.service_name}</Typography>
+                  </Box>
+                  <Box>
+                    <Typography variant="caption" color="text.secondary" fontWeight="600" display="block">Payment Mode</Typography>
+                    <Typography variant="body2" fontWeight="700" color={shipment.pay_method === "COD" ? "error.main" : "success.main"}>
+                      {shipment.pay_method} 
+                      {shipment.pay_method === "COD" && <span> (₹{parseInt(shipment.cod_amount)})</span>}
+                    </Typography>
+                  </Box>
+                  <Box>
+                    <Typography variant="caption" color="text.secondary" fontWeight="600" display="block">AWB Number</Typography>
+                    <Box display="flex" alignItems="center" gap={0.5}>
+                      <Typography variant="body2" fontWeight="800" color="primary.main">{shipment.awb || 'N/A'}</Typography>
+                      {shipment.awb && (
+                        <Tooltip title="Copy AWB">
+                          <IconButton size="small" onClick={() => handleCopy(shipment.awb)} sx={{ p: 0.5 }}>
+                            <ContentCopyIcon sx={{ fontSize: 14 }} />
+                          </IconButton>
+                        </Tooltip>
+                      )}
+                    </Box>
+                  </Box>
+                </Box>
+              </Paper>
+            </Box>
+
+            {/* Address Section */}
+            <Box className="grid grid-cols-1 md:grid-cols-2 gap-6 px-1">
+              <Box>
+                <Typography variant="subtitle2" fontWeight="800" display="flex" alignItems="center" gap={1.5} mb={2} color="text.primary">
+                  <Box sx={{ width: 6, height: 18, bgcolor: 'primary.main', borderRadius: 0.5 }} />
+                  ORIGIN
+                </Typography>
+                <Box sx={{ pl: 2.5 }}>
+                  <Typography variant="body2" fontWeight="700" color="text.primary">
+                    {shipment.warehouse_city}, {shipment.warehouse_state}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                    {shipment.warehouse_country} — {shipment.warehouse_pin}
+                  </Typography>
+                </Box>
+              </Box>
+              <Box>
+                <Typography variant="subtitle2" fontWeight="800" display="flex" alignItems="center" gap={1.5} mb={2} color="text.primary">
+                  <Box sx={{ width: 6, height: 18, bgcolor: 'error.main', borderRadius: 0.5 }} />
+                  DESTINATION
+                </Typography>
+                <Box sx={{ pl: 2.5 }}>
+                  <Typography variant="body2" fontWeight="700" color="text.primary">
+                    {shipment.shipping_city}, {shipment.shipping_state}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                    {shipment.shipping_country} — {shipment.shipping_postcode}
+                  </Typography>
+                </Box>
+              </Box>
+            </Box>
+
+            {/* Packages Table */}
+            <Box>
+              <Typography variant="subtitle2" fontWeight="800" display="flex" alignItems="center" gap={1.5} mb={2} color="text.primary">
+                <InventoryIcon sx={{ color: 'text.secondary', fontSize: 20 }} />
+                PACKAGES ({boxes.length})
+              </Typography>
+              <Paper variant="outlined" sx={{ overflow: 'hidden', borderRadius: 2, border: '1px solid #E5E7EB' }}>
                 <table className="w-full text-left border-collapse">
                   <thead>
-                    <tr className="bg-gray-100 border-b">
-                      <th className="p-2">Box #</th>
-                      <th className="p-2">L x B x H (cm)</th>
-                      <th className="p-2">Weight</th>
-                      <th className="p-2">Qty</th>
+                    <tr className="bg-gray-50 border-b border-gray-200">
+                      <th className="p-4 font-bold text-gray-600 text-[10px] uppercase tracking-widest">Box #</th>
+                      <th className="p-4 font-bold text-gray-600 text-[10px] uppercase tracking-widest">Dimensions (L×B×H cm)</th>
+                      <th className="p-4 font-bold text-gray-600 text-[10px] uppercase tracking-widest text-right">Weight</th>
+                      <th className="p-4 font-bold text-gray-600 text-[10px] uppercase tracking-widest text-center">Qty</th>
                     </tr>
                   </thead>
                   <tbody>
                     {boxes.map((b, i) => (
-                      <tr key={i} className="border-b">
-                        <td className="p-2">{b.box_no}</td>
-                        <td className="p-2">{b.length} x {b.breadth} x {b.height}</td>
-                        <td className="p-2">{b.weight} {b.weight_unit}</td>
-                        <td className="p-2">{b.quantity}</td>
+                      <tr key={i} className="border-b border-gray-100 hover:bg-gray-50/50 transition-colors">
+                        <td className="p-4 text-sm font-semibold text-gray-700">{b.box_no}</td>
+                        <td className="p-4 text-sm text-gray-600">{b.length} × {b.breadth} × {b.height}</td>
+                        <td className="p-4 text-sm text-gray-900 font-bold text-right">{b.weight} {b.weight_unit}</td>
+                        <td className="p-4 text-sm text-gray-600 text-center font-medium">{b.quantity}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
-              </div>
-            </div>
+              </Paper>
+            </Box>
 
-            <div>
-              <h3 className="font-bold text-lg mb-2">Items</h3>
-              <div className="overflow-x-auto border rounded-lg">
+            {/* Items Table */}
+            <Box>
+              <Typography variant="subtitle2" fontWeight="800" display="flex" alignItems="center" gap={1.5} mb={2} color="text.primary">
+                <ListAltIcon sx={{ color: 'text.secondary', fontSize: 20 }} />
+                ITEM DETAILS
+              </Typography>
+              <Paper variant="outlined" sx={{ overflow: 'hidden', borderRadius: 2, border: '1px solid #E5E7EB' }}>
                 <table className="w-full text-left border-collapse">
                   <thead>
-                    <tr className="bg-gray-100 border-b">
-                      <th className="p-2">Box #</th>
-                      <th className="p-2">Product Name</th>
-                      <th className="p-2">Qty</th>
-                      <th className="p-2">Price</th>
+                    <tr className="bg-gray-50 border-b border-gray-200">
+                      <th className="p-4 font-bold text-gray-600 text-[10px] uppercase tracking-widest">Box #</th>
+                      <th className="p-4 font-bold text-gray-600 text-[10px] uppercase tracking-widest">Product Name</th>
+                      <th className="p-4 font-bold text-gray-600 text-[10px] uppercase tracking-widest text-center">Qty</th>
+                      <th className="p-4 font-bold text-gray-600 text-[10px] uppercase tracking-widest text-right">Unit Price</th>
                     </tr>
                   </thead>
                   <tbody>
                     {items.map((it, i) => (
-                      <tr key={i} className="border-b">
-                        <td className="p-2">{it.box_no}</td>
-                        <td className="p-2">{it.product_name}</td>
-                        <td className="p-2">{it.product_quantity}</td>
-                        <td className="p-2">₹{it.selling_price}</td>
+                      <tr key={i} className="border-b border-gray-100 hover:bg-gray-50/50 transition-colors">
+                        <td className="p-4 text-sm font-semibold text-gray-700">{it.box_no}</td>
+                        <td className="p-4 text-sm text-gray-600 font-medium">{it.product_name}</td>
+                        <td className="p-4 text-sm text-gray-600 text-center font-bold">{it.product_quantity}</td>
+                        <td className="p-4 text-sm text-gray-900 font-bold text-right">₹{parseFloat(it.selling_price).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
-              </div>
-            </div>
-            
-            <div className="grid md:grid-cols-2 gap-4 border-t pt-4">
-               <div>
-                  <h4 className="font-semibold text-gray-600">Origin</h4>
-                  <p>{shipment.warehouse_city}, {shipment.warehouse_state} {shipment.warehouse_pin}</p>
-               </div>
-               <div>
-                  <h4 className="font-semibold text-gray-600">Destination</h4>
-                  <p>{shipment.shipping_city}, {shipment.shipping_state} {shipment.shipping_postcode}</p>
-               </div>
-            </div>
+              </Paper>
+            </Box>
+
+            {/* Summary Section */}
+            <Box display="flex" justifyContent="flex-end" pt={2} pb={2}>
+              <Paper 
+                variant="elevation" 
+                elevation={0}
+                sx={{ 
+                  p: 3, 
+                  borderRadius: 3, 
+                  minWidth: 280, 
+                  bgcolor: '#F3F4F6',
+                  border: '1px solid #E5E7EB'
+                }}
+              >
+                <Box display="flex" justifyContent="space-between" mb={1.5}>
+                  <Typography variant="body2" fontWeight="600" color="text.secondary">Total Items</Typography>
+                  <Typography variant="body2" fontWeight="800" color="text.primary">
+                    {items.reduce((acc, item) => acc + parseInt(item.product_quantity), 0)}
+                  </Typography>
+                </Box>
+                <Box display="flex" justifyContent="space-between" mb={1.5}>
+                  <Typography variant="body2" fontWeight="600" color="text.secondary">Total dead weight</Typography>
+                  <Typography variant="body2" fontWeight="800" color="text.primary">
+                    {boxes.reduce((acc, box) => acc + parseFloat(box.weight), 0).toFixed(3)} {boxes[0]?.weight_unit || 'kg'}
+                  </Typography>
+                </Box>
+                <Divider sx={{ my: 2, borderColor: '#D1D5DB' }} />
+                <Box display="flex" justifyContent="space-between" alignItems="baseline">
+                  <Typography variant="subtitle1" fontWeight="800" color="text.primary">Total Amount</Typography>
+                  <Typography variant="h6" fontWeight="900" color="primary.main">
+                    ₹{items.reduce((acc, item) => acc + (parseFloat(item.selling_price) * parseInt(item.product_quantity)), 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                  </Typography>
+                </Box>
+              </Paper>
+            </Box>
           </Box>
         )}
       </DialogContent>
