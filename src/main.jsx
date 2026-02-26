@@ -10,15 +10,14 @@ import MaintenancePage from './components/Maintenance.jsx'
 
 createRoot(document.getElementById('root')).render(
   // <StrictMode>
-    // <BrowserRouter>
-    //   <AuthProvider>
-    //     <FormProvider>
-    //   <WalletProvider>
-    //     <App />
-    //   </WalletProvider>
-    //   </FormProvider>
-    //   </AuthProvider>
-    // </BrowserRouter>
-    <MaintenancePage />
+    <BrowserRouter>
+      <AuthProvider>
+        <FormProvider>
+      <WalletProvider>
+        <App />
+      </WalletProvider>
+      </FormProvider>
+      </AuthProvider>
+    </BrowserRouter>
   // </StrictMode>,
 )
