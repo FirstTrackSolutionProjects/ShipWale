@@ -5,7 +5,7 @@ import getFilterStartDate from '../helpers/getFilterStartDate';
 import getTodaysDate from '../helpers/getTodaysDate';
 import convertToUTCISOString from '../helpers/convertToUTCISOString';
 import DownloadIcon from '@mui/icons-material/Download';
-import { IconButton } from '@mui/material';
+import { IconButton, Box } from '@mui/material';
 import * as XLSX from 'xlsx';
 import { toast } from 'react-toastify';
 import getAllTransactionsDataService from '../services/transactionServices/getAllTransactionDataService';
@@ -13,13 +13,26 @@ import getAllTransactionsDataService from '../services/transactionServices/getAl
 const PAGE_SIZE = 50;
 
 const columns = [
-    { field: 'date', headerName: 'Date', flex: 1, renderCell: (p) => new Date(p?.row?.date).toLocaleString() },
-    { field: 'type', headerName: 'Type', flex: 1 },
-    { field: 'order_id', headerName: 'Order ID', flex: 1 },
-    { field: 'payment_id', headerName: 'Payment ID', flex: 1, hide: true },
-    { field: 'service_name', headerName: 'Service', flex: 1 },
-    { field: 'amount', headerName: 'Amount', flex: 1, renderCell: (p)=> p.value != null ? Number(p.value) : '' },
-    { field: 'reason', headerName: 'Reason', flex: 1 }
+  { field: 'date', headerName: 'Date', flex: 1, valueGetter: p => p?.row?.date, renderCell: p => new Date(p.row.date).toLocaleString(), minWidth: 175 },
+  { field: 'type', headerName: 'Type', flex: 1, minWidth: 100 },
+  { field: 'order_id', headerName: 'Order ID', flex: 1, minWidth: 100 },
+  { field: 'payment_id', headerName: 'Payment ID', flex: 1, hide: true, minWidth: 100 },
+  { field: 'shipment_details', headerName: 'Shipment Details', minWidth: 200,
+        renderCell: (params) => (
+          <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, height: 80, justifyContent: 'center' }}>
+            {params.row.service_name && <div>Service: {params.row.service_name} {params.row.shipping_mode ? `(${params.row.shipping_mode})` : ''}</div>}
+            {params.row.awb && <div>AWB: {params.row.awb}</div>}
+          </Box>
+        )
+      },
+  { field: 'amount', headerName: 'Amount', flex: 1, renderCell: p => {
+      const v = Number(p.value);
+      if (isNaN(v)) return '';
+      const sign = (p.row.type === 'expense' || p.row.type === 'dispute_charge' || p.row.type === 'extra') ? '-' : '+';
+      const cls = sign === '+' ? 'text-green-600' : 'text-red-600';
+      return <span className={cls}>{sign}{Math.abs(v)}</span>;
+    }, minWidth: 80 },
+  { field: 'reason', headerName: 'Reason', flex: 2, minWidth: 100 },
 ];
 
 const TransactionHistory = () => {
@@ -31,6 +44,7 @@ const TransactionHistory = () => {
     const [filters, setFilters] = useState({
         type: 'all',
         order_id: '',
+        awb: '',
         startDate: getFilterStartDate(),
         endDate: getTodaysDate()
     });
@@ -47,6 +61,8 @@ const TransactionHistory = () => {
         setPage(1);
     };
 
+    const [totalPages, setTotalPages] = useState(1);
+
     const fetchData = useCallback(async ()=> {
         setLoading(true); setError(null);
         try {
@@ -55,11 +71,13 @@ const TransactionHistory = () => {
                 startDate: convertToUTCISOString(`${debouncedFilters.startDate}T00:00:00`),
                 endDate: convertToUTCISOString(`${debouncedFilters.endDate}T23:59:59.999`),
                 order_id: debouncedFilters.order_id,
+                awb: debouncedFilters.awb,
                 type: debouncedFilters.type
             });
             // Build a stable unique id; order_id can repeat across different types (e.g. expense & refund for same order)
             setRows(data?.rows || []);
             setRowCount(data?.totalRecords || 0);
+            setTotalPages(data.totalPages || 1);
         } catch (err) {
             setError(err.message || 'Failed to load');
         } finally {
@@ -69,7 +87,6 @@ const TransactionHistory = () => {
 
     useEffect(()=> { fetchData(); }, [fetchData]);
 
-    const totalPages = useMemo(()=> Math.ceil(rowCount / PAGE_SIZE) || 1, [rowCount]);
 
     // Advanced pagination component (mirrors UpdateOrder.jsx style)
     const Pagination = ({ currentPage, totalPages, onPageChange }) => {
@@ -133,7 +150,7 @@ const TransactionHistory = () => {
             <div className='w-full max-w-7xl px-4 flex flex-col gap-4'>
                 <h1 className='text-2xl font-semibold text-center'>Transaction History</h1>
                 <div className='bg-red-500 text-white p-4 rounded-lg space-y-4'>
-                    <div className='grid md:grid-cols-5 gap-3'>
+                    <div className='grid md:grid-cols-6 gap-3'>
                         <select name='type' value={filters.type} onChange={handleFilterChange} className='p-2 rounded text-black bg-white'>
                             <option value='all'>All Types</option>
                             <option value='recharge'>Recharge</option>
@@ -145,6 +162,7 @@ const TransactionHistory = () => {
                             <option value='rto'>RTO Charge</option>
                         </select>
                         <input type='text' name='order_id' value={filters.order_id} onChange={handleFilterChange} placeholder='Order ID' className='p-2 rounded text-black bg-white'/>
+                        <input type='text' name='awb' value={filters.awb} onChange={handleFilterChange} placeholder='AWB' className='p-2 rounded text-black bg-white'/>
                         <input type='date' name='startDate' value={filters.startDate} onChange={handleFilterChange} className='p-2 rounded text-black bg-white'/>
                         <input type='date' name='endDate' value={filters.endDate} onChange={handleFilterChange} className='p-2 rounded text-black bg-white'/>
                         <IconButton
@@ -153,6 +171,7 @@ const TransactionHistory = () => {
                                 const payload = {
                                   type: filters.type,
                                   order_id: filters.order_id,
+                                  awb: filters.awb,
                                   startDate: filters.startDate ? convertToUTCISOString(new Date(filters.startDate).setHours(0,0,0,0)) : '',
                                   endDate: filters.endDate ? convertToUTCISOString(new Date(filters.endDate).setHours(23,59,59,999)) : ''
                                 }
@@ -199,6 +218,7 @@ const TransactionHistory = () => {
                         hideFooterPagination
                         disableColumnMenu
                         disableRowSelectionOnClick
+                        rowHeight={80}
                         // Style tweaks to ensure no ghost rows bleed through the "No rows" overlay
                         sx={{
                             '& .MuiDataGrid-overlayWrapper': { backgroundColor: '#fff' },
