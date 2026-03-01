@@ -485,11 +485,11 @@ const Listing = () => {
         </Box>
       )
     },
-    { field: 'shipment_details', headerName: 'Shipment Details', width: 200,
+    { field: 'shipment_details', headerName: 'Shipment Details', width: 240,
       renderCell: (params) => (
         <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, height: 100, justifyContent: 'center' }}>
           <div>Pay Method: {params.row.pay_method} {params.row.pay_method === "COD" ? ` - ₹${parseInt(params.row.cod_amount)}` : ''}</div>
-          <div>Service: {params.row.service_name}</div>
+          <div>Service: {params.row.service_name} {params.row.shipping_mode ? `(${params.row.shipping_mode})` : ''}</div>
           <div>AWB: {params.row.awb}</div>
           <div>Order ID: {params.row.ord_id}</div>
           <div>{params.row.date ? new Date(params.row.date).toLocaleString() : ''}</div>
@@ -506,36 +506,42 @@ const Listing = () => {
       headerName: 'Actions',
       width: 280,
       renderCell: (params) => (
-        <Box display="flex h-16" gap={1}>
-          <Button
-            variant="outlined"
-            size="small"
-            onClick={() => {
-              setSelectedReport(params.row);
-              setIsDetailsOpen(true);
-            }}
-          >
-            Details
-          </Button>
-          <Button
-            variant="contained"
-            size="small"
-            onClick={() => {
-              setSelectedReport(params.row);
-              setIsViewOpen(true);
-            }}
-          >
-            Status
-          </Button>
-          {!params.row.cancelled && [1,2,6].includes(params.row.serviceId) && (
+        <Box sx={{ display: 'flex', alignItems: 'center', height: '100%', gap: 1 }}>
+          <Box>
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={() => {
+                setSelectedReport(params.row);
+                setIsDetailsOpen(true);
+              }}
+            >
+              Details
+            </Button>
+          </Box>
+          <Box>
             <Button
               variant="contained"
-              color="error"
               size="small"
-              onClick={() => handleCancel(params.row)}
+              onClick={() => {
+                setSelectedReport(params.row);
+                setIsViewOpen(true);
+              }}
             >
-              Cancel
+              Status
             </Button>
+          </Box>
+          {!params.row.cancelled && [1, 2, 6].includes(params.row.serviceId) && (
+            <Box>
+              <Button
+                variant="contained"
+                color="error"
+                size="small"
+                onClick={() => handleCancel(params.row)}
+              >
+                Cancel
+              </Button>
+            </Box>
           )}
         </Box>
       )
@@ -961,7 +967,9 @@ const OrderDetailsDialog = ({ isOpen, onClose, orderId, shipment }) => {
                   </Box>
                   <Box>
                     <Typography variant="caption" color="text.secondary" fontWeight="600" display="block">Courier Service</Typography>
-                    <Typography variant="body2" fontWeight="600" sx={{ fontSize: {xs: '0.8rem', sm: '0.875rem'} }}>{shipment.service_name}</Typography>
+                    <Typography variant="body2" fontWeight="600" sx={{ fontSize: {xs: '0.8rem', sm: '0.875rem'} }}>
+                      {shipment.service_name} {shipment.shipping_mode ? `(${shipment.shipping_mode})` : ''}
+                    </Typography>
                   </Box>
                   <Box>
                     <Typography variant="caption" color="text.secondary" fontWeight="600" display="block">Payment Mode</Typography>
