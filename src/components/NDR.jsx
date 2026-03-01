@@ -544,7 +544,7 @@ const Listing = () => {
       renderCell: (params) => (
         <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, height: 100, justifyContent: 'center' }}>
           <div>Pay Method: {params.row.pay_method} {params.row.pay_method === "COD" ? ` - ₹${parseInt(params.row.cod_amount)}` : ''}</div>
-          <div>Service: {params.row.service_name}</div>
+          <div>Service: {params.row.service_name} {params.row.shipping_mode ? `(${params.row.shipping_mode})` : ''}</div>
           <div>AWB: {params.row.awb}</div>
           <div>Order ID: {params.row.ord_id}</div>
           <div>{params.row.date ? new Date(params.row.date).toLocaleString() : ''}</div>
@@ -983,7 +983,9 @@ const OrderDetailsDialog = ({ isOpen, onClose, orderId, shipment }) => {
                   </Box>
                   <Box>
                     <Typography variant="caption" color="text.secondary" fontWeight="600" display="block">Courier Service</Typography>
-                    <Typography variant="body2" fontWeight="600" sx={{ fontSize: {xs: '0.8rem', sm: '0.875rem'} }}>{shipment.service_name}</Typography>
+                    <Typography variant="body2" fontWeight="600" sx={{ fontSize: {xs: '0.8rem', sm: '0.875rem'} }}>
+                      {shipment.service_name} {shipment.shipping_mode ? `(${shipment.shipping_mode})` : ''}
+                    </Typography>
                   </Box>
                   <Box>
                     <Typography variant="caption" color="text.secondary" fontWeight="600" display="block">Payment Mode</Typography>

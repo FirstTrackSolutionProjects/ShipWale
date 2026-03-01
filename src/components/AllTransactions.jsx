@@ -5,7 +5,7 @@ import getTodaysDate from '../helpers/getTodaysDate';
 import convertToUTCISOString from '../helpers/convertToUTCISOString';
 import getAllTransactionsAdminService from '../services/transactionServices/getAllTransactionsAdminService';
 import DownloadIcon from '@mui/icons-material/Download';
-import { IconButton } from '@mui/material';
+import { IconButton, Box } from '@mui/material';
 import * as XLSX from 'xlsx';
 import { toast } from 'react-toastify';
 import getAllTransactionsDataService from '../services/transactionServices/getAllTransactionDataService';
@@ -13,23 +13,35 @@ import getAllTransactionsDataService from '../services/transactionServices/getAl
 const PAGE_SIZE = 50; // backend admin endpoint uses 50
 
 const columns = [
-  { field: 'date', headerName: 'Date', flex: 1, valueGetter: p => p?.row?.date, renderCell: p => new Date(p.row.date).toLocaleString() },
-  { field: 'type', headerName: 'Type', flex: 1 },
-  { field: 'order_id', headerName: 'Order ID', flex: 1 },
-  { field: 'payment_id', headerName: 'Payment ID', flex: 1, hide: true },
-  { field: 'fullName', headerName: 'Merchant Name', flex: 1 },
-  { field: 'email', headerName: 'Email', flex: 1 },
-  { field: 'businessName', headerName: 'Business', flex: 1 },
-  { field: 'service_name', headerName: 'Service', flex: 1 },
+  { field: 'date', headerName: 'Date', flex: 1, valueGetter: p => p?.row?.date, renderCell: p => new Date(p.row.date).toLocaleString(), minWidth: 175 },
+  { field: 'type', headerName: 'Type', flex: 1, minWidth: 100 },
+  { field: 'order_id', headerName: 'Order ID', flex: 1, minWidth: 100 },
+  { field: 'payment_id', headerName: 'Payment ID', flex: 1, hide: true, minWidth: 100 },
+  { field: 'merchant_details', headerName: 'Merchant Details', minWidth: 250,
+      renderCell: (params) => (
+        <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, height: 80, justifyContent: 'center' }}>
+          <div className="font-bold">{params.row.fullName}</div>
+          <div>{params.row.email}</div>
+        </Box>
+      )
+    },
+  { field: 'shipment_details', headerName: 'Shipment Details', minWidth: 200,
+        renderCell: (params) => (
+          <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, height: 80, justifyContent: 'center' }}>
+            {params.row.service_name && <div>Service: {params.row.service_name} {params.row.shipping_mode ? `(${params.row.shipping_mode})` : ''}</div>}
+            {params.row.awb && <div>AWB: {params.row.awb}</div>}
+          </Box>
+        )
+      },
   { field: 'amount', headerName: 'Amount', flex: 1, renderCell: p => {
       const v = Number(p.value);
       if (isNaN(v)) return '';
       const sign = (p.row.type === 'expense' || p.row.type === 'dispute_charge' || p.row.type === 'extra') ? '-' : '+';
       const cls = sign === '+' ? 'text-green-600' : 'text-red-600';
       return <span className={cls}>{sign}{Math.abs(v)}</span>;
-    } },
-  { field: 'remaining_balance', headerName: 'Balance After', flex: 1, renderCell: p => p.value != null ? Number(p.value) : '' },
-  { field: 'reason', headerName: 'Reason', flex: 1 }
+    }, minWidth: 80 },
+  { field: 'remaining_balance', headerName: 'Balance After', flex: 1, renderCell: p => p.value != null ? Number(p.value) : '', minWidth: 100 },
+  { field: 'reason', headerName: 'Reason', flex: 1, minWidth: 100 },
 ];
 
 const AllTransactions = () => {
@@ -44,6 +56,7 @@ const AllTransactions = () => {
   const [filters, setFilters] = useState({
     type: 'all',
     order_id: '',
+    awb: '',
     merchant_email: '',
     merchant_name: '',
     merchant_business_name: '',
@@ -64,6 +77,8 @@ const AllTransactions = () => {
     setPage(1);
   };
 
+    const [totalPages, setTotalPages] = useState(1);
+
   // Fetch
   const fetchData = useCallback(async () => {
     setLoading(true); setError(null);
@@ -73,6 +88,7 @@ const AllTransactions = () => {
         startDate: convertToUTCISOString(`${debouncedFilters.startDate}T00:00:00`),
         endDate: convertToUTCISOString(`${debouncedFilters.endDate}T23:59:59.999`),
         order_id: debouncedFilters.order_id,
+        awb: debouncedFilters.awb,
         merchant_email: debouncedFilters.merchant_email,
         merchant_name: debouncedFilters.merchant_name,
         merchant_business_name: debouncedFilters.merchant_business_name,
@@ -82,6 +98,7 @@ const AllTransactions = () => {
       // Ensure each row has an id (backend provides id for each select we constructed). Fallback composite.
       setRows(incoming.map((r, i) => ({ id: r.id || `${r.type}_${r.order_id || r.payment_id || i}_${r.date}`, ...r })));
       setRowCount(data?.totalRecords || 0);
+      setTotalPages(data.totalPages || 1);
     } catch (err) {
       setError(err.message || 'Failed to load');
     } finally {
@@ -91,7 +108,6 @@ const AllTransactions = () => {
 
   useEffect(() => { fetchData(); }, [fetchData]);
 
-  const totalPages = useMemo(() => Math.ceil(rowCount / PAGE_SIZE) || 1, [rowCount]);
 
   // Pagination component (same as TransactionHistory)
   const Pagination = ({ currentPage, totalPages, onPageChange }) => {
@@ -163,6 +179,7 @@ const AllTransactions = () => {
               <option value='rto'>RTO Charge</option>
             </select>
             <input name='order_id' value={filters.order_id} onChange={handleFilterChange} placeholder='Order ID' className='p-2 rounded text-black bg-white'/>
+            <input name='awb' value={filters.awb} onChange={handleFilterChange} placeholder='AWB' className='p-2 rounded text-black bg-white'/>
             <input name='merchant_email' value={filters.merchant_email} onChange={handleFilterChange} placeholder='Merchant Email' className='p-2 rounded text-black bg-white'/>
             <input name='merchant_name' value={filters.merchant_name} onChange={handleFilterChange} placeholder='Merchant Name' className='p-2 rounded text-black bg-white'/>
             <input name='merchant_business_name' value={filters.merchant_business_name} onChange={handleFilterChange} placeholder='Business Name' className='p-2 rounded text-black bg-white'/>
@@ -174,6 +191,7 @@ const AllTransactions = () => {
                   const payload = {
                     type: filters.type,
                     order_id: filters.order_id,
+                    awb: filters.awb,
                     merchant_email: filters.merchant_email,
                     merchant_name: filters.merchant_name,
                     merchant_business_name: filters.merchant_business_name,
@@ -222,6 +240,7 @@ const AllTransactions = () => {
             hideFooterPagination
             disableColumnMenu
             disableRowSelectionOnClick
+            rowHeight={80}
             sx={{
               '& .MuiDataGrid-overlayWrapper': { backgroundColor: '#fff' },
               '& .MuiDataGrid-virtualScrollerRenderZone': rows.length === 0 ? { opacity: 0 } : {},
