@@ -65,7 +65,8 @@ const generateMonthlyInvoiceHtml = (data) => {
 
   const companyName = escapeHtml(from.NAME || 'ShipWale')
   const companyShort = escapeHtml((from.NAME || 'ShipWale').split(' ').map(w => w[0]).join('').slice(0,4).toUpperCase())
-  const logoUrl = `${(typeof window !== 'undefined' ? window.location.origin : '')}/logo-nobg.png`
+  // The logo is expected to be in the 'public/image/' directory.
+  const logoUrl = `${(typeof window !== 'undefined' ? window.location.origin : '')}/image/logo-nobg.png`
   const companyTagline = 'Monthly Merchant Invoice'
 
   const invoiceNumber = escapeHtml(details.INVOICE_NUMBER || '')
