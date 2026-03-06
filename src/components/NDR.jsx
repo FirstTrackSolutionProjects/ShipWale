@@ -540,9 +540,9 @@ const Listing = () => {
       )
     },
     {
-      field: 'Shipment Details', headerName: 'Shipment Details', width: 200,
+      field: 'Shipment Details', headerName: 'Shipment Details', width: 280, // Increased width
       renderCell: (params) => (
-        <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, height: 100, justifyContent: 'center' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, justifyContent: 'center' }}>
           <div>Pay Method: {params.row.pay_method} {params.row.pay_method === "COD" ? ` - ₹${parseInt(params.row.cod_amount)}` : ''}</div>
           <div>Service: {params.row.service_name} {params.row.shipping_mode ? `(${params.row.shipping_mode})` : ''}</div>
           <div>AWB: {params.row.awb}</div>
@@ -801,7 +801,7 @@ const Listing = () => {
             columns={columns}
             loading={isLoading}
             hideFooter={true}
-            rowHeight={100}
+            rowHeight={150} // Increased row height
             disableSelectionOnClick
             checkboxSelection
             onRowSelectionModelChange={setSelection}
