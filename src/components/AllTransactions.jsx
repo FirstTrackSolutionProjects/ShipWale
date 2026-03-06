@@ -36,8 +36,28 @@ const columns = [
   { field: 'amount', headerName: 'Amount', flex: 1, renderCell: p => {
       const v = Number(p.value);
       if (isNaN(v)) return '';
-      const sign = (p.row.type === 'expense' || p.row.type === 'dispute_charge' || p.row.type === 'extra') ? '-' : '+';
-      const cls = sign === '+' ? 'text-green-600' : 'text-red-600';
+
+      let sign = '+';
+      let cls = 'text-green-600'; // Default for credits
+
+      // Check for known debit types (including 'rto' for RTO charges)
+      if (['expense', 'dispute_charge', 'extra', 'rto'].includes(p.row.type)) {
+        sign = '-';
+        cls = 'text-red-600';
+      }
+      // Special handling for 'manual' type: the sign depends on the actual value
+      else if (p.row.type === 'manual') {
+        if (v < 0) { // If manual transaction amount is negative, it's a debit
+          sign = '-';
+          cls = 'text-red-600';
+        } else { // Otherwise, it's a credit
+          sign = '+';
+          cls = 'text-green-600';
+        }
+      }
+      // For any other type not explicitly handled (e.g., standard 'recharge' from Razorpay),
+      // it will default to '+' and green, which is appropriate.
+
       return <span className={cls}>{sign}{Math.abs(v)}</span>;
     }, minWidth: 80 },
   { field: 'remaining_balance', headerName: 'Balance After', flex: 1, renderCell: p => p.value != null ? Number(p.value) : '', minWidth: 100 },
