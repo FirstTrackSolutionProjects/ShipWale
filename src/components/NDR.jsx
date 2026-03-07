@@ -21,6 +21,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import ListAltIcon from '@mui/icons-material/ListAlt';
+import ShareIcon from '@mui/icons-material/Share'; // NEW IMPORT for the share button
 import { DataGrid, useGridApiRef } from '@mui/x-data-grid';
 import * as XLSX from 'xlsx';
 import DownloadIcon from '@mui/icons-material/Download';
@@ -28,6 +29,9 @@ import { toast } from "react-toastify";
 import convertToUTCISOString from "../helpers/convertToUTCISOString";
 import { PDFDocument } from "pdf-lib";
 import { DOMESTIC_SHIPMENT_REPORT_STATUS_ENUMS } from "@/Constants";
+
+// Import the new TrackingShareDialog component
+import TrackingShareDialog from './TrackingShareDialog'; // Ensure this path is correct relative to NDR.jsx
 
 const API_URL = import.meta.env.VITE_APP_API_URL;
 
@@ -387,8 +391,12 @@ const Listing = () => {
   const [selectedReport, setSelectedReport] = useState(null);
   const [isViewOpen, setIsViewOpen] = useState(false);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  // NEW STATE FOR TRACKING & SHARING
+  const [isTrackingShareOpen, setIsTrackingShareOpen] = useState(false);
+  const [currentTrackingShareData, setCurrentTrackingShareData] = useState(null);
+
   const [filters, setFilters] = useState({
-    awb: "",
+    awb_or_ref_id: "", // Renamed to a single input field
     ord_id: "",
     status: "",
     serviceId: "",
@@ -419,7 +427,7 @@ const Listing = () => {
   useEffect(() => {
     fetchServices();
     fetchReports();
-  }, [page, filters]);
+  }, [page, filters]); // Added filters to dependency array to re-fetch on filter changes
 
   const fetchServices = async () => {
     await fetch(`${API_URL}/services/active-shipments/domestic`, {
@@ -441,7 +449,6 @@ const Listing = () => {
     const endDate = filters.endDate ? convertToUTCISOString(new Date(filters.endDate).setHours(23,59,59,999)) : '';
     const queryParams = new URLSearchParams({
       page,
-      awb: filters.awb,
       ord_id: filters.ord_id,
       status: filters.status,
       serviceId: filters.serviceId,
@@ -449,8 +456,16 @@ const Listing = () => {
       endDate: endDate
     });
 
+    // Handle AWB or Reference ID filtering with a single parameter
+    if (filters.awb_or_ref_id) {
+      queryParams.append("awb_or_ref_id", filters.awb_or_ref_id);
+    }
+
+    const finalUrl = `${API_URL}/shipment/domestic/reports?${queryParams.toString()}`;
+    console.log("Fetching reports with URL:", finalUrl); // <--- DEBUG LOG
+
     try {
-      const response = await fetch(`${API_URL}/shipment/domestic/reports?${queryParams}`, {
+      const response = await fetch(finalUrl, {
         headers: {
           'Authorization': localStorage.getItem('token'),
         },
@@ -459,9 +474,13 @@ const Listing = () => {
       if (data.success) {
         setReports(data.data);
         setTotalPages(data.totalPages);
+      } else {
+        console.error('Failed to fetch reports:', data);
+        toast.error(data.message || 'Failed to fetch reports.');
       }
     } catch (error) {
       console.error('Error fetching reports:', error);
+      toast.error('Error fetching reports. Please check your network.');
     } finally {
       setIsLoading(false);
     }
@@ -511,6 +530,41 @@ const Listing = () => {
     setSelection({ ids: new Set() });
   };
 
+  // NEW: Function to handle tracking and sharing
+  const handleTrackAndShare = async (reportRow) => {
+    if (!reportRow?.awb) {
+      toast.error("AWB number is not available for this shipment.");
+      return;
+    }
+
+    setSelectedReport(reportRow); // Set the selected report for the dialog
+    setCurrentTrackingShareData(null); // Clear previous tracking data
+    setIsTrackingShareOpen(true); // Open the dialog immediately to show loading state
+
+    try {
+      const response = await fetch(`${API_URL}/shipment/track`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({ awb: reportRow.awb })
+      });
+      const result = await response.json();
+      if (result.success) {
+        setCurrentTrackingShareData(result); // Update with actual tracking data
+      } else {
+        toast.error(result.message || "Failed to fetch tracking data.");
+        console.error('Failed to fetch tracking data:', result);
+        setCurrentTrackingShareData({ success: false, message: result.message || "Failed to load tracking." }); // Provide error state
+      }
+    } catch (error) {
+      toast.error("Error fetching tracking data. Please check your network.");
+      console.error('Error fetching tracking data:', error);
+      setCurrentTrackingShareData({ success: false, message: "Network error or server issue." }); // Provide error state
+    }
+  };
+
   const columns = [
     { field: 'ref_id', headerName: 'Reference ID', width: 130 },
     {
@@ -540,7 +594,7 @@ const Listing = () => {
       )
     },
     {
-      field: 'Shipment Details', headerName: 'Shipment Details', width: 280, // Increased width
+      field: 'Shipment Details', headerName: 'Shipment Details', width: 280, 
       renderCell: (params) => (
         <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, justifyContent: 'center' }}>
           <div>Pay Method: {params.row.pay_method} {params.row.pay_method === "COD" ? ` - ₹${parseInt(params.row.cod_amount)}` : ''}</div>
@@ -559,31 +613,49 @@ const Listing = () => {
     {
       field: 'actions',
       headerName: 'Actions',
-      width: 220,
-      renderCell: (params) => (
-        <Box display="flex h-16" gap={1}>
-          <Button
-            variant="outlined"
-            size="small"
-            onClick={() => {
-              setSelectedReport(params.row);
-              setIsDetailsOpen(true);
-            }}
-          >
-            Details
-          </Button>
-          <Button
-            variant="contained"
-            size="small"
-            onClick={() => {
-              setSelectedReport(params.row);
-              setIsViewOpen(true);
-            }}
-          >
-            Status
-          </Button>
-        </Box>
-      )
+      width: 320, // Increased width to match AllShipmentReports.jsx for consistency
+      renderCell: (params) => {
+        // --- IMPORTANT: CHECK YOUR BROWSER'S DEVELOPER CONSOLE ---
+        console.log(`NDR Row AWB for ref_id ${params.row.ref_id}:`, params.row.awb);
+        // --- END DEBUG LOG ---
+
+        return (
+          <Box sx={{ display: 'flex', alignItems: 'center', height: '100%', gap: 1, flexWrap: 'wrap' }}> 
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={() => {
+                setSelectedReport(params.row);
+                setIsDetailsOpen(true);
+              }}
+            >
+              Details
+            </Button>
+            <Button
+              variant="contained"
+              size="small"
+              onClick={() => {
+                setSelectedReport(params.row);
+                setIsViewOpen(true);
+              }}
+            >
+              Status
+            </Button>
+            {/* NEW TRACK & SHARE BUTTON - Only shows if AWB is present */}
+            {params.row.awb && (
+              <Button
+                variant="contained"
+                color="secondary"
+                size="small"
+                startIcon={<ShareIcon />}
+                onClick={() => handleTrackAndShare(params.row)}
+              >
+                Track & Share
+              </Button>
+            )}
+          </Box>
+        );
+      }
     }
   ];
 
@@ -636,7 +708,6 @@ const Listing = () => {
               onChange={(e) => setFilters({ ...filters, ord_id: e.target.value })}
               sx={{ mr: 1, minWidth: '150px' }}
               InputLabelProps={{
-                // shrink: true,
                 sx: {
                   backgroundColor: 'white',
                   px: 0.5,
@@ -645,16 +716,17 @@ const Listing = () => {
                 },
               }}
             />
+
+            {/* START - Combined AWB / Reference ID Filter */}
             <TextField
-              label="AWB"
+              label="AWB / Reference ID" // Combined label
               variant="outlined"
               size="small"
-              name="awb"
-              value={filters.awb}
-              onChange={(e) => setFilters({ ...filters, awb: e.target.value })}
-              sx={{ mr: 1, minWidth: '150px' }}
+              name="awb_or_ref_id" // Use the new combined name
+              value={filters.awb_or_ref_id}
+              onChange={(e) => setFilters({ ...filters, awb_or_ref_id: e.target.value })}
+              sx={{ mr: 1, minWidth: '180px' }}
               InputLabelProps={{
-                // shrink: true,
                 sx: {
                   backgroundColor: 'white',
                   px: 0.5,
@@ -663,6 +735,8 @@ const Listing = () => {
                 },
               }}
             />
+            {/* END - Combined AWB / Reference ID Filter */}
+
             <FormControl size="small" sx={{ minWidth: '150px', mr: 1 }}>
               <InputLabel id="status-select-label" className="bg-white w-full">Status</InputLabel>
               <Select
@@ -695,7 +769,6 @@ const Listing = () => {
               onChange={(e) => setFilters({ ...filters, startDate: e.target.value })}
               sx={{ mr: 1, minWidth: '150px' }}
               InputLabelProps={{
-                // shrink: true,
                 sx: {
                   backgroundColor: 'white',
                   px: 0.5,
@@ -714,7 +787,6 @@ const Listing = () => {
               onChange={(e) => setFilters({ ...filters, endDate: e.target.value })}
               sx={{ mr: 1, minWidth: '150px' }}
               InputLabelProps={{
-                // shrink: true,
                 sx: {
                   backgroundColor: 'white',
                   px: 0.5,
@@ -749,12 +821,18 @@ const Listing = () => {
               onClick={async () => {
                 try {
                   const payload = {
-                    awb: filters.awb,
                     ord_id: filters.ord_id,
                     serviceId: filters.serviceId,
                     startDate: filters.startDate ? convertToUTCISOString(new Date(filters.startDate).setHours(0,0,0,0)) : '',
                     endDate: filters.endDate ? convertToUTCISOString(new Date(filters.endDate).setHours(23,59,59,999)) : ''
                   }
+                  // Add combined AWB or Reference ID to download payload
+                  if (filters.awb_or_ref_id) {
+                    payload.awb_or_ref_id = filters.awb_or_ref_id;
+                  }
+
+                  console.log("Download payload:", payload); // <--- DEBUG LOG
+
                   const response = await fetch(`${API_URL}/shipment/domestic/reports/download/merchant`, {
                     method: 'POST',
                     headers: {
@@ -853,6 +931,18 @@ const Listing = () => {
           shipment={selectedReport}
         />
       )}
+
+      {/* NEW: Tracking & Share Dialog */}
+      <TrackingShareDialog
+        isOpen={isTrackingShareOpen}
+        onClose={() => {
+          setIsTrackingShareOpen(false);
+          setCurrentTrackingShareData(null); // Clear data when closing
+          setSelectedReport(null); // Clear selected report
+        }}
+        trackingData={currentTrackingShareData}
+        report={selectedReport} // Pass the full report row for sharing details
+      />
     </div>
   );
 };
