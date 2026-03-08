@@ -22,11 +22,15 @@ import CloseIcon from '@mui/icons-material/Close';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import ListAltIcon from '@mui/icons-material/ListAlt';
+import ShareIcon from '@mui/icons-material/Share'; // NEW IMPORT for the share button
 import * as XLSX from 'xlsx';
 import DownloadIcon from '@mui/icons-material/Download';
 import { toast } from "react-toastify";
 import convertToUTCISOString from "../helpers/convertToUTCISOString";
 import { DOMESTIC_SHIPMENT_REPORT_STATUS_ENUMS } from "@/Constants";
+
+// Import the new TrackingShareDialog component
+import TrackingShareDialog from './TrackingShareDialog'; // You'll create this file
 
 const API_URL = import.meta.env.VITE_APP_API_URL;
 
@@ -40,6 +44,7 @@ const timestampToDate = (timestamp) => {
   return formattedTimestamp;
 }
 
+// ... (DelhiveryStatusCard, DelhiveryB2BStatusCard, MovinStatusCard, PickrrStatusCard, ShiprocketStatusCard, EnviaCard, ReportCard - these remain unchanged)
 const DelhiveryStatusCard = ({ report, status }) => {
   return (
     <div>
@@ -181,6 +186,7 @@ const ReportCard = ({ report, status }) => {
   )
 }
 
+
 const ViewDialog = ({ isOpen, onClose, report }) => {
   const [status, setStatus] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -267,6 +273,7 @@ const ViewDialog = ({ isOpen, onClose, report }) => {
   );
 };
 
+// ... (Pagination component remains unchanged)
 const Pagination = ({ currentPage, totalPages, onPageChange }) => {
   const pages = [];
   
@@ -352,6 +359,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
   );
 };
 
+
 const Listing = () => {
   const [reports, setReports] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -360,10 +368,14 @@ const Listing = () => {
   const [selectedReport, setSelectedReport] = useState(null);
   const [isViewOpen, setIsViewOpen] = useState(false);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  // NEW STATE FOR TRACKING & SHARING
+  const [isTrackingShareOpen, setIsTrackingShareOpen] = useState(false);
+  const [currentTrackingShareData, setCurrentTrackingShareData] = useState(null);
+
   const [filters, setFilters] = useState({
     merchant_email: "",
     merchant_name: "",
-    awb: "",
+    awb_or_ref_id: "", // Renamed to a single input field
     ord_id: "",
     status: "",
     serviceId: "",
@@ -375,7 +387,7 @@ const Listing = () => {
   useEffect(() => {
     fetchServices();
     fetchReports();
-  }, [page, filters]);
+  }, [page, filters]); // Added filters to dependency array to re-fetch on filter changes
 
   const fetchServices = async () => {
     await fetch(`${API_URL}/services/active-shipments/domestic`, {
@@ -399,7 +411,6 @@ const Listing = () => {
       page,
       merchant_email: filters.merchant_email,
       merchant_name: filters.merchant_name,
-      awb: filters.awb,
       ord_id: filters.ord_id,
       status: filters.status,
       serviceId: filters.serviceId,
@@ -407,8 +418,16 @@ const Listing = () => {
       endDate: endDate
     });
 
+    // Handle AWB or Reference ID filtering with a single parameter
+    if (filters.awb_or_ref_id) {
+      queryParams.append("awb_or_ref_id", filters.awb_or_ref_id);
+    }
+
+    const finalUrl = `${API_URL}/shipment/domestic/reports/admin?${queryParams.toString()}`;
+    console.log("Fetching reports with URL:", finalUrl); // <--- DEBUG LOG
+
     try {
-      const response = await fetch(`${API_URL}/shipment/domestic/reports/admin?${queryParams}`, {
+      const response = await fetch(finalUrl, {
         headers: {
           'Authorization': localStorage.getItem('token'),
         },
@@ -417,9 +436,13 @@ const Listing = () => {
       if (data.success) {
         setReports(data.reports);
         setTotalPages(data.totalPages);
+      } else {
+        console.error('Failed to fetch reports:', data);
+        toast.error(data.message || 'Failed to fetch reports.');
       }
     } catch (error) {
       console.error('Error fetching reports:', error);
+      toast.error('Error fetching reports. Please check your network.');
     } finally {
       setIsLoading(false);
     }
@@ -448,11 +471,47 @@ const Listing = () => {
     })
   };
 
+  // NEW: Function to handle tracking and sharing
+  const handleTrackAndShare = async (reportRow) => {
+    if (!reportRow?.awb) {
+      toast.error("AWB number is not available for this shipment.");
+      return;
+    }
+
+    setSelectedReport(reportRow); // Set the selected report for the dialog
+    setCurrentTrackingShareData(null); // Clear previous tracking data
+    setIsTrackingShareOpen(true); // Open the dialog immediately to show loading state
+
+    try {
+      const response = await fetch(`${API_URL}/shipment/track`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({ awb: reportRow.awb })
+      });
+      const result = await response.json();
+      if (result.success) {
+        setCurrentTrackingShareData(result); // Update with actual tracking data
+      } else {
+        toast.error(result.message || "Failed to fetch tracking data.");
+        console.error('Failed to fetch tracking data:', result);
+        setCurrentTrackingShareData({ success: false, message: result.message || "Failed to load tracking." }); // Provide error state
+      }
+    } catch (error) {
+      toast.error("Error fetching tracking data. Please check your network.");
+      console.error('Error fetching tracking data:', error);
+      setCurrentTrackingShareData({ success: false, message: "Network error or server issue." }); // Provide error state
+    }
+  };
+
+
   const columns = [
     { field: 'ref_id', headerName: 'Reference ID', width: 130 },
     { field: 'merchant_details', headerName: 'Merchant Details', width: 250,
       renderCell: (params) => (
-        <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, height: 100, justifyContent: 'center' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, height: 130, justifyContent: 'center' }}>
           <div className="font-bold">{params.row.fullName}</div>
           <div>{params.row.email}</div>
           <div>{params.row.phone}</div>
@@ -461,7 +520,7 @@ const Listing = () => {
     },
     { field: 'customer_details', headerName: 'Customer Details', width: 250,
       renderCell: (params) => (
-        <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, height: 100, justifyContent: 'center' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, height: 130, justifyContent: 'center' }}>
           <div className="font-bold">{params.row.customer_name}</div>
           <div>{params.row.customer_email}</div>
           <div>{params.row.customer_mobile}</div>
@@ -471,7 +530,7 @@ const Listing = () => {
     {
       field: 'from_to', headerName: 'Origin', width: 200,
       renderCell: (params) => (
-        <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, height: 100, justifyContent: 'center' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, height: 130, justifyContent: 'center' }}>
           <div>{params.row.warehouse_city}, {params.row.warehouse_state}</div>
           <div>{params.row.warehouse_country} - {params.row.warehouse_pin}</div>
         </Box>
@@ -479,7 +538,7 @@ const Listing = () => {
     },
     { field: 'to_address', headerName: 'Destination', width: 200,
       renderCell: (params) => (
-        <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, height: 100, justifyContent: 'center' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, height: 130, justifyContent: 'center' }}>
           <div>{params.row.shipping_city}, {params.row.shipping_state}</div>
           <div>{params.row.shipping_country} - {params.row.shipping_postcode}</div>
         </Box>
@@ -487,7 +546,7 @@ const Listing = () => {
     },
     { field: 'shipment_details', headerName: 'Shipment Details', width: 300,
       renderCell: (params) => (
-        <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, justifyContent: 'center' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, justifyContent: 'center', height: 130 }}>
           <div>Pay Method: {params.row.pay_method} {params.row.pay_method === "COD" ? ` - ₹${parseInt(params.row.cod_amount)}` : ''}</div>
           <div>Service: {params.row.service_name} {params.row.shipping_mode ? `(${params.row.shipping_mode})` : ''}</div>
           <div>AWB: {params.row.awb}</div>
@@ -504,10 +563,9 @@ const Listing = () => {
     {
       field: 'actions',
       headerName: 'Actions',
-      width: 280,
+      width: 320,
       renderCell: (params) => (
-        <Box sx={{ display: 'flex', alignItems: 'center', height: '100%', gap: 1 }}>
-          <Box>
+        <Box sx={{ display: 'flex', alignItems: 'center', height: '100%', gap: 1, flexWrap: 'wrap' }}>
             <Button
               variant="outlined"
               size="small"
@@ -518,9 +576,7 @@ const Listing = () => {
             >
               Details
             </Button>
-          </Box>
-          <Box>
-            <Button
+            {/* <Button
               variant="contained"
               size="small"
               onClick={() => {
@@ -529,10 +585,18 @@ const Listing = () => {
               }}
             >
               Status
-            </Button>
-          </Box>
+            </Button> */}
+          {params.row.awb && ( // Only show if AWB exists
+              <Button
+                variant="contained"
+                color="secondary"
+                size="small"
+                onClick={() => handleTrackAndShare(params.row)}
+              >
+                Track
+              </Button>
+          )}
           {!params.row.cancelled && [1, 2, 6].includes(params.row.serviceId) && (
-            <Box>
               <Button
                 variant="contained"
                 color="error"
@@ -541,7 +605,6 @@ const Listing = () => {
               >
                 Cancel
               </Button>
-            </Box>
           )}
         </Box>
       )
@@ -585,7 +648,6 @@ const Listing = () => {
               onChange={(e) => setFilters({ ...filters, merchant_name: e.target.value })}
               sx={{ mr: 1, minWidth: '200px' }}
               InputLabelProps={{
-                // shrink: true,
                 sx: {
                   backgroundColor: 'white',
                   px: 0.5,
@@ -603,7 +665,6 @@ const Listing = () => {
               onChange={(e) => setFilters({ ...filters, merchant_email: e.target.value })}
               sx={{ mr: 1, minWidth: '200px' }}
               InputLabelProps={{
-                // shrink: true,
                 sx: {
                   backgroundColor: 'white',
                   px: 0.5,
@@ -621,7 +682,6 @@ const Listing = () => {
               onChange={(e) => setFilters({ ...filters, ord_id: e.target.value })}
               sx={{ mr: 1, minWidth: '150px' }}
               InputLabelProps={{
-                // shrink: true,
                 sx: {
                   backgroundColor: 'white',
                   px: 0.5,
@@ -630,6 +690,27 @@ const Listing = () => {
                 },
               }}
             />
+
+            {/* START - Combined AWB / Reference ID Filter */}
+            <TextField
+              label="AWB / Reference ID" // Combined label
+              variant="outlined"
+              size="small"
+              name="awb_or_ref_id" // Use the new combined name
+              value={filters.awb_or_ref_id}
+              onChange={(e) => setFilters({ ...filters, awb_or_ref_id: e.target.value })}
+              sx={{ mr: 1, minWidth: '180px' }}
+              InputLabelProps={{
+                sx: {
+                  backgroundColor: 'white',
+                  px: 0.5,
+                  width: '100%',
+                  borderRadius: 1,
+                },
+              }}
+            />
+            {/* END - Combined AWB / Reference ID Filter */}
+
             <FormControl size="small" sx={{ minWidth: '150px', mr: 1 }}>
               <InputLabel id="status-select-label" className="bg-white w-full">Status</InputLabel>
               <Select
@@ -652,24 +733,7 @@ const Listing = () => {
                 ))}
               </Select>
             </FormControl>
-            <TextField
-              label="AWB"
-              variant="outlined"
-              size="small"
-              name="awb"
-              value={filters.awb}
-              onChange={(e) => setFilters({ ...filters, awb: e.target.value })}
-              sx={{ mr: 1, minWidth: '150px' }}
-              InputLabelProps={{
-                // shrink: true,
-                sx: {
-                  backgroundColor: 'white',
-                  px: 0.5,
-                  width: '100%',
-                  borderRadius: 1,
-                },
-              }}
-            />
+            
             <TextField
               label="Start Date"
               variant="outlined"
@@ -680,7 +744,6 @@ const Listing = () => {
               onChange={(e) => setFilters({ ...filters, startDate: e.target.value })}
               sx={{ mr: 1, minWidth: '150px' }}
               InputLabelProps={{
-                // shrink: true,
                 sx: {
                   backgroundColor: 'white',
                   px: 0.5,
@@ -699,7 +762,6 @@ const Listing = () => {
               onChange={(e) => setFilters({ ...filters, endDate: e.target.value })}
               sx={{ mr: 1, minWidth: '150px' }}
               InputLabelProps={{
-                // shrink: true,
                 sx: {
                   backgroundColor: 'white',
                   px: 0.5,
@@ -736,12 +798,18 @@ const Listing = () => {
                   const payload = {
                     merchant_email: filters.merchant_email,
                     merchant_name: filters.merchant_name,
-                    awb: filters.awb,
                     ord_id: filters.ord_id,
                     serviceId: filters.serviceId,
                     startDate: filters.startDate ? convertToUTCISOString(new Date(filters.startDate).setHours(0,0,0,0)) : '',
                     endDate: filters.endDate ? convertToUTCISOString(new Date(filters.endDate).setHours(23,59,59,999)) : ''
                   }
+                  // Add combined AWB or Reference ID to download payload
+                  if (filters.awb_or_ref_id) {
+                    payload.awb_or_ref_id = filters.awb_or_ref_id;
+                  }
+
+                  console.log("Download payload:", payload); // <--- DEBUG LOG
+
                   const response = await fetch(`${API_URL}/shipment/domestic/reports/download/admin`, {
                     method: 'POST',
                     headers: {
@@ -787,7 +855,7 @@ const Listing = () => {
             columns={columns}
             loading={isLoading}
             hideFooter={true}
-            rowHeight={150} // Increased row height to accommodate more content
+            rowHeight={130} // Set row height to 130
             disableSelectionOnClick
             getRowId={(row) => row.ref_id}
             sx={{
@@ -837,10 +905,23 @@ const Listing = () => {
           shipment={selectedReport}
         />
       )}
+
+      {/* NEW: Tracking & Share Dialog */}
+      <TrackingShareDialog
+        isOpen={isTrackingShareOpen}
+        onClose={() => {
+          setIsTrackingShareOpen(false);
+          setCurrentTrackingShareData(null); // Clear data when closing
+          setSelectedReport(null); // Clear selected report
+        }}
+        trackingData={currentTrackingShareData}
+        report={selectedReport} // Pass the full report row for sharing details
+      />
     </div>
   );
 };
 
+// ... (OrderDetailsDialog component remains unchanged)
 const OrderDetailsDialog = ({ isOpen, onClose, orderId, shipment }) => {
   const [boxes, setBoxes] = useState([]);
   const [items, setItems] = useState([]);
@@ -1131,6 +1212,7 @@ const OrderDetailsDialog = ({ isOpen, onClose, orderId, shipment }) => {
     </Dialog>
   );
 };
+
 
 export default function AllShipmentReports() {
   return (
