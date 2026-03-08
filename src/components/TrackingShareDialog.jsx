@@ -149,10 +149,14 @@ const TrackingShareDialog = ({ isOpen, onClose, trackingData, report }) => {
       message += "_No detailed scan history available yet._\n";
     }
 
-    // Optional: Add a link to your public tracking page if applicable
-    // Example: message += `\n\n🔗 *Live Tracking Link:* https://yourdomain.com/tracking?awb=${report.awb}`;
+    const trackingLink = report.awb ? `${window.location.origin}/tracking?awb=${report.awb}` : 'N/A';
+    message += `\n\n🔗 *Live Tracking Link:* ${trackingLink}`;
     
     return message;
+  };
+
+  const getTrackingLink = () => {
+    return report.awb ? `${window.location.origin}/tracking?awb=${report.awb}` : '';
   };
 
   // Handler for copying tracking information to clipboard
@@ -161,6 +165,18 @@ const TrackingShareDialog = ({ isOpen, onClose, trackingData, report }) => {
     navigator.clipboard.writeText(message)
       .then(() => toast.success("Tracking info copied to clipboard!"))
       .catch((err) => toast.error("Failed to copy tracking info."));
+  };
+
+  // Handler for copying only the tracking link to clipboard
+  const handleCopyTrackingLink = () => {
+    const link = getTrackingLink();
+    if (link && link !== 'N/A') {
+      navigator.clipboard.writeText(link)
+        .then(() => toast.success("Tracking link copied to clipboard!"))
+        .catch(() => toast.error("Failed to copy tracking link."));
+    } else {
+      toast.error("No tracking link available.");
+    }
   };
 
   // Handler for sharing tracking information via WhatsApp
@@ -268,11 +284,22 @@ const TrackingShareDialog = ({ isOpen, onClose, trackingData, report }) => {
       </DialogContent>
 
       <Box sx={{ px: { xs: 2, sm: 3 }, py: 2, borderTop: '1px solid #eee', display: 'flex', justifyContent: 'flex-end', gap: 1.5 }}>
+        {report?.awb && (
+          <Button
+            variant="outlined"
+            startIcon={<ContentCopyIcon />}
+            onClick={handleCopyTrackingLink}
+            disabled={!report?.awb} // Disable if AWB is not available
+            sx={{ textTransform: 'none' }}
+          >
+            Copy Link
+          </Button>
+        )}
         <Button
           variant="outlined"
           startIcon={<ContentCopyIcon />}
           onClick={handleCopyTrackingInfo}
-          disabled={loading || !trackingData || !trackingData.success} // Disable if still loading or failed
+          disabled={loading || !trackingData || !trackingData.success}
           sx={{ textTransform: 'none' }}
         >
           Copy Info
@@ -282,7 +309,7 @@ const TrackingShareDialog = ({ isOpen, onClose, trackingData, report }) => {
           color="success"
           startIcon={<WhatsAppIcon />}
           onClick={handleShareWhatsApp}
-          disabled={loading || !trackingData || !trackingData.success} // Disable if still loading or failed
+          disabled={loading || !trackingData || !trackingData.success}
           sx={{ textTransform: 'none' }}
         >
           Share on WhatsApp

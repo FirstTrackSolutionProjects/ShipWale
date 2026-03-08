@@ -1,46 +1,61 @@
 import React, { useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'; // NEW IMPORT
 import { toast } from 'react-toastify'
 const API_URL = import.meta.env.VITE_APP_API_URL
 const Tracking = () => {
   const [isTracking, setIsTracking] = useState(false)
-    const [formData,setFormData] = useState({
-        awb : ''
-    })
+  const location = useLocation(); // NEW
+  const [formData,setFormData] = useState({
+      awb : ''
+  })
 
-    useEffect(() => {
-        if (localStorage.getItem('track')){
-            setFormData({id: localStorage.getItem('track'), isWaybill: true})
-            localStorage.setItem('track','')
-            // handleSubmit(1)
-        }
-    }, [])
+  useEffect(() => {
+      const queryParams = new URLSearchParams(location.search);
+      const awbFromUrl = queryParams.get('awb');
 
-    const handleChange = (e) => {
-        const { name, value, type, checked } = e.target;
-        setFormData((prevData) => ({
-          ...prevData,
-          [name]:type === 'radio' ? checked : value
-        }));
-      };
-    const [trackingData,setTrackingData] = useState(null)
-    const closeResultModal = () => {
-        setTrackingData(null)
-    }
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setIsTracking(true)
-        try{
-            const data = await fetch(`${API_URL}/shipment/track`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify(formData)
+      if (awbFromUrl) {
+          setFormData({ awb: awbFromUrl });
+          // Optionally, you might want to automatically trigger tracking here
+          // but for consistency with the existing manual submit flow, 
+          // we'll just pre-fill the field for now.
+      } else if (localStorage.getItem('track')){
+          setFormData({ awb: localStorage.getItem('track') });
+          localStorage.removeItem('track'); // Clear it once used
+      }
+  }, [location.search]); // Depend on location.search to react to URL changes
+
+  const handleChange = (e) => {
+      const { name, value } = e.target; // Removed 'type', 'checked' as only 'awb' is text
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value
+      }));
+    };
+  const [trackingData,setTrackingData] = useState(null)
+  const closeResultModal = () => {
+      setTrackingData(null)
+  }
+  const handleSubmit = async (e) => {
+      e.preventDefault();
+      // Ensure AWB is present before tracking
+      if (!formData.awb) {
+        toast.error("Please enter an AWB number to track.");
+        return;
+      }
+      setIsTracking(true)
+      try{
+          const data = await fetch(`${API_URL}/shipment/track`, {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+                  'Accept': 'application/json'
+              },
+                body: JSON.stringify({ awb: formData.awb }) // Ensure only AWB is sent
             }).then(response => response.json())
             setTrackingData(data)
         } catch (e) {
-            console.log(e)
+            console.error("Tracking error:", e); // Use console.error for errors
+            toast.error("An error occurred while tracking. Please try again.");
         } finally {
             setIsTracking(false)
         }
@@ -74,10 +89,11 @@ const Tracking = () => {
             onChange={handleChange}
             placeholder="Enter Tracking ID / AWB"
             className="flex-grow px-4 py-2 text-sm outline-none focus:bg-red-50 transition-all"
+            disabled={isTracking} // Disable input while tracking
           />
 
-          <button type='submit' className="px-5 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold transition-all">
-            TRACK
+          <button type='submit' className="px-5 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold transition-all" disabled={isTracking}>
+            {isTracking ? 'Tracking...' : 'TRACK'}
           </button>
         </form>
       </div>
