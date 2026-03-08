@@ -631,7 +631,7 @@ const Listing = () => {
             >
               Details
             </Button>
-            <Button
+            {/* <Button
               variant="contained"
               size="small"
               onClick={() => {
@@ -640,17 +640,16 @@ const Listing = () => {
               }}
             >
               Status
-            </Button>
+            </Button> */}
             {/* NEW TRACK & SHARE BUTTON - Only shows if AWB is present */}
             {params.row.awb && (
               <Button
                 variant="contained"
                 color="secondary"
                 size="small"
-                startIcon={<ShareIcon />}
                 onClick={() => handleTrackAndShare(params.row)}
               >
-                Track & Share
+                Track
               </Button>
             )}
           </Box>

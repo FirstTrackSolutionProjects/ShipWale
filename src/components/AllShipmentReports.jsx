@@ -563,10 +563,9 @@ const Listing = () => {
     {
       field: 'actions',
       headerName: 'Actions',
-      width: 320, // Increased width to accommodate the new button
+      width: 320,
       renderCell: (params) => (
-        <Box sx={{ display: 'flex', alignItems: 'center', height: '100%', gap: 1 }}>
-          <Box>
+        <Box sx={{ display: 'flex', alignItems: 'center', height: '100%', gap: 1, flexWrap: 'wrap' }}>
             <Button
               variant="outlined"
               size="small"
@@ -577,9 +576,7 @@ const Listing = () => {
             >
               Details
             </Button>
-          </Box>
-          <Box>
-            <Button
+            {/* <Button
               variant="contained"
               size="small"
               onClick={() => {
@@ -588,25 +585,18 @@ const Listing = () => {
               }}
             >
               Status
-            </Button>
-          </Box>
-          {/* NEW TRACK & SHARE BUTTON */}
+            </Button> */}
           {params.row.awb && ( // Only show if AWB exists
-            <Box>
               <Button
                 variant="contained"
-                color="secondary" // You can choose another color (e.g., 'info', 'primary')
+                color="secondary"
                 size="small"
-                startIcon={<ShareIcon />}
                 onClick={() => handleTrackAndShare(params.row)}
               >
-                Track & Share
+                Track
               </Button>
-            </Box>
           )}
-          {/* Existing Cancel button */}
           {!params.row.cancelled && [1, 2, 6].includes(params.row.serviceId) && (
-            <Box>
               <Button
                 variant="contained"
                 color="error"
@@ -615,7 +605,6 @@ const Listing = () => {
               >
                 Cancel
               </Button>
-            </Box>
           )}
         </Box>
       )
