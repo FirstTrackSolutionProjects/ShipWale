@@ -84,47 +84,73 @@ const TrackingShareDialog = ({ isOpen, onClose, trackingData, report }) => {
   // Generate a comprehensive tracking message for sharing
   const generateTrackingMessage = () => {
     if (!report) return "No shipment details available.";
-    if (loading || !trackingData || !trackingData.success) {
-      return `Shipment Status for AWB: ${report.awb || 'N/A'}\n` +
-             `Order ID: ${report.ord_id || 'N/A'}\n` +
-             `Customer: ${report.customer_name || 'N/A'}\n` +
-             `Destination: ${report.shipping_city}, ${report.shipping_state} - ${report.shipping_postcode || 'N/A'}\n\n` +
-             (trackingData?.message || "Tracking information is currently unavailable or still loading.");
-    }
 
-    let message = `*Shipment Tracking Update*\n\n`;
+    let message = `*🚚 ShipWale - Shipment Tracking Update 🚚*\n\n`;
+
+    // Shipment Details Section
+    message += `*----- Shipment Details ----*\n`;
     message += `📦 *AWB:* ${report.awb || 'N/A'}\n`;
     message += `🛒 *Order ID:* ${report.ord_id || 'N/A'}\n`;
     message += `👤 *Customer:* ${report.customer_name || 'N/A'}\n`;
-    message += `📍 *Destination:* ${report.shipping_city}, ${report.shipping_state} - ${report.shipping_postcode || 'N/A'}\n\n`;
+    message += `📍 *Destination:* ${report.shipping_city || 'N/A'}, ${report.shipping_state || 'N/A'} - ${report.shipping_postcode || 'N/A'}\n`;
+    message += `*----------------------------*\n\n`;
+
+
+    if (loading || !trackingData || !trackingData.success) {
+      // Improved message for loading/unavailable data
+      message += `*🗓️ Tracking History:*\n`;
+      message += `_Tracking information is currently unavailable or still loading._\n`;
+      message += `_Please check back shortly._\n`;
+      return message;
+    }
 
     const statusUpdates = Array.isArray(trackingData.data) ? trackingData.data : (trackingData.data ? [trackingData.data] : []);
     const cleanedStatusUpdates = statusUpdates.filter(Boolean); // Filter out null/undefined scans
 
+    message += `*🗓️ Tracking History:*\n`;
     if (cleanedStatusUpdates.length > 0) {
-      message += `*Latest Status Updates:*\n`;
       // Reversing to show latest first, similar to UI
       cleanedStatusUpdates.slice().reverse().forEach((scan) => {
-        let scanText = "";
+        let formattedTimestamp = '';
+        let status = 'N/A';
+        let description = '';
+        let location = '';
         const serviceId = Number(trackingData.id);
 
-        if (serviceId === 1 && scan.scan_remark) { // Delhivery B2B
-          scanText = `${timestampToDate(scan.scan_timestamp)} | ${scan.location || 'N/A'} | ${scan.scan_remark}`;
-        } else if (serviceId === 2 && (scan.ScanDetail || scan.Instructions)) { // Delhivery B2C
-          scanText = `${timestampToDate(scan.ScanDetail?.ScanDateTime || '')} | ${scan.ScanDetail?.ScannedLocation || 'N/A'} | ${scan.ScanDetail?.Instructions || scan.Instructions || 'N/A'}`;
-        } else if (scan.status) { // Generic tracking
-          scanText = `${timestampToDate(scan.timestamp || '')} | ${scan.location || 'N/A'} | ${scan.status} - ${scan.description || 'N/A'}`;
+        if (serviceId === 1) { // Delhivery B2B
+          formattedTimestamp = timestampToDate(scan.scan_timestamp);
+          status = scan.scan_remark || 'N/A';
+          location = scan.location || '';
+        } else if (serviceId === 2) { // Delhivery B2C
+          // Use ScanDetail if available, otherwise assume scan object itself holds the details
+          const detail = scan.ScanDetail ?? scan; 
+          formattedTimestamp = timestampToDate(detail.ScanDateTime);
+          status = detail.Instructions || detail.Scan || 'N/A';
+          location = detail.ScannedLocation || '';
+        } else { // Generic tracking
+          formattedTimestamp = timestampToDate(scan.timestamp);
+          status = scan.status || 'N/A';
+          description = scan.description || '';
+          location = scan.location || '';
         }
-        if (scanText) {
-          message += `• ${scanText.trim()}\n`;
+        
+        // Construct the scan text more consistently for better readability
+        let scanText = `• *${formattedTimestamp}* - *${status}*`;
+        if (description) {
+            scanText += ` (${description})`;
         }
+        if (location) {
+            scanText += ` at ${location}`;
+        }
+        
+        message += `${scanText.trim()}\n`;
       });
     } else {
-      message += "No detailed scan history available yet.\n";
+      message += "_No detailed scan history available yet._\n";
     }
 
     // Optional: Add a link to your public tracking page if applicable
-    // Example: message += `\nTrack your shipment live: https://yourdomain.com/tracking?awb=${report.awb}`;
+    // Example: message += `\n\n🔗 *Live Tracking Link:* https://yourdomain.com/tracking?awb=${report.awb}`;
     
     return message;
   };
