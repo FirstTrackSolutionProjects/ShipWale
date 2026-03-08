@@ -570,7 +570,7 @@ const Listing = () => {
     {
       field: 'customer_details', headerName: 'Customer', width: 200,
       renderCell: (params) => (
-        <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, height: 100, justifyContent: 'center' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, height: 130, justifyContent: 'center' }}>
           <div>{params.row.customer_name}</div>
           <div>{params.row.customer_email}</div>
           <div>{params.row.customer_mobile}</div>
@@ -579,7 +579,7 @@ const Listing = () => {
     },
     { field: 'from_address', headerName: 'Origin', width: 200,
       renderCell: (params) => (
-        <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, height: 100, justifyContent: 'center' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, height: 130, justifyContent: 'center' }}>
           <div>{params.row.warehouse_city}, {params.row.warehouse_state}</div>
           <div>{params.row.warehouse_country} - {params.row.warehouse_pin}</div>
         </Box>
@@ -587,7 +587,7 @@ const Listing = () => {
     },
     { field: 'to_address', headerName: 'Destination', width: 200,
       renderCell: (params) => (
-        <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, height: 100, justifyContent: 'center' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, height: 130, justifyContent: 'center' }}>
           <div>{params.row.shipping_city}, {params.row.shipping_state}</div>
           <div>{params.row.shipping_country} - {params.row.shipping_postcode}</div>
         </Box>
