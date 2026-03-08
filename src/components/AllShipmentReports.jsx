@@ -511,7 +511,7 @@ const Listing = () => {
     { field: 'ref_id', headerName: 'Reference ID', width: 130 },
     { field: 'merchant_details', headerName: 'Merchant Details', width: 250,
       renderCell: (params) => (
-        <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, height: 100, justifyContent: 'center' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, flexGrow: 1, p: 0.5 }}> {/* Removed fixed height and justifyContent */}
           <div className="font-bold">{params.row.fullName}</div>
           <div>{params.row.email}</div>
           <div>{params.row.phone}</div>
@@ -520,7 +520,7 @@ const Listing = () => {
     },
     { field: 'customer_details', headerName: 'Customer Details', width: 250,
       renderCell: (params) => (
-        <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, height: 100, justifyContent: 'center' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, flexGrow: 1, p: 0.5 }}> {/* Removed fixed height and justifyContent */}
           <div className="font-bold">{params.row.customer_name}</div>
           <div>{params.row.customer_email}</div>
           <div>{params.row.customer_mobile}</div>
@@ -530,7 +530,7 @@ const Listing = () => {
     {
       field: 'from_to', headerName: 'Origin', width: 200,
       renderCell: (params) => (
-        <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, height: 100, justifyContent: 'center' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, flexGrow: 1, p: 0.5 }}> {/* Removed fixed height and justifyContent */}
           <div>{params.row.warehouse_city}, {params.row.warehouse_state}</div>
           <div>{params.row.warehouse_country} - {params.row.warehouse_pin}</div>
         </Box>
@@ -538,7 +538,7 @@ const Listing = () => {
     },
     { field: 'to_address', headerName: 'Destination', width: 200,
       renderCell: (params) => (
-        <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, height: 100, justifyContent: 'center' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, flexGrow: 1, p: 0.5 }}> {/* Removed fixed height and justifyContent */}
           <div>{params.row.shipping_city}, {params.row.shipping_state}</div>
           <div>{params.row.shipping_country} - {params.row.shipping_postcode}</div>
         </Box>
@@ -546,7 +546,7 @@ const Listing = () => {
     },
     { field: 'shipment_details', headerName: 'Shipment Details', width: 300,
       renderCell: (params) => (
-        <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, justifyContent: 'center' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, flexGrow: 1, p: 0.5 }}>
           <div>Pay Method: {params.row.pay_method} {params.row.pay_method === "COD" ? ` - ₹${parseInt(params.row.cod_amount)}` : ''}</div>
           <div>Service: {params.row.service_name} {params.row.shipping_mode ? `(${params.row.shipping_mode})` : ''}</div>
           <div>AWB: {params.row.awb}</div>
@@ -866,7 +866,8 @@ const Listing = () => {
             columns={columns}
             loading={isLoading}
             hideFooter={true}
-            rowHeight={150} // Increased row height to accommodate more content
+            rowHeight="auto" // Set to auto to enable dynamic row height
+            getRowHeight={() => 'auto'} // Function to determine row height dynamically
             disableSelectionOnClick
             getRowId={(row) => row.ref_id}
             sx={{
@@ -889,6 +890,14 @@ const Listing = () => {
               },
               '& .MuiDataGrid-row': {
                 borderBottom: '1px solid #000',
+              },
+              // Ensure cell content allows for dynamic height
+              '& .MuiDataGrid-cell': {
+                alignItems: 'flex-start', // Align content to top within the cell
+                py: 1, // Add vertical padding to cells for spacing
+                // Remove specific cell height to allow content to dictate height
+                maxHeight: 'unset !important', 
+                height: 'unset !important',
               },
             }}
           />
