@@ -102,12 +102,12 @@ const Warehouse = () => {
 
 	const baseColumns = {
 		WAREHOUSE_ID: { headerName: 'ID', minWidth: 90 },
-		WAREHOUSE_NAME: { headerName: 'Warehouse Name', minWidth: 200, filter: true, filterConfig: { type: 'text', default: '' } },
-		WAREHOUSE_PHONE: { headerName: 'Warehouse Phone', minWidth: 150, filter: true, filterConfig: { type: 'text', default: '' } },
-		WAREHOUSE_ADDRESS: { headerName: 'Warehouse Address', minWidth: 250, filter: false },
+		WAREHOUSE_NAME: { headerName: 'Warehouse Name', minWidth: 200, filter: true, config: { maxLength: 32}, filterConfig: { type: 'text', default: '' } },
+		WAREHOUSE_PHONE: { headerName: 'Warehouse Phone', minWidth: 150, filter: true, config: { maxLength: 10, minLength: 10 }, filterConfig: { type: 'text', default: '' } },
+		WAREHOUSE_ADDRESS: { headerName: 'Warehouse Address', minWidth: 250, config: { maxLength: 100 }, filter: false },
 		WAREHOUSE_CITY: { headerName: 'City', minWidth: 120, filter: false },
 		WAREHOUSE_STATE: { headerName: 'State', minWidth: 120, filter: false },
-		WAREHOUSE_PINCODE: { headerName: 'Pincode', minWidth: 120, filter: false },
+		WAREHOUSE_PINCODE: { headerName: 'Pincode', minWidth: 120, config: { maxLength: 6, minLength: 6 }, filter: false },
 		USER_NAME: { headerName: 'User Name', minWidth: 200, roles: [USER_ROLES.ADMIN], filter: true, filterConfig: { type: 'text', default: '' } },
 		USER_EMAIL: { headerName: 'User Email', minWidth: 220, roles: [USER_ROLES.ADMIN], filter: true, filterConfig: { type: 'text', default: '' } },
 		BUSINESS_NAME: { headerName: 'Business Name', minWidth: 200, roles: [USER_ROLES.ADMIN], filter: true, filterConfig: { type: 'text', default: '' } },
@@ -392,6 +392,7 @@ const Warehouse = () => {
 										name={key}
 										label={baseColumns[key].headerName}
 										key={key}
+										config={baseColumns[key].config}
 										formData={filters}
 										handleChange={handleFilterChange}
 									/>
@@ -569,7 +570,7 @@ const Warehouse = () => {
 							size="small"
 							value={createForm.name}
 							onChange={handleCreateFormChange}
-							inputProps={{ maxLength: 32 }}
+							inputProps={baseColumns.WAREHOUSE_NAME.config}
 							required
 						/>
 						<TextField
@@ -578,9 +579,10 @@ const Warehouse = () => {
 							size="small"
 							value={createForm.phone}
 							onChange={(e) => {
-								const next = (e.target.value || '').replace(/[^0-9+\s-]/g, '');
+								const next = (e.target.value || '').replace(/\D/g, '').slice(0, 10);
 								setCreateForm((prev) => ({ ...prev, phone: next }));
 							}}
+							inputProps={baseColumns.WAREHOUSE_PHONE.config}
 							required
 						/>
 						<TextField
@@ -589,6 +591,7 @@ const Warehouse = () => {
 							size="small"
 							value={createForm.address}
 							onChange={handleCreateFormChange}
+							inputProps={baseColumns.WAREHOUSE_ADDRESS.config}
 							required
 						/>
 						<TextField
@@ -596,8 +599,9 @@ const Warehouse = () => {
 							name="pin"
 							size="small"
 							value={createForm.pin}
+							inputProps={baseColumns.WAREHOUSE_PINCODE.config}
 							onChange={(e) => {
-								const next = (e.target.value || '').replace(/\D/g, '').slice(0, 10);
+								const next = (e.target.value || '').replace(/\D/g, '').slice(0, 6);
 								setCreateForm((prev) => ({ ...prev, pin: next }));
 								if (next.length === 6) {
 									fillCityState(next);
@@ -618,6 +622,7 @@ const Warehouse = () => {
 							size="small"
 							value={createForm.city}
 							onChange={handleCreateFormChange}
+							inputProps={baseColumns.WAREHOUSE_CITY.config}
 							required
 						/>
 						<TextField
@@ -626,6 +631,7 @@ const Warehouse = () => {
 							size="small"
 							value={createForm.state}
 							onChange={handleCreateFormChange}
+							inputProps={baseColumns.WAREHOUSE_STATE.config}
 							required
 						/>
 						<TextField
