@@ -8,7 +8,7 @@ const DashboardMain = () => {
   return (
     <div className=" py-16 w-full h-full flex flex-col items-center overflow-x-hidden overflow-y-auto">
       {/* <Profile /> */}
-      <AnnoucementCard />
+      {/* <AnnoucementCard /> */}
       <Greeting />
       <DashboardSummary />
       {/* <DashboardStatement /> */}
