@@ -1,406 +1,431 @@
-import React, { useState, useEffect } from "react";
-import { Box, Typography, TextField, Button, Grid } from "@mui/material";
+import React, { useEffect, useMemo, useState } from "react";
+import {
+  Box,
+  Button,
+  Grid,
+  Step,
+  StepLabel,
+  Stepper,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { FileUpload, CheckCircle } from "@mui/icons-material";
-import { z } from "zod";
-import { USER_ROLES } from '../Constants'; 
-import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import checkIncompleteRequest from "../services/checkIncompleteRequest";
+
+import { USER_ROLES } from "../Constants";
+import { useAuth } from "../context/AuthContext";
 import checkPendingRequest from "../services/checkPendingRequest";
+import getS3PutUrlService from "../services/s3Services/getS3PutUrlService";
+import putObjectService from "../components/CustomComponents/s3Services/putObjectService";
+
+import {
+  VERIFICATION_STEP_SCHEMAS,
+  VERIFICATION_WIZARD_CONFIG,
+  buildVerificationPayload,
+  getActiveVerificationSteps,
+  getRequiredFileFieldNames,
+} from "./verify/verificationWizardConfig";
 
 const API_URL = import.meta.env.VITE_APP_API_URL;
 
-// Define the Zod validation schema
-const formSchema = z.object({
-  address: z.string().min(1, "Address is required"),
-  state: z.string().min(1, "State is required"),
-  city: z.string().min(1, "City is required"),
-  pin: z.string().min(1, "PIN Code is required").regex(/^\d{6}$/, "Invalid PIN Code"),
-  aadhar: z.string().min(1, "Aadhar Number is required").length(12, "Aadhar must be 12 digits"),
-  pan: z.string().min(1, "PAN Number is required").length(10, "PAN must be 10 characters"),
-  gst: z.string().optional(),
-  msme: z.string().optional(),
-  bank: z.string().min(1, "Bank Name is required"),
-  ifsc: z.string().min(1, "IFSC Code is required"),
-  account: z.string().min(1, "Account Number is required"),
-  cin: z.string().optional(),
-});
-
-const FileUploadForm = ({ reqId, onNext }) => {
-  const { id } = useAuth();
-  const [fileData, setFileData] = useState({
-    aadhar_doc: null,
-    pan_doc: null,
-    gst_doc: null,
-    cancelledCheque: null,
-    selfie_doc: null,
-  });
-  const [uploadStatus, setUploadStatus] = useState({
-    aadhar_doc: false,
-    pan_doc: false,
-    gst_doc: false,
-    cancelledCheque: false,
-    selfie_doc: false,
-  });
-
-  const getDocumentStatus = async () => {
-    const response = await fetch(`${API_URL}/verification/documentStatus`, {
-      method: "POST",
-      headers: {
-        Authorization: localStorage.getItem("token"),
-      },
-    });
-    const data = await response.json();
-    setUploadStatus(data.message);
+const chunkArray = (array, size) => {
+  const result = [];
+  for (let i = 0; i < array.length; i += size) {
+    result.push(array.slice(i, i + size));
   }
+  return result;
+};
 
-  useEffect(()=>{
-    getDocumentStatus()
-  },[])
+const createUploadSessionId = () => {
+  try {
+    if (typeof crypto !== "undefined" && crypto.randomUUID) {
+      return crypto.randomUUID();
+    }
+  } catch {
+    // ignore
+  }
+  return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+};
 
-  const handleFileChange = (e) => {
-    const { name, files } = e.target;
-    setFileData((prevData) => ({
-      ...prevData,
-      [name]: files[0],
-    }));
+const Verify = () => {
+  const navigate = useNavigate();
+  const { isAuthenticated, verified, role, id } = useAuth();
+
+  const steps = useMemo(() => getActiveVerificationSteps(), []);
+
+  const initialValues = useMemo(() => {
+    const values = {};
+    for (const step of VERIFICATION_WIZARD_CONFIG.steps) {
+      for (const field of step.textFields || []) {
+        values[field.name] = "";
+      }
+    }
+    return values;
+  }, []);
+
+  const initialFiles = useMemo(() => {
+    const files = {};
+    for (const step of VERIFICATION_WIZARD_CONFIG.steps) {
+      for (const field of step.fileFields || []) {
+        files[field.name] = null;
+      }
+    }
+    return files;
+  }, []);
+
+  const [activeStep, setActiveStep] = useState(0);
+  const [values, setValues] = useState(initialValues);
+  const [files, setFiles] = useState(initialFiles);
+  const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [view, setView] = useState("form"); // form | pending
+
+  const validateStep = (stepId) => {
+    const stepConfig = steps.find((s) => s.id === stepId);
+    if (!stepConfig) return true;
+    if (!stepConfig.mandatory) return true;
+
+    const schema = VERIFICATION_STEP_SCHEMAS[stepId];
+    const nextErrors = {};
+
+    // Validate text fields
+    if (schema) {
+      const dataForStep = {};
+      for (const field of stepConfig.textFields || []) {
+        dataForStep[field.name] = values[field.name];
+      }
+      const result = schema.safeParse(dataForStep);
+      if (!result.success) {
+        for (const issue of result.error.issues) {
+          const key = issue.path?.[0];
+          if (key) nextErrors[key] = issue.message;
+        }
+      }
+    }
+
+    // Validate file fields (required only)
+    for (const field of stepConfig.fileFields || []) {
+      if (!field.required) continue;
+      if (!files[field.name]) {
+        nextErrors[field.name] = `${field.label} is required`;
+      }
+    }
+
+    setErrors((prev) => ({ ...prev, ...nextErrors }));
+    return Object.keys(nextErrors).length === 0;
   };
 
-  const handleUpload = async (name) => {
+  const validateAllMandatorySteps = () => {
+    for (let index = 0; index < steps.length; index++) {
+      const stepConfig = steps[index];
+      if (stepConfig.id === "review") continue;
+      if (!stepConfig.mandatory) continue;
+
+      const ok = validateStep(stepConfig.id);
+      if (!ok) {
+        setActiveStep(index);
+        return false;
+      }
+    }
+    return true;
+  };
+
+  const handleTextChange = (e) => {
+    const { name, value } = e.target;
+    setValues((prev) => ({ ...prev, [name]: value }));
+    setErrors((prev) => ({ ...prev, [name]: undefined }));
+  };
+
+  const handleFileChange = (e) => {
+    const { name } = e.target;
+    const file = e.target.files?.[0] || null;
+    setFiles((prev) => ({ ...prev, [name]: file }));
+    setErrors((prev) => ({ ...prev, [name]: undefined }));
+  };
+
+  const handleNext = () => {
+    const stepId = steps[activeStep]?.id;
+    if (stepId && stepId !== "review" && steps[activeStep]?.mandatory) {
+      const ok = validateStep(stepId);
+      if (!ok) return;
+    }
+    setActiveStep((prev) => Math.min(prev + 1, steps.length - 1));
+  };
+
+  const handleBack = () => {
+    setActiveStep((prev) => Math.max(prev - 1, 0));
+  };
+
+  const uploadAllSelectedFiles = async () => {
+    const uploadSessionId = createUploadSessionId();
+
+    const fileEntries = Object.entries(files).filter(([, file]) => Boolean(file));
+    const batches = chunkArray(
+      fileEntries,
+      VERIFICATION_WIZARD_CONFIG.batchUploadSize
+    );
+
+    const uploadedFileKeys = {};
+    for (const batch of batches) {
+      const batchResults = await Promise.all(
+        batch.map(async ([fieldName, file]) => {
+          const key = `merchant/${id}/verificationDocs/${uploadSessionId}/${fieldName}`;
+          const uploadUrl = await getS3PutUrlService(key, file.type, true);
+          await putObjectService(uploadUrl, file, file.type);
+          return { fieldName, key };
+        })
+      );
+
+      for (const result of batchResults) {
+        uploadedFileKeys[result.fieldName] = result.key;
+      }
+    }
+
+    return uploadedFileKeys;
+  };
+
+  const handleFinalSubmit = async () => {
+    if (isSubmitting) return;
+
+    // Validate all enabled + mandatory steps
+    const allStepsOk = validateAllMandatorySteps();
+    if (!allStepsOk) return;
+
+    // Validate required files across enabled + mandatory steps
+    const requiredFiles = getRequiredFileFieldNames();
+    const missingFiles = requiredFiles.filter((name) => !files[name]);
+    if (missingFiles.length) {
+      const nextErrors = missingFiles.reduce((acc, name) => {
+        acc[name] = "This file is required";
+        return acc;
+      }, {});
+      setErrors((prev) => ({ ...prev, ...nextErrors }));
+      toast.error("Please upload all required documents");
+      return;
+    }
+
+    setIsSubmitting(true);
     try {
-      const key = `merchant/${id}/verificationDocs/${reqId}/${name}`;
-      const urlResponse = await fetch(`${API_URL}/s3/putUrl`, {
-        method: "POST",
-        headers: {
-          Authorization: localStorage.getItem("token"),
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ filename: key, filetype: fileData[name].type }),
+      toast.info("Uploading documents...");
+      const uploadedFileKeys = await uploadAllSelectedFiles();
+
+      const payload = buildVerificationPayload({
+        values,
+        uploadedFileKeys,
       });
 
-      if (!urlResponse.ok) {
-        throw new Error({message: "Failed to generate upload URL"});
-      }
-
-      const { uploadURL } = await urlResponse.json();
-
-      const uploadRequest = await fetch(uploadURL, {
-        method: "PUT",
-        headers: { "Content-Type": fileData[name].type },
-        body: fileData[name],
-      });
-
-      if (!uploadRequest.ok) {
-        throw new Error({message: "Failed to upload file"});
-      }
-
-      const updateDocStatusRequest = await fetch(`${API_URL}/verification/documentStatus/update`, {
+      toast.info("Submitting verification request...");
+      const response = await fetch(`${API_URL}/verification`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
           Authorization: localStorage.getItem("token"),
         },
-        body: JSON.stringify({ name, key }),
+        body: JSON.stringify(payload),
       });
 
-      if (!updateDocStatusRequest.ok) {
-        throw new Error({message: "Failed to update document status"});
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        toast.error(data?.message || "Failed to submit verification request");
+        return;
       }
 
-      setUploadStatus((prevStatus) => ({
-        ...prevStatus,
-        [name]: true,
-      }));
-      toast.success("Upload successful");
+      toast.success(data?.message || "Verification request submitted successfully");
+      setView("pending");
     } catch (error) {
-      toast.error(`Error uploading ${name}: ${error.message}`);
+      toast.error("Failed to submit verification request");
+      console.error(error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!uploadStatus.aadhar_doc || !uploadStatus.pan_doc || !uploadStatus.selfie_doc){
-      toast.error("Please upload all required documents")
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate("/login");
       return;
     }
-    try{
-        const request = await fetch(`${API_URL}/verification/submit`,{
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Accept: "application/json",
-                Authorization: localStorage.getItem("token")
-            }
-        })
-        const response = await request.json()
-        if (response.success){
-            toast.success(response.message)
-            onNext()
-        } else {
-            toast.error(response.message)
-        }
-    } catch (error) {
-        toast.error(`Error submitting verification form`)
-    }
-  }
-  const files = [{
-    name: "aadhar_doc",
-    label: "Aadhar Card*"
-  }, 
-  {
-    name: "pan_doc",
-    label: "PAN Card*"
-  },
-  {
-    name: "gst_doc",
-    label: "GST Certificate"
-  },
-  {
-    name: "cancelledCheque",
-    label: "Cancelled Cheque"
-  },
-  {
-    name: "selfie_doc",
-    label: "Selfie Photo*"
-  }
-  ]
 
-  return (
-    <Box sx={{ maxWidth: 800, mx: "auto", p: 3 }} onSubmit={handleSubmit} component={"form"}>
-      <Typography variant="h5" align="center" gutterBottom>
-        Upload Verification Documents
-      </Typography>
-      <Grid container spacing={2}>
-        {files.map((doc, idx) => (
-          <Grid item xs={12} md={6} key={idx}>
-            <Typography variant="subtitle1" gutterBottom>
-              {doc.label}
-            </Typography>
-            <TextField
-              type="file"
-              id={doc.name}
-              name={doc.name}
-              variant="outlined"
-              fullWidth
-              onChange={handleFileChange}
-            />
-            <Button
-              variant="contained"
-              color="primary"
-              fullWidth
-              sx={{ mt: 2 }}
-              onClick={() => handleUpload(doc.name)}
-              startIcon={<FileUpload />}
-            >
-              Upload
-            </Button>
-            {uploadStatus[doc.name] && (
-              <Typography color="success.main" sx={{ mt: 1 }}>
-                <CheckCircle sx={{ fontSize: 16, mr: 1 }} />
-                Uploaded
-              </Typography>
-            )}
-          </Grid>
-        ))}
-      </Grid>
-      <Button
-        variant="contained"
-        color="primary"
-        type="submit"
-        fullWidth
-        sx={{ mt: 3  }}
-        >Submit</Button>
-    </Box>
-  );
-};
-
-const TextForm = ({ onNext }) => {
-  const [formData, setFormData] = useState({
-    address: "",
-    state: "",
-    city: "",
-    pin: "",
-    aadhar: "",
-    pan: "",
-    gst: "",
-    msme: "",
-    bank: "",
-    ifsc: "",
-    account: "",
-    cin: "",
-  });
-  const [errors, setErrors] = useState({});
-
-  const fields = [
-    { fieldId: "address", fieldTitle: "Address", required: true, helperText: "Enter your full address" },
-    { fieldId: "state", fieldTitle: "State", required: true, helperText: "Enter your state" },
-    { fieldId: "city", fieldTitle: "City", required: true, helperText: "Enter your city" },
-    { fieldId: "pin", fieldTitle: "PIN Code", required: true, helperText: "Enter your PIN code" },
-    { fieldId: "aadhar", fieldTitle: "Aadhar Number", required: true, helperText: "Enter your Aadhar number" },
-    { fieldId: "pan", fieldTitle: "PAN Number", required: true, helperText: "Enter your PAN number" },
-    { fieldId: "gst", fieldTitle: "GST Number", required: false, helperText: "Enter your GST number" },
-    { fieldId: "msme", fieldTitle: "MSME Number", required: false, helperText: "Enter your MSME number (if applicable)" },
-    { fieldId: "bank", fieldTitle: "Bank Name", required: true, helperText: "Enter your bank name" },
-    { fieldId: "ifsc", fieldTitle: "IFSC Code", required: true, helperText: "Enter your bank IFSC code" },
-    { fieldId: "account", fieldTitle: "Account Number", required: true, helperText: "Enter your bank account number" },
-    { fieldId: "cin", fieldTitle: "CIN Number", required: false, helperText: "Enter your CIN number (if applicable)" },
-  ];
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    // Validate form data using Zod schema
-    const result = formSchema.safeParse(formData);
-
-    if (result.success) {
-      setErrors({}); // Clear previous errors
-
-      // Proceed with the form submission
-      const response = await fetch(
-        `${API_URL}/verification/createIncompleteVerifyRequest`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-            Authorization: localStorage.getItem("token"),
-          },
-          body: JSON.stringify(formData),
-        }
-      );
-      const data = await response.json();
-      toast.success(data.message);
-      onNext();
-    } else {
-      // Set validation errors
-      const validationErrors = result.error.formErrors.fieldErrors;
-      setErrors(validationErrors);
-    }
-  };
-
-  return (
-    <Box
-      component="form"
-      onSubmit={handleSubmit}
-      sx={{
-        maxWidth: 800,
-        mx: "auto",
-        p: 3,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center"
-      }}
-      className="border-gray-300 shadow-xl border-2 rounded-xl "
-    >
-      <Typography variant="h4" className="text-2xl sm:text-4xl lg:text-5xl">Verification Form</Typography>
-
-      <Grid container spacing={2} sx={{ mt: 2 }}>
-        {fields.map((field, idx) => (
-          <Grid item xs={12} md={6} key={idx}>
-            <TextField
-              label={field.fieldTitle}
-              variant="outlined"
-              name={field.fieldId}
-              value={formData[field.fieldId]}
-              onChange={handleChange}
-              fullWidth
-              error={Boolean(errors[field.fieldId])}
-              helperText={errors[field.fieldId] ? errors[field.fieldId][0] : field.helperText}
-            />
-          </Grid>
-        ))}
-      </Grid>
-
-      <Button
-        variant="contained"
-        color="primary"
-        type="submit"
-        fullWidth
-        sx={{ mt: 3, maxWidth: 300, bgcolor: 'black' }}
-      >
-        Submit
-      </Button>
-    </Box>
-  );
-};
-
-const Verify = () => {  
-  const navigate = useNavigate();  
-  const {isAuthenticated ,verified, role} = useAuth()
-  const [step, setStep] = useState(1);
-  const [reqId, setReqId] = useState(null);
-  const nextStep = () => setStep((prevStep) => prevStep + 1);
-
-  // Only Merchants require verification
-  const requiresVerification = role === USER_ROLES.MERCHANT;
-
-  const incompleteRequest = async () => {
-    const response = await checkIncompleteRequest();
-    if (response.success){
-        setReqId(response.message.reqId)
-        setStep(2)
-    }
-  }
-
-  const pendingRequest = async () => {
-    const response = await checkPendingRequest();
-    if (response.success){
-        setStep(3)
-    }
-  }
-
-  useEffect(()=>{
-    if (!isAuthenticated){
-        navigate('/login')
-        return;
-    }
-    
-    // 1. If already verified, redirect to dashboard
     if (verified) {
-        navigate('/dashboard');
-        return;
-    }
-    
-    // 2. If authenticated but the role does NOT require verification (e.g., Admin Employee),
-    // send them to the dashboard immediately.
-    if (!requiresVerification) {
-        navigate('/dashboard');
-        return;
+      navigate("/dashboard");
+      return;
     }
 
-    // If here: isAuthenticated=true, !verified, role=MERCHANT. Proceed with KYC forms.
-    incompleteRequest()
-    pendingRequest()
-    
-  },[isAuthenticated, verified, navigate, role, requiresVerification])
+    (async () => {
+      try {
+        const pending = await checkPendingRequest();
+        if (pending?.success) {
+          setView("pending");
+        }
+      } catch {
+        // ignore
+      }
+    })();
+  }, [isAuthenticated, verified, navigate]);
 
-  // Prevent rendering forms if the user is redirecting or doesn't need verification
-  if (!isAuthenticated || !requiresVerification || verified) {
-      return null;
+  if (!isAuthenticated || verified) {
+    return null;
   }
+
+  if (view === "pending") {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          p: 2,
+        }}
+      >
+        <Typography variant="h6">Verification Request Submitted</Typography>
+      </Box>
+    );
+  }
+
+  const currentStep = steps[activeStep];
 
   return (
     <Box
       sx={{
-        // minHeight: "100vh",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
         p: 2,
+        width: "100%",
       }}
     >
-      {step === 1 && <TextForm onNext={incompleteRequest} />}
-      {step === 2 && <FileUploadForm reqId={reqId} onNext={nextStep} />}
-      {step === 3 && <div>Verification Request Submitted</div>}
+      <Box
+        sx={{
+          maxWidth: 900,
+          width: "100%",
+          p: 3,
+        }}
+        className="border-gray-300 shadow-xl border-2 rounded-xl"
+      >
+        <Typography variant="h4" sx={{ mb: 2 }}>
+          Verification Form
+        </Typography>
+
+        <Stepper activeStep={activeStep} sx={{ mb: 3 }}>
+          {steps.map((s) => (
+            <Step key={s.id}>
+              <StepLabel>{s.title}</StepLabel>
+            </Step>
+          ))}
+        </Stepper>
+
+        {currentStep?.id !== "review" ? (
+          <>
+            <Typography variant="h6" sx={{ mb: 2 }}>
+              {currentStep?.title}
+            </Typography>
+
+            <Grid container spacing={2}>
+              {(currentStep?.textFields || []).map((field) => (
+                <Grid item xs={12} md={6} key={field.name}>
+                  <TextField
+                    label={`${field.label}${field.required ? "*" : ""}`}
+                    name={field.name}
+                    value={values[field.name]}
+                    onChange={handleTextChange}
+                    fullWidth
+                    error={Boolean(errors[field.name])}
+                    helperText={errors[field.name] || field.helperText}
+                  />
+                </Grid>
+              ))}
+
+              {(currentStep?.fileFields || []).map((field) => (
+                <Grid item xs={12} md={6} key={field.name}>
+                  <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                    {field.label}
+                    {field.required ? "*" : ""}
+                  </Typography>
+                  <TextField
+                    type="file"
+                    name={field.name}
+                    variant="outlined"
+                    fullWidth
+                    inputProps={{ accept: field.accept }}
+                    onChange={handleFileChange}
+                    error={Boolean(errors[field.name])}
+                    helperText={
+                      errors[field.name] ||
+                      (files[field.name]?.name
+                        ? files[field.name].name
+                        : field.helperText)
+                    }
+                  />
+                </Grid>
+              ))}
+            </Grid>
+          </>
+        ) : (
+          <>
+            <Typography variant="h6" sx={{ mb: 2 }}>
+              Review
+            </Typography>
+
+            <Grid container spacing={2}>
+              {Object.entries(values).map(([key, value]) => (
+                <Grid item xs={12} md={6} key={key}>
+                  <Typography variant="subtitle2" sx={{ color: "text.secondary" }}>
+                    {key}
+                  </Typography>
+                  <Typography sx={{ wordBreak: "break-word" }}>
+                    {value || "-"}
+                  </Typography>
+                </Grid>
+              ))}
+              {Object.entries(files).map(([key, file]) => (
+                <Grid item xs={12} md={6} key={key}>
+                  <Typography variant="subtitle2" sx={{ color: "text.secondary" }}>
+                    {key}
+                  </Typography>
+                  <Typography sx={{ wordBreak: "break-word" }}>
+                    {file?.name || "-"}
+                  </Typography>
+                </Grid>
+              ))}
+            </Grid>
+          </>
+        )}
+
+        <Box sx={{ display: "flex", gap: 2, mt: 3 }}>
+          <Button
+            variant="outlined"
+            onClick={handleBack}
+            disabled={activeStep === 0 || isSubmitting}
+            fullWidth
+          >
+            Back
+          </Button>
+
+          {currentStep?.id === "review" ? (
+            <Button
+              variant="contained"
+              onClick={handleFinalSubmit}
+              disabled={isSubmitting}
+              fullWidth
+              sx={{ bgcolor: "black" }}
+            >
+              {isSubmitting ? "Submitting..." : "Submit"}
+            </Button>
+          ) : (
+            <Button
+              variant="contained"
+              onClick={handleNext}
+              disabled={isSubmitting}
+              fullWidth
+              sx={{ bgcolor: "black" }}
+            >
+              Next
+            </Button>
+          )}
+        </Box>
+      </Box>
     </Box>
   );
 };

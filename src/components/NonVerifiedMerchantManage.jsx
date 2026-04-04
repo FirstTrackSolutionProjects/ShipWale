@@ -1,5 +1,5 @@
+import getUnverifiedUserService from '@/services/userServices/getUnverifiedUserService'
 import { useEffect , useState  } from 'react'
-const API_URL = import.meta.env.VITE_APP_API_URL
 
 
 const Card = ({merchant}) => {
@@ -10,10 +10,10 @@ const Card = ({merchant}) => {
             <div className='p-4 border'>
                 <p>User Id : {merchant.uid}</p>
                 <p>Name : {merchant.fullName}</p>
-                <p>Business Name : {merchant.businessName}</p>
                 <p>Phone : {merchant.phone}</p>
                 <p>Email : {merchant.email}</p>
-            </div>
+                <p>Created At: {new Date(merchant.createdAt).toLocaleString()}</p>
+            </div>  
         </>
     )
 }
@@ -21,19 +21,11 @@ const Card = ({merchant}) => {
 
 
 const MerchantManage =  () => {
-    const [merchants, setMerchants] = useState([    ])
+    const [merchants, setMerchants] = useState([])
     useEffect(() => {
         const getVerifiedMerchant = async () => {
-            const response = await fetch(`${API_URL}/merchant/unverified`, {
-                method: 'POST',
-                headers: { 'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    'Authorization': localStorage.getItem('token'),
-                }
-            })
-            const data = await response.json();
-            if (data.message.length)
-                setMerchants(data.message)
+            const data = await getUnverifiedUserService();
+            setMerchants(data || [])
         }
         getVerifiedMerchant();
     },[]);

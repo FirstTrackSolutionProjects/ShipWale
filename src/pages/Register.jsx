@@ -19,9 +19,7 @@ const Register = () => {
     reg_email: "",
     reg_password: "",
     confirm_password: "",
-    business_name: "",
     mobile: "",
-    role: USER_ROLES.MERCHANT, // Default role selection
   });
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -38,7 +36,7 @@ const Register = () => {
   const emailRef = useRef(''); // Stores the email that received the OTP
   // -------------------------
 
-  const { isAuthenticated, login, verified, role} = useAuth(); // Added role: authRole
+  const { isAuthenticated, login, verified } = useAuth(); // Added role: authRole
   // const [emailModalOpen, setEmailModalOpen] = useState(false) // Removed modal state
   const navigate = useNavigate();
 
@@ -89,11 +87,6 @@ const Register = () => {
 
   const validate = (isSubmission = false) => {
     let validationErrors = false;
-
-    if (!Object.values(USER_ROLES).includes(formData.role)) {
-      toast.error("Invalid user role selected");
-      validationErrors = true;
-    }
 
     if (!/^[A-Za-z\s]+$/.test(formData.name)) {
       toast.error("Full name should contain alphabets only")
@@ -146,10 +139,10 @@ const Register = () => {
   useEffect(()=>{
     if (isAuthenticated && verified){
       navigate("/dashboard")
-    } else if (isAuthenticated && role === USER_ROLES.MERCHANT) {
+    } else if (isAuthenticated) {
       navigate("/verify")
     }
-  },[isAuthenticated, verified, navigate, role]) // Navigation dependencies added
+  },[isAuthenticated, verified, navigate]) // Navigation dependencies added
 
   // Timer useEffect: Handles starting, stopping, and cleanup of the 30s regeneration cooldown
   useEffect(() => {
@@ -199,11 +192,9 @@ const Register = () => {
     try {
         const registerPayload = {
             fullName: formData.name,
-            businessName: formData.business_name,
             email: formData.reg_email,
             password: formData.reg_password,
             mobile: formData.mobile,
-            role: formData.role,
             otp: otp, // Include OTP
         };
         
@@ -212,17 +203,7 @@ const Register = () => {
         if (registerResponse?.token) { // Successful registration returns a token
           toast.success("Registration and Email Verification successful!");
           await login(registerResponse.token);
-          
-          const newRole = registerPayload.role;
-              
-          // --- FIX: Role-based Redirection ---
-          if (newRole === USER_ROLES.MERCHANT) {
-              // Merchant must proceed to KYC
-              navigate("/verify"); 
-          } else {
-              // Other roles skip KYC and go straight to Dashboard
-              navigate("/dashboard"); 
-          }
+          navigate("/verify"); 
           // ------------------------------------
         } else {
           // This path should ideally not be reached if service throws error, but maintained for robustness
@@ -378,40 +359,6 @@ const Register = () => {
               >
                 {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
               </button>
-          </div>
-
-          {/* Business Name */}
-          <div className="flex items-center border border-gray-300 rounded-md px-3 py-2 focus-within:ring-2 focus-within:ring-red-500">
-            <FaBuilding className="text-gray-500 mr-2" />
-            <input
-              type="text"
-              placeholder="Business Name"
-              required
-              name="business_name"
-              value={formData.business_name}
-              onChange={handleChange}
-              className="w-full focus:outline-none"
-            />
-          </div>
-          
-          {/* Role Selection */}
-          <div className="flex flex-col border border-gray-300 rounded-md px-3 py-2 focus-within:ring-2 focus-within:ring-red-500">
-            <label htmlFor="role-select" className="text-gray-500 text-sm mb-1">Register As:</label>
-            <select
-              id="role-select"
-              required
-              name="role"
-              value={formData.role}
-              onChange={handleChange}
-              className="w-full focus:outline-none border-none bg-transparent"
-            >
-              <option value={USER_ROLES.MERCHANT}>Merchant</option>
-              {/* Temporarily hidden roles */}
-              {/* <option value={USER_ROLES.SUBMERCHANT}>Sub-merchant</option> */}
-              {/* <option value={USER_ROLES.MERCHANT_EMPLOYEE}>Merchant Employee</option> */}
-              {/* <option value={USER_ROLES.ADMIN_EMPLOYEE}>Admin Employee</option> */}
-              {/* Note: ADMIN role is excluded from public registration */}
-            </select>
           </div>
 
           { /*Terms & conditions */}
