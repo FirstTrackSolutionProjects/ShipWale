@@ -988,7 +988,8 @@ const ShipCard = ({ price, shipment, setIsShipped, setIsShip, getParcels }) => {
         price: Math.round(price.price), 
         serviceId: price.serviceId, 
         courierId: price.courierId,
-        courierServiceId: price.courierServiceId 
+        courierServiceId: price.courierServiceId,
+        submerchantMargin: price.submerchantMargin,
       })
     }).then(response => response.json()).then(async result => {
       if (result.success) {
