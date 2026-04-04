@@ -57,6 +57,8 @@ import {
     Globe2
 } from 'lucide-react'
 import B2CBulkShipment from "@/components/BulkShipment/B2CBulkShipment"
+import MySubmerchants from "@/components/Submerchant/MySubmerchants"
+import SubmerchantRequests from "@/components/Submerchant/SubmerchantRequests"
 
 export const navItems = [
     {
@@ -103,11 +105,22 @@ export const DOMESTIC_SHIPMENT_REPORT_STATUS_ENUMS = Object.freeze({
     RTO_DELIVERED: 'RTO DELIVERED'
 })
 
+export const TRANSACTION_TYPES = Object.freeze({
+    RECHARGE: 'RECHARGE',
+    MANUAL_RECHARGE: 'MANUAL RECHARGE',
+    EXPENSE: 'EXPENSE',
+    REFUND: 'REFUND',
+    EXTRA_CHARGE: 'EXTRA CHARGE',
+    RTO_CHARGE: 'RTO CHARGE',
+    WEIGHT_DISPUTE: 'WEIGHT DISPUTE',
+    BALANCE_TRANSFER: 'BALANCE TRANSFER',
+    BALANCE_WITHDRAWAL: 'BALANCE WITHDRAWAL',
+    SUBMERCHANT_MARGIN: 'SUBMERCHANT MARGIN',
+})
+
 export const USER_ROLES = Object.freeze({
     ADMIN: 'ADMIN',
     MERCHANT: 'MERCHANT',
-    ADMIN_EMPLOYEE: 'ADMIN_EMPLOYEE',
-    MERCHANT_EMPLOYEE: 'MERCHANT_EMPLOYEE',
     SUBMERCHANT: 'SUBMERCHANT'
 })
 
@@ -133,6 +146,7 @@ export const menuItems = [
         name : "Wallet Recharge",
         isDropdown : false,
         url : 'wallet-recharge',
+        roles: [USER_ROLES.ADMIN, USER_ROLES.MERCHANT, USER_ROLES.SUBMERCHANT],
         dropDownOptions : [{}]
     },
     {
@@ -142,6 +156,7 @@ export const menuItems = [
         merchantOnly : true, // Assuming standard users/merchants can see their own tickets
         url : 'support',      // Navigates to /dashboard/support
         component : Support, 
+        roles: [USER_ROLES.MERCHANT, USER_ROLES.SUBMERCHANT], // Only merchants and submerchants can access
         dropDownOptions : [{}]
     },
     {
@@ -151,6 +166,7 @@ export const menuItems = [
         isDropdown : false,
         url : 'rate-calculator',
         component: Pricing,
+        roles: [USER_ROLES.ADMIN, USER_ROLES.MERCHANT, USER_ROLES.SUBMERCHANT],
         dropDownOptions : [{}]
     },
     {
@@ -160,6 +176,7 @@ export const menuItems = [
         isDropdown : true,
         url : 'bulk-shipment',
         merchantOnly : true,
+        roles: [USER_ROLES.MERCHANT, USER_ROLES.SUBMERCHANT],
         // component: Pricing,
         dropDownOptions : [
             {
@@ -189,6 +206,7 @@ export const menuItems = [
         merchantOnly : true,
         url : 'order/create',
         component: CreateOrder,
+        roles: [USER_ROLES.MERCHANT, USER_ROLES.SUBMERCHANT],
         dropDownOptions : [{
             
             icon : PackagePlus,
@@ -214,6 +232,7 @@ export const menuItems = [
         isDropdown : false,
         url : 'warehouse',
         component : Warehouse,
+        roles: [USER_ROLES.ADMIN, USER_ROLES.MERCHANT, USER_ROLES.SUBMERCHANT],
         dropDownOptions : [{}]
     },
     {
@@ -224,6 +243,7 @@ export const menuItems = [
         merchantOnly : true,
         url : 'shipments',
         component : UpdateOrder,
+        roles: [USER_ROLES.MERCHANT, USER_ROLES.SUBMERCHANT],
         dropDownOptions : [{
             
             icon : Package,
@@ -250,6 +270,7 @@ export const menuItems = [
         isDropdown : false,
         url : 'transaction-history',
         component : TransactionHistory,
+        roles: [USER_ROLES.ADMIN, USER_ROLES.MERCHANT, USER_ROLES.SUBMERCHANT],
         dropDownOptions : [{}],
         merchantOnly : true
     },
@@ -260,6 +281,7 @@ export const menuItems = [
         isDropdown : false,
         admin : true,
         url : 'manage/merchant/transactions',
+        roles: [USER_ROLES.ADMIN],
         component : AllTransactions,
         dropDownOptions : [{}]
     },
@@ -270,6 +292,7 @@ export const menuItems = [
         isDropdown : false,
         url : 'weight-disputes',
         component : WeightDisputes,
+        roles: [USER_ROLES.ADMIN, USER_ROLES.MERCHANT, USER_ROLES.SUBMERCHANT],
         dropDownOptions : [
             {
                 
@@ -299,6 +322,7 @@ export const menuItems = [
         admin : true,
         url : 'cod-remittance-manage',
         component : CodRemittanceAdmin,
+        roles: [USER_ROLES.ADMIN],
         dropDownOptions : [{}]
     },
     {
@@ -309,6 +333,7 @@ export const menuItems = [
         merchantOnly : true,
         url : 'cod-remittance-history',
         component : CodRemittanceMerchant,
+        roles: [USER_ROLES.MERCHANT, USER_ROLES.SUBMERCHANT],
         dropDownOptions : [{}]
     },
     {
@@ -317,6 +342,8 @@ export const menuItems = [
         name : "Cancellations/Refunds",
         isDropdown : true,
         admin : true,
+        hidden: true,
+        roles: [USER_ROLES.ADMIN],
         // url : 'cancellations-refunds',
         // component : DashboardMain,
         dropDownOptions : [
@@ -384,6 +411,7 @@ export const menuItems = [
         isDropdown : false,
         admin: true,
         url : 'pending-rto',
+        roles: [USER_ROLES.ADMIN],
         component : PendingRTO,
         dropDownOptions : [{}]
     },
@@ -395,6 +423,7 @@ export const menuItems = [
         merchantOnly : true,
         url : 'shipment/reports',
         component : NDR,
+        roles: [USER_ROLES.MERCHANT, USER_ROLES.SUBMERCHANT],
         dropDownOptions : [{
             
             icon : FileText,
@@ -414,12 +443,31 @@ export const menuItems = [
         },]
     },
     {
+        icon : ShieldCheck,
+        name : "My Submerchants",
+        isDropdown : false,
+        url : 'my-submerchants',
+        roles: [USER_ROLES.MERCHANT],
+        component : MySubmerchants,
+        dropDownOptions : []
+    },
+    {
+        icon : ShieldCheck,
+        name: "Submerchant Requests",
+        isDropdown: false,
+        url: 'submerchant-requests',
+        roles: [USER_ROLES.ADMIN, USER_ROLES.MERCHANT, USER_ROLES.SUBMERCHANT],
+        component: SubmerchantRequests,
+        dropDownOptions: []
+    },
+    {
         
         icon : ShieldCheck,
         name : "Merchant Manage",
         isDropdown : true,
         admin : true,
         url : 'manage/merchant',
+        roles: [USER_ROLES.ADMIN],
         dropDownOptions : [{
             
             icon : ShieldCheck,
@@ -516,6 +564,7 @@ export const menuItems = [
         isDropdown : true,
         admin : true,
         url : 'submissions',
+        roles : [USER_ROLES.ADMIN],
         dropDownOptions : [{
             
             icon : ClipboardList,
@@ -563,6 +612,7 @@ export const menuItems = [
         isDropdown: false,
         admin: true,               
         url: 'admin/support',      // Navigates to /dashboard/admin/support
+        roles: [USER_ROLES.ADMIN], // Only admins can access this
         component: AdminSupport,    
         dropDownOptions: [{}]
     },
@@ -572,6 +622,7 @@ export const menuItems = [
         isDropdown: false,
         admin: true,               
         url: 'admin/analytics',      // Navigates to /dashboard/admin/analytics
+        roles: [USER_ROLES.ADMIN], // Only admins can access this
         component: AdminAnalytics,    
         dropDownOptions: [{}]
     },
@@ -582,6 +633,7 @@ export const menuItems = [
         isDropdown : false,
         admin : true,
         url : 'manual-recharge',
+        roles: [USER_ROLES.ADMIN],
         component : ManualRecharge,
         dropDownOptions : [{}]
     },
@@ -591,6 +643,7 @@ export const menuItems = [
         name : "Settings",
         isDropdown : true,
         url : 'settings',
+        roles: [USER_ROLES.ADMIN, USER_ROLES.MERCHANT, USER_ROLES.SUBMERCHANT],
         dropDownOptions : [
             {
                 
@@ -601,16 +654,18 @@ export const menuItems = [
                 component : Profile,
                 dropDownOptions : [{}]
             },
-            {
+            // {
                 
-                icon : SettingsIcon,
-                name : "Profile Update",
-                isDropdown : false,
-                url : 'settings/profile-update-request',
-                component : UpdateProfileRequest,
-                merchantOnly : true,
-                dropDownOptions : [{}]
-            },
+            //     icon : SettingsIcon,
+            //     name : "Profile Update",
+            //     isDropdown : false,
+            //     url : 'settings/profile-update-request',
+            //     component : UpdateProfileRequest,
+            //     merchantOnly : true,
+            //     roles: [USER_ROLES.MERCHANT, USER_ROLES.SUBMERCHANT],
+            //     hidden: true,
+            //     dropDownOptions : [{}]
+            // },
             {
                 
                 icon : SettingsIcon,
@@ -618,6 +673,7 @@ export const menuItems = [
                 isDropdown : false,
                 url : 'settings/change-password',
                 component : ChangePassword,
+                roles: [USER_ROLES.ADMIN, USER_ROLES.MERCHANT, USER_ROLES.SUBMERCHANT],
                 dropDownOptions : [{}]
             },
         ]

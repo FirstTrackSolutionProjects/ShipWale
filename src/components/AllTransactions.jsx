@@ -9,59 +9,52 @@ import { IconButton, Box } from '@mui/material';
 import * as XLSX from 'xlsx';
 import { toast } from 'react-toastify';
 import getAllTransactionsDataService from '../services/transactionServices/getAllTransactionDataService';
+import { TRANSACTION_TYPES, USER_ROLES } from '@/Constants';
 
 const PAGE_SIZE = 50; // backend admin endpoint uses 50
 
 const columns = [
-  { field: 'date', headerName: 'Date', flex: 1, valueGetter: p => p?.row?.date, renderCell: p => new Date(p.row.date).toLocaleString(), minWidth: 175 },
-  { field: 'type', headerName: 'Type', flex: 1, minWidth: 100 },
-  { field: 'order_id', headerName: 'Order ID', flex: 1, minWidth: 100 },
-  { field: 'payment_id', headerName: 'Payment ID', flex: 1, hide: true, minWidth: 100 },
+  { field: 'DATE', headerName: 'Date', flex: 1, renderCell: p => new Date(p.row.DATE).toLocaleString(), minWidth: 175 },
+  { field: 'TRANSACTION_TYPE', headerName: 'Type', flex: 1, minWidth: 100 },
+  { field: 'ORDER_ID', headerName: 'Order ID', flex: 1, minWidth: 100 },
   { field: 'merchant_details', headerName: 'Merchant Details', minWidth: 250,
       renderCell: (params) => (
         <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, height: 80, justifyContent: 'center' }}>
-          <div className="font-bold">{params.row.fullName}</div>
-          <div>{params.row.email}</div>
+          <div className="font-bold">{params.row.MERCHANT_NAME}</div>
+          <div>{params.row.MERCHANT_EMAIL}</div>
+          <div>Role : {params.row.MERCHANT_ROLE}</div>
         </Box>
       )
     },
   { field: 'shipment_details', headerName: 'Shipment Details', minWidth: 200,
         renderCell: (params) => (
           <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, height: 80, justifyContent: 'center' }}>
-            {params.row.service_name && <div>Service: {params.row.service_name} {params.row.shipping_mode ? `(${params.row.shipping_mode})` : ''}</div>}
-            {params.row.awb && <div>AWB: {params.row.awb}</div>}
+            {params.row.SERVICE_NAME && <div>Service: {params.row.SERVICE_NAME} {params.row.shipping_mode ? `(${params.row.shipping_mode})` : ''}</div>}
+            {params.row.AWB && <div>AWB: {params.row.AWB}</div>}
           </Box>
         )
       },
-  { field: 'amount', headerName: 'Amount', flex: 1, renderCell: p => {
+  { field: 'AMOUNT', headerName: 'Amount', flex: 1, renderCell: p => {
       const v = Number(p.value);
       if (isNaN(v)) return '';
 
       let sign = '+';
       let cls = 'text-green-600'; // Default for credits
 
-      // Check for known debit types (including 'rto' for RTO charges)
-      if (['expense', 'dispute_charge', 'extra', 'rto'].includes(p.row.type)) {
+      if (p.row.CREDIT_OR_DEBIT === 'DEBIT') {
         sign = '-';
         cls = 'text-red-600';
-      }
-      // Special handling for 'manual' type: the sign depends on the actual value
-      else if (p.row.type === 'manual') {
-        if (v < 0) { // If manual transaction amount is negative, it's a debit
-          sign = '-';
-          cls = 'text-red-600';
-        } else { // Otherwise, it's a credit
-          sign = '+';
-          cls = 'text-green-600';
-        }
+      } else {
+        sign = '+';
+        cls = 'text-green-600';
       }
       // For any other type not explicitly handled (e.g., standard 'recharge' from Razorpay),
       // it will default to '+' and green, which is appropriate.
 
       return <span className={cls}>{sign}{Math.abs(v)}</span>;
     }, minWidth: 80 },
-  { field: 'remaining_balance', headerName: 'Balance After', flex: 1, renderCell: p => p.value != null ? Number(p.value) : '', minWidth: 100 },
-  { field: 'reason', headerName: 'Reason', flex: 1, minWidth: 100 },
+  { field: 'REMAINING_BALANCE', headerName: 'Balance After', flex: 1, renderCell: p => p.value != null ? Number(p.value) : '', minWidth: 100 },
+  { field: 'DESCRIPTION', headerName: 'Description', flex: 1, minWidth: 100 },
 ];
 
 const AllTransactions = () => {
@@ -81,7 +74,8 @@ const AllTransactions = () => {
     merchant_name: '',
     merchant_business_name: '',
     startDate: getFilterStartDate(),
-    endDate: getTodaysDate()
+    endDate: getTodaysDate(),
+    role: ''
   });
   const [debouncedFilters, setDebouncedFilters] = useState(filters);
 
@@ -112,7 +106,8 @@ const AllTransactions = () => {
         merchant_email: debouncedFilters.merchant_email,
         merchant_name: debouncedFilters.merchant_name,
         merchant_business_name: debouncedFilters.merchant_business_name,
-        type: debouncedFilters.type
+        type: debouncedFilters.type,
+        role: debouncedFilters.role
       });
       const incoming = data?.rows || [];
       // Ensure each row has an id (backend provides id for each select we constructed). Fallback composite.
@@ -189,14 +184,12 @@ const AllTransactions = () => {
         <div className='bg-red-500 text-white p-4 rounded-lg space-y-4'>
           <div className='grid md:grid-cols-8 gap-3'>
             <select name='type' value={filters.type} onChange={handleFilterChange} className='p-2 rounded text-black bg-white'>
-              <option value='all'>All Types</option>
-              <option value='recharge'>Recharge</option>
-              <option value='manual'>Manual Recharge</option>
-              <option value='expense'>Expense</option>
-              <option value='refund'>Refund</option>
-              <option value='dispute_charge'>Dispute Charge</option>
-              {/* <option value='extra'>Extra Charge</option> */}
-              <option value='rto'>RTO Charge</option>
+              <option value='all'>ALL</option>
+              {Object.values(TRANSACTION_TYPES).map((type) => (
+                <option key={type} value={type}>
+                  {type}
+                </option>
+              ))}
             </select>
             <input name='order_id' value={filters.order_id} onChange={handleFilterChange} placeholder='Order ID' className='p-2 rounded text-black bg-white'/>
             <input name='awb' value={filters.awb} onChange={handleFilterChange} placeholder='AWB' className='p-2 rounded text-black bg-white'/>
@@ -205,6 +198,15 @@ const AllTransactions = () => {
             <input name='merchant_business_name' value={filters.merchant_business_name} onChange={handleFilterChange} placeholder='Business Name' className='p-2 rounded text-black bg-white'/>
             <input type='date' name='startDate' value={filters.startDate} onChange={handleFilterChange} className='p-2 rounded text-black bg-white'/>
             <input type='date' name='endDate' value={filters.endDate} onChange={handleFilterChange} className='p-2 rounded text-black bg-white'/>
+            <select name='role' value={filters.role} onChange={handleFilterChange} className='p-2 rounded text-black bg-white'>
+              <option value=''>ALL ROLES</option>
+              {Object.values(USER_ROLES).map((role) => (
+                <option key={role} value={role}>
+                  {role}
+                </option>
+              ))}
+            </select>
+
             <IconButton
               onClick={async () => {
                 try {

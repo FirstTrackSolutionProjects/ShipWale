@@ -16,7 +16,6 @@ const Dashboard = () => {
   
   // A user needs verification if they are a Merchant AND not yet verified
   const needsKycVerification = !verified && !isKycExempt; // !verified && role === MERCHANT
-  const admin = role === USER_ROLES.ADMIN;
 
   // Use useEffect for navigation guards
   React.useEffect(() => {
@@ -42,9 +41,9 @@ const Dashboard = () => {
     return null; 
   }
   
-  const generateRoutes = (items, admin) => {
+  const generateRoutes = (items, role) => {
     return items.flatMap((item, index) => {
-      if ((item.admin && !admin) || (item.merchantOnly && admin)) {
+      if (item.hidden || (item.roles !== undefined && !item.roles.includes(role))) {
         return [];
       }
       const routes = [
@@ -55,7 +54,7 @@ const Dashboard = () => {
         />
       ];
       if (item.dropDownOptions && item.dropDownOptions.length > 0) {
-        routes.push(...generateRoutes(item.dropDownOptions, admin));
+        routes.push(...generateRoutes(item.dropDownOptions, role));
       }
       return routes;
     });
@@ -66,7 +65,7 @@ return (
       <Sidebar2 />
         <main className="flex-grow justify-center items-center overflow-y-auto">
           <Routes>
-            {generateRoutes(menuItems, admin)}
+            {generateRoutes(menuItems, role)}
             <Route path="admin/support/:id" element={<AdminTicketDetail />} />
             {/* FIX: Add the standard merchant ticket detail route */}
             <Route path="support/:id" element={<TicketDetail />} /> 

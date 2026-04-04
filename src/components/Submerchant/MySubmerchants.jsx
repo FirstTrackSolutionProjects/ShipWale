@@ -1,19 +1,14 @@
 import { useEffect , useMemo, useState  } from 'react'
 import { DataGrid } from '@mui/x-data-grid'
-import UserDiscountModal from './Modals/UserDiscountModal'
-import MerchantInvoiceModal from './Modals/MerchantInvoiceModal'
-import formatDateAndTime from '../helpers/formatDateAndTime'
-import allowNegativeBalanceService from '../services/merchantServices/allowNegativeBalanceService'
-import revokeNegativeBalanceService from '../services/merchantServices/revokeNegativeBalanceService'
-import { toast } from 'react-toastify'
-import getVerifiedUsersService from '@/services/userServices/getVerifiedUsersService'
-import getVerifiedUserByUserRoleIdService from '@/services/userServices/getVerifiedUserByUserRoleIdService'
-import { USER_ROLES } from '@/Constants'
+import UserDiscountModal from '../Modals/UserDiscountModal'
+import AddSubmerchantModal from '../Modals/AddSubmerchantModal'
+import getMySubmerchantService from '@/services/merchantServices/getMySubmerchantService'
+import getMySubmerchantsService from '@/services/merchantServices/getMySubmerchantsService'
 const API_URL = import.meta.env.VITE_APP_API_URL
 const View = ({ userRoleId, onClose }) => {
     const [user, setUser] = useState({})
     const getUserDetails = async () => {
-        const res = await getVerifiedUserByUserRoleIdService({user_role_id : userRoleId})
+        const res = await getMySubmerchantService({submerchant_id : userRoleId})
         setUser(res?.data)
     }
     useEffect(()=>{
@@ -27,6 +22,7 @@ const View = ({ userRoleId, onClose }) => {
         fetch(`${API_URL}/roles/activate/${user?.user_role_id}`, {
             method: 'PATCH',
             headers: {
+
                 'Accept': 'application/json',
                 'Authorization': localStorage.getItem('token')
             }
@@ -133,7 +129,7 @@ const View = ({ userRoleId, onClose }) => {
 }
 
 
-const MerchantManage =  () => {
+const MySubmerchants =  () => {
     // Data state
     const [rows, setRows] = useState([])
     const [rowCount, setRowCount] = useState(0)
@@ -143,71 +139,44 @@ const MerchantManage =  () => {
 
     // Filters
     const [filters, setFilters] = useState({
-        user_name: '',
-        user_email: '',
-        user_phone: '',
-        user_role: '',
-        sort_by: ''
+        submerchant_name: '',
+        submerchant_email: '',
+        submerchant_phone: '',
+        status: '',
     })
 
+    // Add submerchant modal + refetch trigger
+    const [openAddSubmerchantModal, setOpenAddSubmerchantModal] = useState(false)
+    const [refreshIndex, setRefreshIndex] = useState(0)
+
     // View modal state
-    const [selectedMerchant, setSelectedMerchant] = useState(null)
     const [showView, setShowView] = useState(false)
     const [viewUserRoleId, setViewUserRoleId] = useState(null)
-    const [showInvoice, setShowInvoice] = useState(false)
-
-    // To Pay (Negative Limit) modal state
-    const [showToPay, setShowToPay] = useState(false)
-    const [selectedToPay, setSelectedToPay] = useState(null)
-    const [toPayForm, setToPayForm] = useState({ negative_limit: '' })
-    const [toPaySubmitting, setToPaySubmitting] = useState(false)
 
     // Columns definition
     const columns = useMemo(() => [
         { field: 'user_role_id', headerName: 'Account ID', width: 100 },
-        { field: 'uid', headerName: 'User ID', flex: 1, minWidth: 80 },
-        { field: 'fullName', headerName: 'Name', flex: 1, minWidth: 150 },
-        { field: 'email', headerName: 'Email', flex: 1.2, minWidth: 200 },
-        { field: 'phone', headerName: 'Phone', width: 140 },
-        { field: 'user_role', headerName: 'Role', width: 120 },
-        { field: 'balance', headerName: 'Balance', width: 120, renderCell: (p)=> p.value !== undefined && p.value !== null ? `₹${p.value}` : '₹0' },
-        { field: 'total_revenue', headerName: 'Total Revenue', width: 120, renderCell: (p)=> p.value !== undefined && p.value !== null ? `₹${parseFloat(p.value).toFixed(2)}` : '₹0.00' },
-        { field: 'createdAt', headerName: 'Joined', width: 170, renderCell: (p)=> p.value ? new Date(p.value).toLocaleString() : '' },
-        { field: 'user_role_active', headerName: 'Status', width: 110, renderCell: (params)=> (
-            <span className={`px-2 py-1 rounded-2xl text-xs ${params.value ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-                {params.value ? 'Active' : 'Inactive'}
-            </span>
-        ) },
+        { field: 'SUBMERCHANT_NAME', headerName: 'Name', flex: 1, minWidth: 150 },
+        { field: 'SUBMERCHANT_EMAIL', headerName: 'Email', flex: 1.2, minWidth: 200 },
+        { field: 'SUBMERCHANT_PHONE', headerName: 'Phone', width: 140 },
+        { field: 'STATUS', headerName: 'Status', width: 110 },
         { field: 'actions', headerName: 'Actions', width: 320, sortable: false, filterable: false, renderCell: (params)=> {
             return (
-            <div className="flex items-center space-x-2">
-                <button
-                    className="px-3 py-1 bg-red-500 text-white rounded-2xl text-sm"
-                    onClick={() => {
-                        setViewUserRoleId(params.row.user_role_id)
-                        setShowView(true)
-                    }}
-                >
-                    View
-                </button>
-                <button
-                    className="px-3 py-1 bg-purple-600 text-white rounded-2xl text-sm"
-                    onClick={() => {
-                        setSelectedToPay(params.row);
-                        const defaultLimit = (params.row?.negative_value ?? params.row?.negative_limit);
-                        setToPayForm({ negative_limit: (defaultLimit ?? '') === null ? '' : String(defaultLimit ?? '') });
-                        setShowToPay(true);
-                    }}
-                >
-                    To Pay
-                </button>
-                { [USER_ROLES.MERCHANT, USER_ROLES.SUBMERCHANT].includes(params.row.user_role) ? <button
-                    className="px-3 py-1 bg-green-600 text-white rounded-2xl text-sm"
-                    onClick={() => { setSelectedMerchant(params.row); setShowInvoice(true); }}
-                >
-                    Invoice
-                </button> : null }
-            </div>
+            <>
+                {
+                    ['ACTIVE', 'INACTIVE'].includes(params.row.STATUS) ? <div className="flex items-center space-x-2">
+                    <button
+                        className="px-3 py-1 bg-red-500 text-white rounded-2xl text-sm"
+                        onClick={() => {
+                            setViewUserRoleId(params.row.user_role_id)
+                            setShowView(true)
+                        }}
+                    >
+                        View
+                    </button>
+                    </div> : null
+                }
+            </>
         )} }
     ], [])
 
@@ -217,7 +186,7 @@ const MerchantManage =  () => {
         const handler = setTimeout(async () => {
             setLoading(true)
             try {
-                const res = await getVerifiedUsersService({
+                const res = await getMySubmerchantsService({
                     page: page + 1, // backend is 1-based
                     ...Object.fromEntries(Object.entries(filters).filter(([_, v]) => v !== '' && v !== undefined && v !== null))
                 });
@@ -236,7 +205,7 @@ const MerchantManage =  () => {
         }, 400) // debounce
 
         return () => { active = false; clearTimeout(handler) }
-    }, [page, filters])
+    }, [page, filters, refreshIndex])
 
     const handleFilterChange = (key) => (e) => {
         const value = e.target.value
@@ -278,6 +247,11 @@ const MerchantManage =  () => {
 
     return (
         <>
+            <AddSubmerchantModal
+                open={openAddSubmerchantModal}
+                onClose={() => setOpenAddSubmerchantModal(false)}
+                onSuccess={() => setRefreshIndex((v) => v + 1)}
+            />
             {showView && viewUserRoleId && (
                 <View
                     userRoleId={viewUserRoleId}
@@ -287,152 +261,53 @@ const MerchantManage =  () => {
                     }}
                 />
             )}
-            {showToPay && selectedToPay && (
-                <div className='absolute inset-0 bg-[rgba(0,0,0,0.5)] z-50 flex justify-center items-center overflow-y-auto'>
-                    <div className='relative p-6 w-full max-w-[460px] bg-white rounded-2xl overflow-hidden space-y-4'>
-                        <p className='absolute top-4 right-5 cursor-pointer' onClick={() => { if (!toPaySubmitting) setShowToPay(false) }}>X</p>
-                        <p className='text-xl font-medium text-center'>To Pay</p>
-                        <div className='space-y-2'>
-                            <label className='text-sm font-medium'>Negative Limit (≤ 0)</label>
-                            <input
-                                type='number'
-                                max={0}
-                                step='0.01'
-                                className='border rounded-lg px-3 py-2 w-full outline-none focus:ring-2 focus:ring-red-400'
-                                placeholder='Enter negative limit (e.g., -5000)'
-                                value={toPayForm.negative_limit}
-                                onChange={(e) => setToPayForm({ negative_limit: e.target.value })}
-                                disabled={toPaySubmitting}
-                            />
-                            <p className='text-xs text-gray-500'>Set a negative spending limit for this merchant. Must be less than or equal to 0.</p>
-                        </div>
-                        <div className='flex items-center justify-between pt-2'>
-                            {(selectedToPay?.negative_limit !== undefined && selectedToPay?.negative_limit !== null) || (selectedToPay?.negative_value !== undefined && selectedToPay?.negative_value !== null) ? (
-                                <button
-                                    className={`px-3 py-2 rounded-2xl text-sm ${toPaySubmitting ? 'bg-gray-400 cursor-not-allowed' : 'bg-red-600 text-white'}`}
-                                    onClick={async () => {
-                                        if (toPaySubmitting) return;
-                                        try {
-                                            setToPaySubmitting(true)
-                                            await revokeNegativeBalanceService(selectedToPay.uid)
-                                            toast.success('Negative limit removed')
-                                            // Update local rows
-                                            setRows(prev => prev.map(r => r.uid === selectedToPay.uid ? { ...r, negative_limit: null, negative_value: null } : r))
-                                            setShowToPay(false)
-                                        } catch (err) {
-                                            const msg = err instanceof Error ? err.message : 'Failed to remove negative limit'
-                                            toast.error(msg)
-                                        } finally {
-                                            setToPaySubmitting(false)
-                                        }
-                                    }}
-                                    disabled={toPaySubmitting}
-                                >
-                                    Remove Negative Limit
-                                </button>
-                            ) : <div />}
-                            <div className='flex items-center space-x-2'>
-                                <button
-                                    className={`px-3 py-2 rounded-2xl text-sm border ${toPaySubmitting ? 'opacity-60 cursor-not-allowed' : ''}`}
-                                    onClick={() => setShowToPay(false)}
-                                    disabled={toPaySubmitting}
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    className={`px-3 py-2 rounded-2xl text-sm ${toPaySubmitting ? 'bg-gray-400 cursor-not-allowed' : 'bg-red-600 text-white'}`}
-                                    onClick={async () => {
-                                        if (toPaySubmitting) return;
-                                        const val = parseFloat(toPayForm.negative_limit)
-                                        if (isNaN(val)) { toast.error('Please enter a number'); return }
-                                        if (val > 0) { toast.error('Negative Limit must be less than or equal to 0'); return }
-                                        try {
-                                            setToPaySubmitting(true)
-                                            await allowNegativeBalanceService(selectedToPay.uid, { negative_limit: val })
-                                            toast.success('Negative limit updated successfully')
-                                            // Update local rows
-                                            setRows(prev => prev.map(r => r.uid === selectedToPay.uid ? { ...r, negative_limit: val, negative_value: val } : r))
-                                            setShowToPay(false)
-                                        } catch (err) {
-                                            const msg = err instanceof Error ? err.message : 'Failed to update negative limit'
-                                            toast.error(msg)
-                                        } finally {
-                                            setToPaySubmitting(false)
-                                        }
-                                    }}
-                                    disabled={toPaySubmitting}
-                                >
-                                    Save
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
-            {showInvoice && selectedMerchant && (
-                <MerchantInvoiceModal
-                    open={showInvoice}
-                    onClose={() => setShowInvoice(false)}
-                    merchantId={selectedMerchant?.uid}
-                />
-            )}
             <div className="py-16 w-full h-full flex flex-col items-center overflow-x-hidden overflow-y-auto">
                 <div className='w-full max-w-[1200px] px-6 flex flex-col items-stretch space-y-6'>
-                    <div className='text-center text-3xl font-medium text-black'>Verified Users</div>
+                    <div className='w-full flex items-center justify-between'>
+                        <div className='text-3xl font-medium text-black'>My Submerchants</div>
+                        <button
+                            className='px-4 py-2 bg-red-500 text-white rounded'
+                            onClick={() => setOpenAddSubmerchantModal(true)}
+                        >
+                            Add Submerchant
+                        </button>
+                    </div>
 
                     {/* Filters */}
                     <div className="w-full bg-white p-4 rounded-xl shadow-sm border">
-                        <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                             <input
                                 type="text"
                                 className="border rounded-lg px-3 py-2 w-full outline-none focus:ring-2 focus:ring-red-400"
                                 placeholder="User Name"
-                                value={filters.user_name}
-                                onChange={handleFilterChange('user_name')}
+                                value={filters.submerchant_name}
+                                onChange={handleFilterChange('submerchant_name')}
                             />
                             <input
                                 type="email"
                                 className="border rounded-lg px-3 py-2 w-full outline-none focus:ring-2 focus:ring-red-400"
                                 placeholder="User Email"
-                                value={filters.user_email}
-                                onChange={handleFilterChange('user_email')}
+                                value={filters.submerchant_email}
+                                onChange={handleFilterChange('submerchant_email')}
                             />
                             <input
                                 type="text"
                                 className="border rounded-lg px-3 py-2 w-full outline-none focus:ring-2 focus:ring-red-400"
                                 placeholder="User Phone"
-                                value={filters.user_phone}
-                                onChange={handleFilterChange('user_phone')}
+                                value={filters.submerchant_phone}
+                                onChange={handleFilterChange('submerchant_phone')}
                             />
                             <select
                                 className="border rounded-lg px-3 py-2 w-full outline-none focus:ring-2 focus:ring-red-400"
-                                value={filters.user_role}
-                                onChange={handleFilterChange('user_role')}
+                                value={filters.status}
+                                onChange={handleFilterChange('status')}
                             >
-                                <option value=''>All Roles</option>
-                                {Object.values(USER_ROLES).map(role => (
-                                    <option key={role} value={role}>{role}</option>
-                                ))}
-                            </select>
-                            <select
-                                className="border rounded-lg px-3 py-2 w-full outline-none focus:ring-2 focus:ring-red-400"
-                                value={filters.is_to_pay_merchant}
-                                onChange={handleFilterChange('is_to_pay_merchant')}
-                            >
-                                <option value=''>All Users</option>
-                                <option value='true'>To Pay Users</option>
-                                <option value='false'>Non To Pay Users</option>
-                            </select>
-                            <select
-                                className="border rounded-lg px-3 py-2 w-full outline-none focus:ring-2 focus:ring-red-400"
-                                value={filters.sort_by}
-                                onChange={handleFilterChange('sort_by')}
-                            >
-                                <option value=''>Sort By</option>
-                                <option value='total_revenue_asc'>Lowest Revenue</option>
-                                <option value='total_revenue_desc'>Highest Revenue</option>
-                                <option value='uid_asc'>Oldest User</option>
-                                <option value='uid_desc'>Newest User</option>
+                                <option value=''>All</option>
+                                <option value='REQUESTED'>Requested</option>
+                                <option value='ACTIVE'>Active</option>
+                                <option value='INACTIVE'>Rejected</option>
+                                <option value='CANCELLED'>Cancelled</option>
+                                <option value='REJECTED'>Rejected</option>
                             </select>
                         </div>
                     </div>
@@ -490,4 +365,4 @@ const MerchantManage =  () => {
     )
 }
 
-export default MerchantManage
+export default MySubmerchants

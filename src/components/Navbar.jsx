@@ -1,10 +1,13 @@
 import { Menu, X } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 // NavItem and navItems removed (unused)
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import WalletRechargeModal from "./WalletRechargeModal"; 
 import { useWallet } from "../context/WalletContext";
+import getAvailableRoles from "../services/roleServices/getAvailableRoles";
+import changeRoleService from "../services/roleServices/changeRoleService";
+import { toast } from "react-toastify";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -21,9 +24,17 @@ const Navbar = () => {
   ];
   const navigate = useNavigate();
   const [showRecharge, setShowRecharge] = useState(false)
-  const {verified, isAuthenticated, logout, business_name} = useAuth()
+  const { verified, isAuthenticated, logout, business_name, name, role } = useAuth()
   const { balance, refreshBalance } = useWallet();
   // isMenu and toggleMenu removed (unused)
+
+  // Role switcher state
+  const [availableRoles, setAvailableRoles] = useState([])
+  const [rolesLoading, setRolesLoading] = useState(false)
+  const [roleMenuOpen, setRoleMenuOpen] = useState(false)
+  const [switchingRoleId, setSwitchingRoleId] = useState(null)
+  const roleDropdownDesktopRef = useRef(null)
+  const roleDropdownMobileRef = useRef(null)
 
   const closeRechargeModal = () => {
     setShowRecharge(false);
@@ -35,12 +46,125 @@ const Navbar = () => {
     refreshBalance();
   },[isAuthenticated, verified]);
 
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setAvailableRoles([])
+      setRoleMenuOpen(false)
+      return;
+    }
+
+    let active = true
+    const fetchRoles = async () => {
+      try {
+        setRolesLoading(true)
+        const roles = await getAvailableRoles()
+        if (!active) return
+        setAvailableRoles(Array.isArray(roles) ? roles : [])
+      } catch (e) {
+        if (!active) return
+        setAvailableRoles([])
+      } finally {
+        if (active) setRolesLoading(false)
+      }
+    }
+
+    fetchRoles()
+    return () => {
+      active = false
+    }
+  }, [isAuthenticated])
+
+  const shouldShowRoleSwitcher = useMemo(() => {
+    return isAuthenticated && Array.isArray(availableRoles) && availableRoles.length > 1
+  }, [isAuthenticated, availableRoles])
+
+  useEffect(() => {
+    if (!roleMenuOpen) return
+    const onMouseDown = (e) => {
+      const desktopEl = roleDropdownDesktopRef.current
+      const mobileEl = roleDropdownMobileRef.current
+      const clickedInsideDesktop = desktopEl?.contains?.(e.target)
+      const clickedInsideMobile = mobileEl?.contains?.(e.target)
+      if (!clickedInsideDesktop && !clickedInsideMobile) {
+        setRoleMenuOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', onMouseDown)
+    return () => document.removeEventListener('mousedown', onMouseDown)
+  }, [roleMenuOpen])
+
+  const handleSwitchRole = async (nextRole) => {
+    try {
+      const nextUserRoleId = nextRole?.user_role_id
+      if (!nextUserRoleId) throw new Error('Invalid role')
+      if (switchingRoleId) return
+
+      if (String(nextRole?.role || '').toUpperCase() === String(role || '').toUpperCase()) {
+        setRoleMenuOpen(false)
+        return
+      }
+
+      setSwitchingRoleId(nextUserRoleId)
+      const newToken = await changeRoleService(nextUserRoleId)
+      localStorage.setItem('token', newToken)
+      setRoleMenuOpen(false)
+      setMenuOpen(false)
+      window.location.reload()
+    } catch (e) {
+      toast.error(e?.message || 'Failed to change role')
+    } finally {
+      setSwitchingRoleId(null)
+    }
+  }
+
   // scrollToTop removed (unused)
 
   const formatBusinessName = (name) => {
     if (!name) return '';
     return name.length > 20 ? name.slice(0, 20) + '...' : name;
   };
+
+  const RoleDropdownMenu = ({ containerRef }) => {
+    if (!shouldShowRoleSwitcher) return null
+    return (
+      <div className="relative" ref={containerRef}>
+        <button
+          type="button"
+          className="bg-white text-black flex items-center font-medium rounded-xl px-2 py-2 cursor-pointer max-w-xs truncate"
+          onClick={() => setRoleMenuOpen((o) => !o)}
+          disabled={rolesLoading}
+          title={role ? `Current role: ${role}` : 'Switch role'}
+        >
+          <span className="truncate">{role ? `Role: ${role}` : 'Switch Role'}</span>
+          <span className="ml-2">▾</span>
+        </button>
+
+        {roleMenuOpen && (
+          <div className="absolute right-0 mt-2 w-56 bg-white border rounded-xl shadow-lg z-50 overflow-hidden">
+            {availableRoles.map((r) => {
+              const isActive = String(r?.role || '').toUpperCase() === String(role || '').toUpperCase()
+              const isBusy = switchingRoleId === r?.user_role_id
+              return (
+                <button
+                  key={r?.user_role_id}
+                  type="button"
+                  className={`w-full text-left px-4 py-2 text-sm hover:bg-red-50 ${isActive ? 'bg-red-50 font-medium' : ''} ${(switchingRoleId && !isBusy) ? 'opacity-60 cursor-not-allowed' : ''}`}
+                  onClick={() => handleSwitchRole(r)}
+                  disabled={Boolean(switchingRoleId) || isActive}
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="truncate">{r?.role}</span>
+                    {isBusy ? <span className="text-xs text-gray-500">Switching…</span> : null}
+                  </div>
+                </button>
+              )
+            })}
+          </div>
+        )}
+      </div>
+    )
+  }
+
   return (
     <>
       <nav className="fixed top-0 left-0 w-full shadow-md bg-black z-10">
@@ -95,12 +219,13 @@ const Navbar = () => {
               </>
             ):null}
             <div className="hidden md:flex space-x-4">
+              <RoleDropdownMenu containerRef={roleDropdownDesktopRef} />
               <p
                 className="bg-white text-black flex items-center font-medium rounded-xl px-2 py-2 cursor-pointer max-w-xs truncate"
                 onClick={()=>navigate('/dashboard')}
-                title={business_name}
+                title={business_name || name}
               >
-                {formatBusinessName(business_name)}
+                {formatBusinessName(business_name || name)}
               </p>
               <p
                 className="bg-red-400 text-white flex items-center font-medium rounded-xl px-2 py-2 cursor-pointer"
@@ -146,6 +271,11 @@ const Navbar = () => {
                 {formatBusinessName(business_name)}
               </p>
             )}
+
+            {isAuthenticated ? (
+              <RoleDropdownMenu containerRef={roleDropdownMobileRef} />
+            ) : null}
+
             {links.map((item) => (
               <Link
                 key={item.to}

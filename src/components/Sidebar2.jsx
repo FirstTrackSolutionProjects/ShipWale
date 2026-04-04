@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { FaBars, FaTimes } from 'react-icons/fa'; // Import FontAwesome icons
-import { menuItems, USER_ROLES } from '../Constants'; // Import sidebar items
+import { menuItems } from '../Constants'; // Import sidebar items
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import SidebarItem from './SidebarItem.jsx';
 import WalletRechargeModal from './WalletRechargeModal.jsx';
 const Sidebar2 = () => {
   const {role, logout} = useAuth();
-  const admin = role === USER_ROLES.ADMIN;
   const navigate = useNavigate();
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
@@ -46,7 +45,7 @@ const Sidebar2 = () => {
       >
       <ul className="p-2">
         {sidebarItems.map((item) => {
-          if ((item.admin && !admin) || (item.merchantOnly && admin)) {
+          if (item.hidden || (item.roles !== undefined && !item.roles.includes(role))) {
             return;
           }
           return(<SidebarItem item={item} setShowRecharge={setShowRecharge} sidebarExpanded={isSidebarHovered} />)
@@ -60,7 +59,7 @@ const Sidebar2 = () => {
         {/* Close button (Icon) */}
         <ul className="p-4 pt-12">
         {sidebarItems.map((item) => {
-          if ((item.admin && !admin) || (item.merchantOnly && admin)) {
+          if (item.hidden || (item.roles !== undefined && !item.roles.includes(role))) {
             return;
           }
           return(<SidebarItem item={item} setShowRecharge={setShowRecharge} toggleSidebar={toggleSidebar} />)

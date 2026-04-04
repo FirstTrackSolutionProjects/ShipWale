@@ -13,19 +13,18 @@ import getAllTransactionsDataService from '../services/transactionServices/getAl
 const PAGE_SIZE = 50;
 
 const columns = [
-  { field: 'date', headerName: 'Date', flex: 1, valueGetter: p => p?.row?.date, renderCell: p => new Date(p.row.date).toLocaleString(), minWidth: 175 },
-  { field: 'type', headerName: 'Type', flex: 1, minWidth: 100 },
-  { field: 'order_id', headerName: 'Order ID', flex: 1, minWidth: 100 },
-  { field: 'payment_id', headerName: 'Payment ID', flex: 1, hide: true, minWidth: 100 },
+  { field: 'DATE', headerName: 'Date', flex: 1, valueGetter: p => p?.row?.DATE, renderCell: p => new Date(p.row.DATE).toLocaleString(), minWidth: 175 },
+  { field: 'TRANSACTION_TYPE', headerName: 'Type', flex: 1, minWidth: 100 },
+  { field: 'ORDER_ID', headerName: 'Order ID', flex: 1, minWidth: 100 },
   { field: 'shipment_details', headerName: 'Shipment Details', minWidth: 200,
         renderCell: (params) => (
           <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, height: 80, justifyContent: 'center' }}>
-            {params.row.service_name && <div>Service: {params.row.service_name} {params.row.shipping_mode ? `(${params.row.shipping_mode})` : ''}</div>}
-            {params.row.awb && <div>AWB: {params.row.awb}</div>}
+            {params.row.SERVICE_NAME && <div>Service: {params.row.SERVICE_NAME} {params.row.shipping_mode ? `(${params.row.shipping_mode})` : ''}</div>}
+            {params.row.AWB && <div>AWB: {params.row.AWB}</div>}
           </Box>
         )
       },
-  { field: 'amount', headerName: 'Amount', flex: 1, renderCell: p => {
+  { field: 'AMOUNT', headerName: 'Amount', flex: 1, renderCell: p => {
       const v = Number(p.value);
       if (isNaN(v)) return '';
 
@@ -33,26 +32,19 @@ const columns = [
       let cls = 'text-green-600'; // Default for credits
 
       // Check for known debit types (including 'rto' for RTO charges)
-      if (['expense', 'dispute_charge', 'extra', 'rto'].includes(p.row.type)) {
+      if (p.row.CREDIT_OR_DEBIT === 'DEBIT') {
         sign = '-';
         cls = 'text-red-600';
-      }
-      // Special handling for 'manual' type: the sign depends on the actual value
-      else if (p.row.type === 'manual') {
-        if (v < 0) { // If manual transaction amount is negative, it's a debit
-          sign = '-';
-          cls = 'text-red-600';
-        } else { // Otherwise, it's a credit
+      } else { // Otherwise, it's a credit
           sign = '+';
           cls = 'text-green-600';
-        }
       }
       // For any other type not explicitly handled (e.g., standard 'recharge' from Razorpay),
       // it will default to '+' and green, which is appropriate.
 
       return <span className={cls}>{sign}{Math.abs(v)}</span>;
     }, minWidth: 80 },
-  { field: 'reason', headerName: 'Reason', flex: 2, minWidth: 100 },
+  { field: 'DESCRIPTION', headerName: 'Description', flex: 2, minWidth: 100 },
 ];
 
 const TransactionHistory = () => {
@@ -229,6 +221,7 @@ const TransactionHistory = () => {
                         columns={columns}
                         loading={loading}
                         paginationMode='server'
+                        getRowId={(row)=>row.TRANSACTION_ID}
                         // Prevent skeleton placeholder rows after filters return zero by forcing rowCount to 0
                         rowCount={rows.length === 0 ? 0 : rowCount}
                         pageSizeOptions={[PAGE_SIZE]}
