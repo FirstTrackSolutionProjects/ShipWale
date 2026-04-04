@@ -2,6 +2,7 @@ import { useEffect , useMemo, useState  } from 'react'
 import { DataGrid } from '@mui/x-data-grid'
 import UserDiscountModal from '../Modals/UserDiscountModal'
 import AddSubmerchantModal from '../Modals/AddSubmerchantModal'
+import UpdateSubmerchantMarginModal from '../Modals/UpdateSubmerchantMarginModal'
 import getMySubmerchantService from '@/services/merchantServices/getMySubmerchantService'
 import getMySubmerchantsService from '@/services/merchantServices/getMySubmerchantsService'
 const API_URL = import.meta.env.VITE_APP_API_URL
@@ -149,6 +150,11 @@ const MySubmerchants =  () => {
     const [openAddSubmerchantModal, setOpenAddSubmerchantModal] = useState(false)
     const [refreshIndex, setRefreshIndex] = useState(0)
 
+    // Update margin modal
+    const [openUpdateMarginModal, setOpenUpdateMarginModal] = useState(false)
+    const [selectedSubmerchantId, setSelectedSubmerchantId] = useState(null)
+    const [selectedCurrentMargin, setSelectedCurrentMargin] = useState(null)
+
     // View modal state
     const [showView, setShowView] = useState(false)
     const [viewUserRoleId, setViewUserRoleId] = useState(null)
@@ -159,22 +165,38 @@ const MySubmerchants =  () => {
         { field: 'SUBMERCHANT_NAME', headerName: 'Name', flex: 1, minWidth: 150 },
         { field: 'SUBMERCHANT_EMAIL', headerName: 'Email', flex: 1.2, minWidth: 200 },
         { field: 'SUBMERCHANT_PHONE', headerName: 'Phone', width: 140 },
+        { field: 'MARGIN', headerName: 'Margin %', width: 110 },
         { field: 'STATUS', headerName: 'Status', width: 110 },
         { field: 'actions', headerName: 'Actions', width: 320, sortable: false, filterable: false, renderCell: (params)=> {
             return (
             <>
                 {
-                    ['ACTIVE', 'INACTIVE'].includes(params.row.STATUS) ? <div className="flex items-center space-x-2">
-                    <button
-                        className="px-3 py-1 bg-red-500 text-white rounded-2xl text-sm"
-                        onClick={() => {
-                            setViewUserRoleId(params.row.user_role_id)
-                            setShowView(true)
-                        }}
-                    >
-                        View
-                    </button>
-                    </div> : null
+                    ['ACTIVE', 'INACTIVE'].includes(params.row.STATUS) ? (
+                        <div className="flex items-center space-x-2">
+                            <button
+                                className="px-3 py-1 bg-red-500 text-white rounded-2xl text-sm"
+                                onClick={() => {
+                                    setViewUserRoleId(params.row.user_role_id)
+                                    setShowView(true)
+                                }}
+                            >
+                                View
+                            </button>
+
+                            {params.row.STATUS === 'ACTIVE' ? (
+                                <button
+                                    className="px-3 py-1 bg-red-500 text-white rounded-2xl text-sm"
+                                    onClick={() => {
+                                        setSelectedSubmerchantId(params.row.user_role_id)
+                                        setSelectedCurrentMargin(params.row.MARGIN)
+                                        setOpenUpdateMarginModal(true)
+                                    }}
+                                >
+                                    Update Margin
+                                </button>
+                            ) : null}
+                        </div>
+                    ) : null
                 }
             </>
         )} }
@@ -250,6 +272,17 @@ const MySubmerchants =  () => {
             <AddSubmerchantModal
                 open={openAddSubmerchantModal}
                 onClose={() => setOpenAddSubmerchantModal(false)}
+                onSuccess={() => setRefreshIndex((v) => v + 1)}
+            />
+            <UpdateSubmerchantMarginModal
+                open={openUpdateMarginModal}
+                onClose={() => {
+                    setOpenUpdateMarginModal(false)
+                    setSelectedSubmerchantId(null)
+                    setSelectedCurrentMargin(null)
+                }}
+                submerchantId={selectedSubmerchantId}
+                currentMargin={selectedCurrentMargin}
                 onSuccess={() => setRefreshIndex((v) => v + 1)}
             />
             {showView && viewUserRoleId && (
