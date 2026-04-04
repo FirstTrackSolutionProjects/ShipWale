@@ -5,7 +5,8 @@ const TextInput = ({
     formData,
     handleChange,
     name,
-    label
+    label,
+    config
 }) => {
   return (
     <TextField
@@ -15,6 +16,7 @@ const TextInput = ({
         value={formData[name]}
         onChange={handleChange}
         sx={{ minWidth: 200 }}
+        inputProps={config}
     />
   )
 }
