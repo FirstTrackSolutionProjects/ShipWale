@@ -55,7 +55,6 @@ const SubmerchantRequests = () => {
 			setRequests(Array.isArray(res?.data) ? res.data : [])
 		} catch (e) {
 			console.error(e)
-			toast.error(e?.message || 'Failed to fetch requests')
 			setRequests([])
 		} finally {
 			setLoading(false)
