@@ -270,7 +270,7 @@ export const menuItems = [
         isDropdown : false,
         url : 'transaction-history',
         component : TransactionHistory,
-        roles: [USER_ROLES.ADMIN, USER_ROLES.MERCHANT, USER_ROLES.SUBMERCHANT],
+        roles: [USER_ROLES.MERCHANT, USER_ROLES.SUBMERCHANT],
         dropDownOptions : [{}],
         merchantOnly : true
     },
@@ -453,10 +453,19 @@ export const menuItems = [
     },
     {
         icon : ShieldCheck,
+        name: "Submerchant Verification Requests",
+        isDropdown: false,
+        url: 'submerchant-verification-requests',
+        roles: [USER_ROLES.MERCHANT],
+        component: VerificationRequests,
+        dropDownOptions: []
+    },
+    {
+        icon : ShieldCheck,
         name: "Submerchant Requests",
         isDropdown: false,
         url: 'submerchant-requests',
-        roles: [USER_ROLES.ADMIN, USER_ROLES.MERCHANT, USER_ROLES.SUBMERCHANT],
+        roles: [USER_ROLES.MERCHANT, USER_ROLES.SUBMERCHANT],
         component: SubmerchantRequests,
         dropDownOptions: []
     },
