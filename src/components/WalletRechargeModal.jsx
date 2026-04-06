@@ -29,7 +29,8 @@ const WalletRechargeModal = ({ onClose }) => {
             method: 'POST',
             body: JSON.stringify({ amount }),
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': localStorage.getItem('token')
             },
         });
     const data = await response.json();
