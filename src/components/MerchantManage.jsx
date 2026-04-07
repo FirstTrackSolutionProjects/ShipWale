@@ -127,7 +127,7 @@ const View = ({ userRoleId, onClose }) => {
                     </div>
                 </div>
             </div>
-            <UserDiscountModal open={openDiscountModal} onClose={closeDiscountModal} uid={user?.uid} />
+            <UserDiscountModal open={openDiscountModal} onClose={closeDiscountModal} user_role_id={user?.user_role_id} />
         </>
     )
 }
