@@ -6,7 +6,7 @@ import UpdateDiscountModal from "./UpdateDiscountModal";
 import { FaTrashCan } from "react-icons/fa6";
 
 const API_URL = import.meta.env.VITE_APP_API_URL
-const UserDiscountModal = ({ open, onClose, uid }) => {
+const UserDiscountModal = ({ open, onClose, user_role_id }) => {
     if (!open) return;
     const [discounts, setDiscounts] = useState([])
     const [openAddDiscount, setOpenAddDiscount] = useState(false)
@@ -20,7 +20,7 @@ const UserDiscountModal = ({ open, onClose, uid }) => {
         getDiscounts();
     }
     const getDiscounts = async () => {
-        const discountRequest = await fetch(`${API_URL}/discounts/${uid}`,{
+        const discountRequest = await fetch(`${API_URL}/discounts/${user_role_id}`,{
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -50,7 +50,7 @@ const UserDiscountModal = ({ open, onClose, uid }) => {
                     'Accept': 'application/json',
                     'Authorization': localStorage.getItem('token'),
                 },
-                body: JSON.stringify({ service_id : serviceId, uid : uid }),
+                body: JSON.stringify({ service_id : serviceId, user_role_id : user_role_id }),
             })
             const data = await response.json();
             if (data?.success){
@@ -86,7 +86,7 @@ const UserDiscountModal = ({ open, onClose, uid }) => {
                   <div className="text-xl absolute right-2 transition-all text-red-500 duration-500 hover:text-2xl" onClick={()=>handleDeleteDiscount(discount?.service_id)}>
                     <FaTrashCan />
                   </div>
-                  <UpdateDiscountModal open={openUpdateDiscount} onClose={closeUpdateDiscount} uid={uid} serviceId={discount?.service_id} discount={discount?.discount_percentage} />
+                  <UpdateDiscountModal open={openUpdateDiscount} onClose={closeUpdateDiscount} user_role_id={user_role_id} serviceId={discount?.service_id} discount={discount?.discount_percentage} />
                 </div>
             )) : <div className="text-center">No discounts applied</div>}
           </div>
@@ -99,7 +99,7 @@ const UserDiscountModal = ({ open, onClose, uid }) => {
             </button>
           </div>
         </div>
-        <AddDiscountModal open={openAddDiscount} onClose={closeAddDiscount} uid={uid} />
+        <AddDiscountModal open={openAddDiscount} onClose={closeAddDiscount} user_role_id={user_role_id} />
       </div>
     );
   };
