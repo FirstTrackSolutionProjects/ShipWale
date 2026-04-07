@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 const API_URL = import.meta.env.VITE_APP_API_URL
-const UpdateDiscountModal = ({ open, onClose, uid, serviceId, discount }) => {
+const UpdateDiscountModal = ({ open, onClose, user_role_id, serviceId, discount }) => {
     if (!open) return;
     const [formData, setFormData] = useState({
-        uid: uid,
+        user_role_id: user_role_id,
         service_id: serviceId,
         discount: discount
     })
