@@ -314,10 +314,10 @@ const MerchantManage =  () => {
                                         if (toPaySubmitting) return;
                                         try {
                                             setToPaySubmitting(true)
-                                            await revokeNegativeBalanceService(selectedToPay.uid)
+                                            await revokeNegativeBalanceService(selectedToPay.user_role_id)
                                             toast.success('Negative limit removed')
                                             // Update local rows
-                                            setRows(prev => prev.map(r => r.uid === selectedToPay.uid ? { ...r, negative_limit: null, negative_value: null } : r))
+                                            setRows(prev => prev.map(r => r.user_role_id === selectedToPay.user_role_id ? { ...r, negative_limit: null, negative_value: null } : r))
                                             setShowToPay(false)
                                         } catch (err) {
                                             const msg = err instanceof Error ? err.message : 'Failed to remove negative limit'
@@ -348,10 +348,10 @@ const MerchantManage =  () => {
                                         if (val > 0) { toast.error('Negative Limit must be less than or equal to 0'); return }
                                         try {
                                             setToPaySubmitting(true)
-                                            await allowNegativeBalanceService(selectedToPay.uid, { negative_limit: val })
+                                            await allowNegativeBalanceService(selectedToPay.user_role_id, { negative_limit: val })
                                             toast.success('Negative limit updated successfully')
                                             // Update local rows
-                                            setRows(prev => prev.map(r => r.uid === selectedToPay.uid ? { ...r, negative_limit: val, negative_value: val } : r))
+                                            setRows(prev => prev.map(r => r.user_role_id === selectedToPay.user_role_id ? { ...r, negative_limit: val, negative_value: val } : r))
                                             setShowToPay(false)
                                         } catch (err) {
                                             const msg = err instanceof Error ? err.message : 'Failed to update negative limit'

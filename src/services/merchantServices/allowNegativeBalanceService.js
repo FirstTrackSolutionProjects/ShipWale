@@ -1,9 +1,9 @@
 
 const API_URL = import.meta.env.VITE_APP_API_URL
 
-const allowNegativeBalanceService = async (uid, formData) => {
+const allowNegativeBalanceService = async (user_role_id, formData) => {
     try {
-        const response = await fetch(`${API_URL}/merchant/allow-negative/${uid}`, {
+        const response = await fetch(`${API_URL}/merchant/allow-negative/${user_role_id}`, {
             method: 'POST',
             headers: {
                 'Authorization': localStorage.getItem('token'),

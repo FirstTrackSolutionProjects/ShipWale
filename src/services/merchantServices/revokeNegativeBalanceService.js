@@ -1,9 +1,9 @@
 
 const API_URL = import.meta.env.VITE_APP_API_URL
 
-const revokeNegativeBalanceService = async (uid, formData) => {
+const revokeNegativeBalanceService = async (user_role_id) => {
     try {
-        const response = await fetch(`${API_URL}/merchant/revoke-negative/${uid}`, {
+        const response = await fetch(`${API_URL}/merchant/revoke-negative/${user_role_id}`, {
             method: 'PATCH',
             headers: {
                 'Authorization': localStorage.getItem('token'),
