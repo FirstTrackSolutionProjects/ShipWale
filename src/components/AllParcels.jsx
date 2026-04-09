@@ -1158,16 +1158,18 @@ const Listing = ({ step, setStep }) => {
     },
     { field: 'merchant_details', headerName: 'Merchant Details', width: 250,
       renderCell: (params) => (
-        <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, height: 80, justifyContent: 'center' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, height: 90, justifyContent: 'center' }}>
           <div className="font-bold">{params.row.fullName}</div>
           <div>{params.row.email}</div>
           <div>{params.row.phone}</div>
+          <div>{params.row.user_role}</div>
+          {params.row.merchant_name && <div>{params.row.merchant_name} ({params.row.merchant_email})</div>}
         </Box>
       )
     },
     { field: 'customer_details', headerName: 'Customer Details', width: 250,
       renderCell: (params) => (
-        <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, height: 80, justifyContent: 'center' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, height: 90, justifyContent: 'center' }}>
           <div className="font-bold">{params.row.customer_name}</div>
           <div>{params.row.customer_email}</div>
           <div>{params.row.customer_mobile}</div>
@@ -1188,7 +1190,7 @@ const Listing = ({ step, setStep }) => {
   renderCell: (params) => {
     const isShipped = Boolean(params.row.awb);
     return (
-      <Box sx={{ whiteSpace: 'normal', lineHeight: 1.5, display: 'flex', flexDirection: 'column', justifyContent: 'center', height: 80 }}>
+      <Box sx={{ whiteSpace: 'normal', lineHeight: 1.5, display: 'flex', flexDirection: 'column', justifyContent: 'center', height: 90 }}>
         {isShipped ? (
           <>
             <div>{params.row.service_name}</div>
@@ -1359,7 +1361,7 @@ const Listing = ({ step, setStep }) => {
                 borderBottom: '1px solid #000',
               },
             }}
-            rowHeight={80}
+            rowHeight={90}
           />
         </Box>
 

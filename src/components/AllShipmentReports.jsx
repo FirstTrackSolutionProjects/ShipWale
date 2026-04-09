@@ -509,12 +509,15 @@ const Listing = () => {
 
   const columns = [
     { field: 'ref_id', headerName: 'Reference ID', width: 130 },
-    { field: 'merchant_details', headerName: 'Merchant Details', width: 250,
+    { field: 'user_details', headerName: 'User Details', width: 250,
       renderCell: (params) => (
         <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, height: 130, justifyContent: 'center' }}>
           <div className="font-bold">{params.row.fullName}</div>
           <div>{params.row.email}</div>
           <div>{params.row.phone}</div>
+          <div>{params.row.business_name}</div>
+          <div>Role: {params.row.user_role}</div>
+          {params.row.merchant_name ? <div>Merchant: {params.row.merchant_name} ({params.row.merchant_email})</div> : null}
         </Box>
       )
     },
