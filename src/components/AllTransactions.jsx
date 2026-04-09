@@ -19,17 +19,17 @@ const columns = [
   { field: 'ORDER_ID', headerName: 'Order ID', flex: 1, minWidth: 100 },
   { field: 'merchant_details', headerName: 'User Details', minWidth: 250,
       renderCell: (params) => (
-        <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, height: 80, justifyContent: 'center' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, height: 90, justifyContent: 'center' }}>
           <div className="font-bold">{params.row.MERCHANT_NAME}</div>
           <div>{params.row.MERCHANT_EMAIL}</div>
           <div>Role : {params.row.MERCHANT_ROLE}</div>
-          <div>Merchant : {params.row.MASTER_MERCHANT_NAME} ({params.row.MASTER_MERCHANT_EMAIL})</div>
+          {params.row.MASTER_MERCHANT_NAME && <div>Merchant : {params.row.MASTER_MERCHANT_NAME} ({params.row.MASTER_MERCHANT_EMAIL})</div>}
         </Box>
       )
     },
   { field: 'shipment_details', headerName: 'Shipment Details', minWidth: 200,
         renderCell: (params) => (
-          <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, height: 80, justifyContent: 'center' }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', whiteSpace: 'normal', lineHeight: 1.3, height: 90, justifyContent: 'center' }}>
             {params.row.SERVICE_NAME && <div>Service: {params.row.SERVICE_NAME} {params.row.shipping_mode ? `(${params.row.shipping_mode})` : ''}</div>}
             {params.row.AWB && <div>AWB: {params.row.AWB}</div>}
           </Box>
@@ -263,7 +263,7 @@ const AllTransactions = () => {
             hideFooterPagination
             disableColumnMenu
             disableRowSelectionOnClick
-            rowHeight={80}
+            rowHeight={90}
             sx={{
               '& .MuiDataGrid-overlayWrapper': { backgroundColor: '#fff' },
               '& .MuiDataGrid-virtualScrollerRenderZone': rows.length === 0 ? { opacity: 0 } : {},
