@@ -804,7 +804,8 @@ const Listing = () => {
                     ord_id: filters.ord_id,
                     serviceId: filters.serviceId,
                     startDate: filters.startDate ? convertToUTCISOString(new Date(filters.startDate).setHours(0,0,0,0)) : '',
-                    endDate: filters.endDate ? convertToUTCISOString(new Date(filters.endDate).setHours(23,59,59,999)) : ''
+                    endDate: filters.endDate ? convertToUTCISOString(new Date(filters.endDate).setHours(23,59,59,999)) : '',
+                    status: filters.status,
                   }
                   // Add combined AWB or Reference ID to download payload
                   if (filters.awb_or_ref_id) {
